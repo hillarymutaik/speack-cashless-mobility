@@ -113,7 +113,7 @@ class _LocationPageState extends State<ProfileScreen> {
                         height: MediaQuery.of(context).size.height * .33,
                         width: size.width,
                         decoration: const BoxDecoration(
-                          image: const DecorationImage(
+                          image: DecorationImage(
                               image: AssetImage('assets/logo.jpg'),
                               fit: BoxFit.cover),
                           borderRadius: BorderRadius.vertical(
@@ -152,9 +152,9 @@ class _LocationPageState extends State<ProfileScreen> {
                       Icons.person_outline,
                       color: Colors.blueGrey,
                     ),
-                    text: Text(
+                    text: const Text(
                       'Speack Limited',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
                         color: Colors.black,
                         fontWeight: FontWeight.normal,
@@ -167,9 +167,9 @@ class _LocationPageState extends State<ProfileScreen> {
                       Icons.phone,
                       color: Colors.blueGrey,
                     ),
-                    text: Text(
+                    text: const Text(
                       '+254727918955',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         color: Colors.black,
                         fontWeight: FontWeight.normal,
@@ -182,9 +182,9 @@ class _LocationPageState extends State<ProfileScreen> {
                       Icons.email,
                       color: Colors.blueGrey,
                     ),
-                    text: Text(
+                    text: const Text(
                       'speacklimited@gmail.com',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
                         color: Colors.black,
                         fontWeight: FontWeight.normal,
@@ -388,11 +388,11 @@ class _LocationPageState extends State<ProfileScreen> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                     color: Colors.redAccent,
-                    child: const Text("Delete"),
                     elevation: 0,
                     highlightElevation: 0,
                     hoverElevation: 0,
                     focusElevation: 0,
+                    child: const Text("Delete"),
                   ),
                 ],
               ),

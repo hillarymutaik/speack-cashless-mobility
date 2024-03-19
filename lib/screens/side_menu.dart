@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'fleet_screen.dart';
 import 'transactions.dart';
 import 'users.dart';
 import 'vehicles.dart';
@@ -43,30 +44,30 @@ class _SideMenuState extends State<SideMenu> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.black87,
       child: ListView(
         children: [
           UserAccountsDrawerHeader(
-            accountName: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                margin: const EdgeInsets.symmetric(horizontal: 90, vertical: 5),
-                decoration: BoxDecoration(
-                    color: Colors.white70.withOpacity(.1),
-                    border: Border.all(color: Colors.transparent),
-                    borderRadius: BorderRadius.circular(8)),
-                child: const Text(
-                  'Speack',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )),
+            // accountName: Container(
+            //     padding:
+            //         const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+            //     margin: const EdgeInsets.symmetric(horizontal: 90, vertical: 5),
+            //     decoration: BoxDecoration(
+            //         color: Colors.white70.withOpacity(.1),
+            //         border: Border.all(color: Colors.transparent),
+            //         borderRadius: BorderRadius.circular(8)),
+            //     child: const Text(
+            //       'Speack',
+            //       style: TextStyle(
+            //         fontSize: 16,
+            //         color: Colors.white,
+            //         fontWeight: FontWeight.bold,
+            //       ),
+            //     )),
             accountEmail: Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
-                margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
                     color: Colors.white70
                         .withOpacity(.1), //Get.theme.primaryColor,
@@ -75,7 +76,7 @@ class _SideMenuState extends State<SideMenu> {
                     ),
                     borderRadius: BorderRadius.circular(8)),
                 child: const Text(
-                  'speacklimited@gmail.com',
+                  'Speack Limited',
                   style: TextStyle(
                     fontSize: 15,
                     color: Colors.white,
@@ -96,8 +97,9 @@ class _SideMenuState extends State<SideMenu> {
               ),
             ),
             decoration: const BoxDecoration(
-              color: Colors.black, // Background color
+              color: Colors.black87,
             ),
+            accountName: null,
           ),
           SizedBox(
             height: MediaQuery.of(context).size.height * .025,
@@ -115,38 +117,10 @@ class _SideMenuState extends State<SideMenu> {
                 icon: Icon(
                   Icons.dashboard,
                   color: Colors.red.shade900,
-                  size: 30,
+                  // size: 30,
                 ),
                 text: const Text(
                   'Home',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white70,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                onTap: (e) {
-                  // Navigate to the '/profile' route
-                  Navigator.pop(context);
-                },
-              )),
-          Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  border: Border.all(
-                    color: Colors.transparent,
-                  ),
-                  borderRadius: BorderRadius.circular(10)),
-              child: AccountLinkWidget(
-                icon: Icon(
-                  Icons.person_2_rounded,
-                  color: Colors.red.shade900,
-                  size: 30,
-                ),
-                text: const Text(
-                  'Speack Limited',
                   style: TextStyle(
                     fontSize: 18,
                     color: Colors.white70,
@@ -158,6 +132,34 @@ class _SideMenuState extends State<SideMenu> {
                   Navigator.pop(context);
                 },
               )),
+          // Container(
+          //     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+          //     margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+          //     decoration: BoxDecoration(
+          //         color: Colors.transparent,
+          //         border: Border.all(
+          //           color: Colors.transparent,
+          //         ),
+          //         borderRadius: BorderRadius.circular(10)),
+          //     child: AccountLinkWidget(
+          //       icon: Icon(
+          //         Icons.person_2_rounded,
+          //         color: Colors.red.shade900,
+          //         // size: 30,
+          //       ),
+          //       text: const Text(
+          //         'Speack Limited',
+          //         style: TextStyle(
+          //           fontSize: 18,
+          //           color: Colors.white70,
+          //           fontWeight: FontWeight.bold,
+          //         ),
+          //       ),
+          //       onTap: (e) {
+          //         // Navigate to the '/profile' route
+          //         Navigator.pop(context);
+          //       },
+          //     )),
           Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
@@ -171,7 +173,7 @@ class _SideMenuState extends State<SideMenu> {
                 icon: Icon(
                   Icons.wallet_rounded,
                   color: Colors.red.shade900,
-                  size: 30,
+                  // size: 30,
                 ),
                 text: const Text(
                   'Wallet',
@@ -187,33 +189,33 @@ class _SideMenuState extends State<SideMenu> {
                   // requestOTP();
                 },
               )),
-          Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  border: Border.all(
-                    color: Colors.transparent,
-                  ),
-                  borderRadius: BorderRadius.circular(10)),
-              child: AccountLinkWidget(
-                icon: Icon(
-                  Icons.phone_android,
-                  color: Colors.red.shade900,
-                  size: 30,
-                ),
-                text: const Text(
-                  '+254727918955',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white70,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                onTap: (e) {
-                  Navigator.pop(context);
-                },
-              )),
+          // Container(
+          //     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+          //     margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+          //     decoration: BoxDecoration(
+          //         color: Colors.transparent,
+          //         border: Border.all(
+          //           color: Colors.transparent,
+          //         ),
+          //         borderRadius: BorderRadius.circular(10)),
+          //     child: AccountLinkWidget(
+          //       icon: Icon(
+          //         Icons.phone_android,
+          //         color: Colors.red.shade900,
+          //         // size: 30,
+          //       ),
+          //       text: const Text(
+          //         '+254727918955',
+          //         style: TextStyle(
+          //           fontSize: 18,
+          //           color: Colors.white70,
+          //           fontWeight: FontWeight.bold,
+          //         ),
+          //       ),
+          //       onTap: (e) {
+          //         Navigator.pop(context);
+          //       },
+          //     )),
           Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
@@ -227,7 +229,7 @@ class _SideMenuState extends State<SideMenu> {
                 icon: Icon(
                   Icons.people_alt_rounded,
                   color: Colors.red.shade900,
-                  size: 30,
+                  // size: 30,
                 ),
                 text: const Text(
                   'Users',
@@ -255,7 +257,7 @@ class _SideMenuState extends State<SideMenu> {
                 icon: Icon(
                   Icons.motorcycle_rounded,
                   color: Colors.red.shade900,
-                  size: 30,
+                  // size: 30,
                 ),
                 text: const Text(
                   'Vehicles',
@@ -271,8 +273,8 @@ class _SideMenuState extends State<SideMenu> {
                 },
               )),
           Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               decoration: BoxDecoration(
                   color: Colors.transparent,
                   border: Border.all(
@@ -281,14 +283,14 @@ class _SideMenuState extends State<SideMenu> {
                   borderRadius: BorderRadius.circular(10)),
               child: AccountLinkWidget(
                 icon: Icon(
-                  Icons.motorcycle_rounded,
+                  Icons.bus_alert_rounded,
                   color: Colors.red.shade900,
-                  size: 30,
+                  // size: 30,
                 ),
                 text: const Text(
-                  'Transactions',
+                  'Fleets',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 18,
                     color: Colors.white70,
                     fontWeight: FontWeight.bold,
                   ),
@@ -297,11 +299,11 @@ class _SideMenuState extends State<SideMenu> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (ctx) => TransactionsScreen()));
+                          builder: (ctx) => FleetNumbersScreen()));
                 },
               )),
           SizedBox(
-            height: MediaQuery.of(context).size.height * .01,
+            height: MediaQuery.of(context).size.height * .12,
           ),
           const Divider(
             color: Colors.white,
@@ -316,7 +318,7 @@ class _SideMenuState extends State<SideMenu> {
           //     return
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
-            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 23),
             decoration: BoxDecoration(
                 color: Colors.white70.withOpacity(.1), //Get.theme.primaryColor,
                 border: Border.all(
@@ -327,7 +329,7 @@ class _SideMenuState extends State<SideMenu> {
               icon: const Icon(
                 Icons.logout,
                 color: Colors.redAccent,
-                size: 30,
+                // size: 30,
               ),
               text: const Text('Logout',
                   style: TextStyle(

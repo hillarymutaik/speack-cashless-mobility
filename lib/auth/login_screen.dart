@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../home/Home.dart';
-import '../home/home_screen.dart';
 import '../utils/validators.dart';
 
 class SignInScreen extends StatefulWidget {

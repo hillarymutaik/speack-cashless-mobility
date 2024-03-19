@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../screens/fleet_screen.dart';
@@ -19,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<HomeScreen> {
-  bool _searchLoading = false;
+  // bool _searchLoading = false;
   final TextEditingController _regNoController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -53,7 +52,7 @@ class _SearchScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     account();
-    loadData();
+    // loadData();
   }
 
   Future<bool> checkNetworkConnectivity() async {
@@ -61,19 +60,19 @@ class _SearchScreenState extends State<HomeScreen> {
     return connectivityResult != ConnectivityResult.none;
   }
 
-  Map<String, dynamic> _data = {};
+  // Map<String, dynamic> _data = {};
 
-  Future<void> loadData() async {
-    try {
-      String jsonString = await rootBundle.loadString('assets/data.json');
-      Map<String, dynamic> data = jsonDecode(jsonString);
-      setState(() {
-        _data = data;
-      });
-    } catch (e) {
-      print("Error retrieving data: $e");
-    }
-  }
+  // Future<void> loadData() async {
+  //   try {
+  //     String jsonString = await rootBundle.loadString('assets/data.json');
+  //     Map<String, dynamic> data = jsonDecode(jsonString);
+  //     setState(() {
+  //       _data = data;
+  //     });
+  //   } catch (e) {
+  //     print("Error retrieving data: $e");
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -83,16 +82,14 @@ class _SearchScreenState extends State<HomeScreen> {
             image: AssetImage('assets/log.png'), fit: BoxFit.cover),
       ),
       child: Scaffold(
-        backgroundColor: Colors.blue.withOpacity(.3),
+        backgroundColor: Colors.white,
         drawer: const SideMenu(),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           automaticallyImplyLeading: true,
-          iconTheme: IconThemeData(
-            size: 30,
-            color:
-                Colors.blue.shade900, // Change the color to your desired color
+          iconTheme: const IconThemeData(
+            color: Color.fromARGB(255, 2, 46, 100),
           ),
         ),
         body: SingleChildScrollView(
@@ -100,19 +97,9 @@ class _SearchScreenState extends State<HomeScreen> {
               height: MediaQuery.of(context).size.height,
               padding:
                   EdgeInsets.all(MediaQuery.of(context).size.height * 0.008),
-              child:
-
-                  //  ListView.builder(
-                  //   itemCount: _data.length,
-                  //   scrollDirection: Axis.vertical,
-                  //   itemBuilder: (context, index) {
-                  //     String model = _data.keys.elementAt(index);
-                  //     List<dynamic> items = _data[model];
-                  //     return
-
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     const Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(

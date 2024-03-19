@@ -1,3 +1,4 @@
+// ignore_for_file: use_key_in_widget_constructors
 import 'package:flutter/material.dart';
 import '../profile/profile_screen.dart';
 import '../screens/wallet/wallet_screen.dart';
@@ -20,12 +21,11 @@ class _HomeState extends State<Home> {
       body: screens[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.blue.withOpacity(.3),
-        elevation: 0,
+        backgroundColor: Colors.white,
+        elevation: 15,
         selectedItemColor: const Color.fromARGB(255, 2, 46, 100),
         unselectedItemColor:
             const Color.fromARGB(255, 2, 46, 99).withOpacity(0.5),
-        // iconSize: 25,
         currentIndex: currentIndex,
         onTap: (index) => setState(() => currentIndex = index),
         items: const [

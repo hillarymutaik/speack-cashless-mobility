@@ -1,8 +1,12 @@
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+
+import '../transactions.dart';
 
 class WalletScreen extends StatefulWidget {
   @override
@@ -30,8 +34,17 @@ class _WalletsScreenState extends State<WalletScreen> {
     }
   }
 
-  String formatDateTime(String dateTimeString) {
-    DateTime dateTime = DateTime.parse(dateTimeString);
+  // String formatDateTime(String dateTimeString) {
+  //   DateTime dateTime = DateTime.parse(dateTimeString);
+  //   DateFormat formatter = DateFormat('h:mm a d MMM y');
+  //   return formatter.format(dateTime);
+  // }
+
+  String formatDateTime(String? dateTimeString) {
+    if (dateTimeString == null || dateTimeString.isEmpty) {
+      return 'N/A';
+    }
+    DateTime dateTime = DateTime.tryParse(dateTimeString) ?? DateTime.now();
     DateFormat formatter = DateFormat('h:mm a d MMM y');
     return formatter.format(dateTime);
   }
@@ -39,200 +52,179 @@ class _WalletsScreenState extends State<WalletScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: const Color.fromARGB(255, 2, 46, 99).withOpacity(0.1),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 25),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  // Align(
-                  //   alignment: Alignment.topLeft,
-                  //   child: Navigator.canPop(context)
-                  //       ? GestureDetector(
-                  //           // onTap: () =>
-
-                  //           //     // Navigator.pop(context),
-
-                  //           //     Navigator.pushAndRemoveUntil(
-                  //           //         context,
-                  //           //         MaterialPageRoute(
-                  //           //             builder: (context) =>
-                  //           //                 const HomeScreen()),
-                  //           //         (route) => false),
-                  //           child: Icon(
-                  //             Icons.arrow_back,
-                  //             size: 32,
-                  //             color: Colors.deepOrange.shade500,
-                  //           ),
-                  //         )
-                  //       : null,
-                  // ),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 30, vertical: 20),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('Wallet ID: ${_walletData!['id']}',
-                                      style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold)),
-                                  Text(
-                                      'Vehicle ID: ${_walletData!['vehicleId']}',
-                                      style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold))
-                                ]),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text('Balance:',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold)),
-                                  Text('KSH ${_walletData!['currentBalance']}',
-                                      style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold)),
-                                ]),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text('Last Updated: ',
-                                      style: TextStyle(
-                                          color: Colors.black54,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold)),
-                                  Text(
-                                      formatDateTime(
-                                          _walletData!['lastUpdatedAt']),
-                                      style: const TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold)),
-                                ]),
-                          ])),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  // const Text(
-                  //   'Withdrawal OTP',
-                  //   style: TextStyle(
-                  //     fontSize: 25,
-                  //     fontWeight: FontWeight.bold,
-                  //   ),
-                  // ),
-                  // const SizedBox(
-                  //   height: 23,
-                  // ),
-                  Container(
-                      constraints: const BoxConstraints(maxWidth: 500),
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      child: RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(children: <TextSpan>[
-                          const TextSpan(
-                            text: 'We will send you a ',
-                            style: TextStyle(
-                              color: Colors.black38,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          TextSpan(
-                              text: 'One Time Password ',
-                              style: TextStyle(
-                                  color: Colors.blue.shade900,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold)),
-                          const TextSpan(
-                            text: 'to your phone number',
-                            style: TextStyle(
-                              color: Colors.black38,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ]),
-                      )),
-
-                  const SizedBox(
-                    height: 36,
-                  ),
-                  Row(children: [
-                    Expanded(
-                        child: GestureDetector(
-                            onTap: () async {
-                              // Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (ctx) =>
-                              //             const WithdrawalHistory()));
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 12),
-                              decoration: BoxDecoration(
-                                  color: Colors.blue.shade900,
-                                  borderRadius: BorderRadius.circular(8),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                        color: Colors.white,
-                                        blurRadius: 20,
-                                        offset: Offset(0, 0))
-                                  ]),
-                              child: const Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.arrow_forward_rounded,
-                                      color: Colors.transparent,
-                                    ),
-                                    Text("Withdrawals",
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                        )),
-                                    Icon(
-                                      Icons.arrow_forward_rounded,
-                                      color: Colors.white,
-                                    )
-                                  ]),
-                            )))
-                  ])
-                ],
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.white,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 25),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 60,
               ),
-            ),
+              Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.shade400,
+                            blurRadius: 18,
+                            offset: Offset(0, 0))
+                      ]),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                  'Wallet ID: ${_walletData != null ? _walletData!['id'] : 'N/A'}',
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold)),
+                              Text(
+                                  'Vehicle ID: ${_walletData != null ? _walletData!['vehicleId'] : 'N/A'}',
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold))
+                            ]),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Balance:',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold)),
+                              Text(
+                                  'KSH ${_walletData != null ? _walletData!['currentBalance'] : 'N/A'}',
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold)),
+                            ]),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Last Updated: ',
+                                  style: TextStyle(
+                                      color: Colors.black54,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold)),
+                              Text(
+                                  formatDateTime(
+                                      '${_walletData != null ? _walletData!['lastUpdatedAt'] : ''}'),
+                                  style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold)),
+                            ]),
+                      ])),
+              const SizedBox(
+                height: 30,
+              ),
+              // const Text(
+              //   'Withdrawal OTP',
+              //   style: TextStyle(
+              //     fontSize: 25,
+              //     fontWeight: FontWeight.bold,
+              //   ),
+              // ),
+              // const SizedBox(
+              //   height: 23,
+              // ),
+              Container(
+                  constraints: const BoxConstraints(maxWidth: 500),
+                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                  child: RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(children: <TextSpan>[
+                      const TextSpan(
+                        text: 'We will send you a ',
+                        style: TextStyle(
+                          color: Colors.black38,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextSpan(
+                          text: 'One Time Password ',
+                          style: TextStyle(
+                              color: Colors.blue.shade900,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold)),
+                      const TextSpan(
+                        text: 'to your phone number',
+                        style: TextStyle(
+                          color: Colors.black38,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ]),
+                  )),
+
+              const SizedBox(
+                height: 36,
+              ),
+              Row(children: [
+                Expanded(
+                    child: GestureDetector(
+                        onTap: () async {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (ctx) => TransactionsScreen()));
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 12),
+                          decoration: BoxDecoration(
+                              color: Colors.blue.shade900,
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Colors.white,
+                                    blurRadius: 20,
+                                    offset: Offset(0, 0))
+                              ]),
+                          child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.arrow_forward_rounded,
+                                  color: Colors.transparent,
+                                ),
+                                Text("Withdrawals",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    )),
+                                Icon(
+                                  Icons.arrow_forward_rounded,
+                                  color: Colors.white,
+                                )
+                              ]),
+                        )))
+              ])
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
   // Future<BalanceModel> getWalletBalance() async {
