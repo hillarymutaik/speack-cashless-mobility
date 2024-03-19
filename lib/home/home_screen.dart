@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../screens/side_menu.dart';
 import '../utils/validators.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -82,8 +83,8 @@ class _SearchScreenState extends State<SearchScreen> {
             image: AssetImage('assets/log.png'), fit: BoxFit.cover),
       ),
       child: Scaffold(
-        backgroundColor: Colors.blue.withOpacity(.7),
-        // drawer: const SideMenu(),
+        backgroundColor: Colors.blue.withOpacity(.5),
+        drawer: const SideMenu(),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -93,69 +94,43 @@ class _SearchScreenState extends State<SearchScreen> {
             color: Colors.white, // Change the color to your desired color
           ),
         ),
-        body: Stack(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 0),
-              child: const Text(
-                'To check vehicle details, you are required to pay a handling fee',
-                style: TextStyle(
-                    fontSize: 23,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700),
-              ),
+        body: SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            padding: EdgeInsets.all(MediaQuery.of(context).size.height * 0.008),
+            child: ListView.builder(
+              itemCount: _data.length,
+              scrollDirection: Axis.vertical,
+              itemBuilder: (context, index) {
+                String model = _data.keys.elementAt(index);
+                List<dynamic> items = _data[model];
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        model.toUpperCase(),
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      itemCount: items.length,
+                      itemBuilder: (context, idx) {
+                        return ListTile(
+                          title: Text(items[idx].toString()),
+                        );
+                      },
+                    ),
+                  ],
+                );
+              },
             ),
-            SingleChildScrollView(
-              child: Container(
-                height: MediaQuery.of(context).size.height,
-                padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.18),
-                child: ListView.builder(
-                  itemCount: _data.length,
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (context, index) {
-                    String model = _data.keys.elementAt(index);
-                    List<dynamic> items = _data[model];
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            model.toUpperCase(),
-                            style: const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          scrollDirection: Axis.vertical,
-                          itemCount: items.length,
-                          itemBuilder: (context, idx) {
-                            return ListTile(
-                              title: Text(items[idx].toString()),
-                            );
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ),
-            Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 35, vertical: 5),
-                child: const Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Text('Speack Cashless Mobility',
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontStyle: FontStyle.italic,
-                          color: Color(0xff4c505b),
-                        )))),
-          ],
+          ),
         ),
       ),
     );

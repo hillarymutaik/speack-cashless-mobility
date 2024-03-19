@@ -1,0 +1,125 @@
+{
+    "users": [
+      {
+        "id": 1,
+        "phoneNumber": "1234567890",
+        "username": "user1",
+        "email": "user1@example.com",
+        "fullName": "User One",
+        "password": "password1",
+        "status": "ACTIVE",
+        "role": "OWNER",
+        "createdAt": "2024-03-19T12:00:00Z",
+        "lastUpdatedAt": "2024-03-19T12:00:00Z"
+      },
+      {
+        "id": 2,
+        "phoneNumber": "9876543210",
+        "username": "user2",
+        "email": "user2@example.com",
+        "fullName": "User Two",
+        "password": "password2",
+        "status": "DORMANT",
+        "role": "DRIVER",
+        "createdAt": "2024-03-18T12:00:00Z",
+        "lastUpdatedAt": "2024-03-18T12:00:00Z"
+      },
+      {
+        "id": 3,
+        "phoneNumber": "1234567891",
+        "username": "user3",
+        "email": "user3@example.com",
+        "fullName": "User Three",
+        "password": "password3",
+        "status": "ACTIVE",
+        "role": "OWNER",
+        "createdAt": "2024-03-17T12:00:00Z",
+        "lastUpdatedAt": "2024-03-17T12:00:00Z"
+      },
+      {
+        "id": 4,
+        "phoneNumber": "9876543211",
+        "username": "user4",
+        "email": "user4@example.com",
+        "fullName": "User Four",
+        "password": "password4",
+        "status": "DORMANT",
+        "role": "DRIVER",
+        "createdAt": "2024-03-16T12:00:00Z",
+        "lastUpdatedAt": "2024-03-16T12:00:00Z"
+      },
+      {
+        "id": 5,
+        "phoneNumber": "1234567892",
+        "username": "user5",
+        "email": "user5@example.com",
+        "fullName": "User Five",
+        "password": "password5",
+        "status": "ACTIVE",
+        "role": "DRIVER",
+        "createdAt": "2024-03-15T12:00:00Z",
+        "lastUpdatedAt": "2024-03-15T12:00:00Z"
+      },
+      {
+        "id": 6,
+        "phoneNumber": "9876543212",
+        "username": "user6",
+        "email": "user6@example.com",
+        "fullName": "User Six",
+        "password": "password6",
+        "status": "DORMANT",
+        "role": "OWNER",
+        "createdAt": "2024-03-14T12:00:00Z",
+        "lastUpdatedAt": "2024-03-14T12:00:00Z"
+      },
+      {
+        "id": 7,
+        "phoneNumber": "1234567893",
+        "username": "user7",
+        "email": "user7@example.com",
+        "fullName": "User Seven",
+        "password": "password7",
+        "status": "ACTIVE",
+        "role": "DRIVER",
+        "createdAt": "2024-03-13T12:00:00Z",
+        "lastUpdatedAt": "2024-03-13T12:00:00Z"
+      },
+      {
+        "id": 8,
+        "phoneNumber": "9876543213",
+        "username": "user8",
+        "email": "user8@example.com",
+        "fullName": "User Eight",
+        "password": "password8",
+        "status": "DORMANT",
+        "role": "OWNER",
+        "createdAt": "2024-03-12T12:00:00Z",
+        "lastUpdatedAt": "2024-03-12T12:00:00Z"
+      },
+      {
+        "id": 9,
+        "phoneNumber": "1234567894",
+        "username": "user9",
+        "email": "user9@example.com",
+        "fullName": "User Nine",
+        "password": "password9",
+        "status": "ACTIVE",
+        "role": "DRIVER",
+        "createdAt": "2024-03-11T12:00:00Z",
+        "lastUpdatedAt": "2024-03-11T12:00:00Z"
+      },
+      {
+        "id": 10,
+        "phoneNumber": "9876543214",
+        "username": "user10",
+        "email": "user10@example.com",
+        "fullName": "User Ten",
+        "password": "password10",
+        "status": "DORMANT",
+        "role": "OWNER",
+        "createdAt": "2024-03-10T12:00:00Z",
+        "lastUpdatedAt": "2024-03-10T12:00:00Z"
+      }
+    ]
+  }
+  

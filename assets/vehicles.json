@@ -1,0 +1,85 @@
+{
+    "vehicles": [
+      {
+        "id": 1,
+        "userId": 1,
+        "fleetNumber": "ABC123",
+        "numberPlate": "XYZ456",
+        "createdAt": "2024-03-19T12:00:00Z",
+        "lastUpdatedAt": "2024-03-19T12:00:00Z"
+      },
+      {
+        "id": 2,
+        "userId": 2,
+        "fleetNumber": "DEF456",
+        "numberPlate": "UVW789",
+        "createdAt": "2024-03-18T12:00:00Z",
+        "lastUpdatedAt": "2024-03-18T12:00:00Z"
+      },
+      {
+        "id": 3,
+        "userId": 3,
+        "fleetNumber": "GHI789",
+        "numberPlate": "JKL012",
+        "createdAt": "2024-03-17T12:00:00Z",
+        "lastUpdatedAt": "2024-03-17T12:00:00Z"
+      },
+      {
+        "id": 4,
+        "userId": 4,
+        "fleetNumber": "MNO123",
+        "numberPlate": "PQR456",
+        "createdAt": "2024-03-16T12:00:00Z",
+        "lastUpdatedAt": "2024-03-16T12:00:00Z"
+      },
+      {
+        "id": 5,
+        "userId": 5,
+        "fleetNumber": "STU789",
+        "numberPlate": "VWX012",
+        "createdAt": "2024-03-15T12:00:00Z",
+        "lastUpdatedAt": "2024-03-15T12:00:00Z"
+      },
+      {
+        "id": 6,
+        "userId": 6,
+        "fleetNumber": "YZA123",
+        "numberPlate": "BCD456",
+        "createdAt": "2024-03-14T12:00:00Z",
+        "lastUpdatedAt": "2024-03-14T12:00:00Z"
+      },
+      {
+        "id": 7,
+        "userId": 7,
+        "fleetNumber": "EFG789",
+        "numberPlate": "HIJ012",
+        "createdAt": "2024-03-13T12:00:00Z",
+        "lastUpdatedAt": "2024-03-13T12:00:00Z"
+      },
+      {
+        "id": 8,
+        "userId": 8,
+        "fleetNumber": "KLM123",
+        "numberPlate": "NOP456",
+        "createdAt": "2024-03-12T12:00:00Z",
+        "lastUpdatedAt": "2024-03-12T12:00:00Z"
+      },
+      {
+        "id": 9,
+        "userId": 9,
+        "fleetNumber": "QRS789",
+        "numberPlate": "TUV012",
+        "createdAt": "2024-03-11T12:00:00Z",
+        "lastUpdatedAt": "2024-03-11T12:00:00Z"
+      },
+      {
+        "id": 10,
+        "userId": 10,
+        "fleetNumber": "WXYZ123",
+        "numberPlate": "456ABC",
+        "createdAt": "2024-03-10T12:00:00Z",
+        "lastUpdatedAt": "2024-03-10T12:00:00Z"
+      }
+    ]
+  }
+  
