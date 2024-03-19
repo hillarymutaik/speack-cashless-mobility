@@ -1,0 +1,25 @@
+{
+    "fleet_numbers": [
+      {
+        "id": 1,
+        "fleetNumber": "ABC123"
+      },
+      {
+        "id": 2,
+        "fleetNumber": "DEF456"
+      },
+      {
+        "id": 3,
+        "fleetNumber": "GHI789"
+      },
+      {
+        "id": 4,
+        "fleetNumber": "JKL012"
+      },
+      {
+        "id": 5,
+        "fleetNumber": "MNO345"
+      }
+    ]
+  }
+  

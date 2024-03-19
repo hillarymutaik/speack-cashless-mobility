@@ -1,0 +1,45 @@
+{
+    "security_pins": [
+      {
+        "id": 1,
+        "pin": "1234",
+        "userId": 1,
+        "numberOfTrials": 0,
+        "isLocked": false,
+        "lockExpiryDate": null
+      },
+      {
+        "id": 2,
+        "pin": "5678",
+        "userId": 2,
+        "numberOfTrials": 0,
+        "isLocked": false,
+        "lockExpiryDate": null
+      },
+      {
+        "id": 3,
+        "pin": "9012",
+        "userId": 3,
+        "numberOfTrials": 0,
+        "isLocked": false,
+        "lockExpiryDate": null
+      },
+      {
+        "id": 4,
+        "pin": "3456",
+        "userId": 4,
+        "numberOfTrials": 0,
+        "isLocked": false,
+        "lockExpiryDate": null
+      },
+      {
+        "id": 5,
+        "pin": "7890",
+        "userId": 5,
+        "numberOfTrials": 0,
+        "isLocked": false,
+        "lockExpiryDate": null
+      }
+    ]
+  }
+  

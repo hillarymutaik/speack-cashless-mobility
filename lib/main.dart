@@ -28,7 +28,7 @@ class SpeackCashless extends StatelessWidget {
       routes: {
         SplashScreen.routeName: (_) => const SplashScreen(),
         SignInScreen.routeName: (_) => const SignInScreen(),
-        SearchScreen.routeName: (_) => const SearchScreen(),
+        HomeScreen.routeName: (_) => const HomeScreen(),
       },
     );
   }

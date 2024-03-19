@@ -1,0 +1,35 @@
+{
+    "wallets": [
+      {
+        "id": 1,
+        "currentBalance": 150.0,
+        "lastUpdatedAt": "2024-03-19T12:00:00Z",
+        "vehicleId": 1
+      },
+      {
+        "id": 2,
+        "currentBalance": 200.0,
+        "lastUpdatedAt": "2024-03-18T12:00:00Z",
+        "vehicleId": 2
+      },
+      {
+        "id": 3,
+        "currentBalance": 300.0,
+        "lastUpdatedAt": "2024-03-17T12:00:00Z",
+        "vehicleId": 3
+      },
+      {
+        "id": 4,
+        "currentBalance": 250.0,
+        "lastUpdatedAt": "2024-03-16T12:00:00Z",
+        "vehicleId": 4
+      },
+      {
+        "id": 5,
+        "currentBalance": 180.0,
+        "lastUpdatedAt": "2024-03-15T12:00:00Z",
+        "vehicleId": 5
+      }
+    ]
+  }
+  

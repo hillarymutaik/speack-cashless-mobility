@@ -4,21 +4,21 @@ import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../screens/fleet_screen.dart';
+import '../screens/pins.dart';
 import '../screens/side_menu.dart';
-import '../utils/validators.dart';
 
-class SearchScreen extends StatefulWidget {
-  const SearchScreen({Key? key}) : super(key: key);
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
   static const routeName = 'search-screen';
 
   @override
-  State<SearchScreen> createState() => _SearchScreenState();
+  State<HomeScreen> createState() => _SearchScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
+class _SearchScreenState extends State<HomeScreen> {
   bool _searchLoading = false;
   final TextEditingController _regNoController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
@@ -83,186 +83,287 @@ class _SearchScreenState extends State<SearchScreen> {
             image: AssetImage('assets/log.png'), fit: BoxFit.cover),
       ),
       child: Scaffold(
-        backgroundColor: Colors.blue.withOpacity(.5),
+        backgroundColor: Colors.blue.withOpacity(.3),
         drawer: const SideMenu(),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           automaticallyImplyLeading: true,
-          iconTheme: const IconThemeData(
+          iconTheme: IconThemeData(
             size: 30,
-            color: Colors.white, // Change the color to your desired color
+            color:
+                Colors.blue.shade900, // Change the color to your desired color
           ),
         ),
         body: SingleChildScrollView(
           child: Container(
-            height: MediaQuery.of(context).size.height,
-            padding: EdgeInsets.all(MediaQuery.of(context).size.height * 0.008),
-            child: ListView.builder(
-              itemCount: _data.length,
-              scrollDirection: Axis.vertical,
-              itemBuilder: (context, index) {
-                String model = _data.keys.elementAt(index);
-                List<dynamic> items = _data[model];
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
+              height: MediaQuery.of(context).size.height,
+              padding:
+                  EdgeInsets.all(MediaQuery.of(context).size.height * 0.008),
+              child:
+
+                  //  ListView.builder(
+                  //   itemCount: _data.length,
+                  //   scrollDirection: Axis.vertical,
+                  //   itemBuilder: (context, index) {
+                  //     String model = _data.keys.elementAt(index);
+                  //     List<dynamic> items = _data[model];
+                  //     return
+
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
                       child: Text(
-                        model.toUpperCase(),
-                        style: const TextStyle(
+                        'Fleets',
+                        style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      itemCount: items.length,
-                      itemBuilder: (context, idx) {
-                        return ListTile(
-                          title: Text(items[idx].toString()),
-                        );
-                      },
+                    InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (ctx) => FleetNumbersScreen()));
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 3),
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 2),
+                          decoration: BoxDecoration(
+                              color: Colors.grey,
+                              border: Border.all(
+                                color: Colors.transparent,
+                              ),
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.car_crash_rounded,
+                                  color: Colors.white,
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 12),
+                                  width: 1,
+                                  height: 24,
+                                  color: Colors.white,
+                                ),
+                                const Expanded(
+                                  child: Text(
+                                    'Fleets',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 12,
+                                  color: Colors.white70,
+                                ),
+                              ],
+                            ),
+                          ),
+                        )),
+                    const Divider(
+                      color: Colors.black,
+                      endIndent: 5.0,
+                      indent: 5,
                     ),
-                  ],
-                );
-              },
-            ),
-          ),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'Pins',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (ctx) =>
+                                      const SecurityPinsScreen()));
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 3),
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 2),
+                          decoration: BoxDecoration(
+                              color: Colors.grey,
+                              border: Border.all(
+                                color: Colors.transparent,
+                              ),
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.pin,
+                                  color: Colors.white,
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 12),
+                                  width: 1,
+                                  height: 24,
+                                  color: Colors.white,
+                                ),
+                                const Expanded(
+                                  child: Text(
+                                    'Pins',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 12,
+                                  color: Colors.white70,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ))
+                  ])),
         ),
       ),
     );
   }
 
-  Future<dynamic> createSearch({
-    required String registrationNo,
-    required int amount,
-    required String phoneNumber,
-  }) async {
-    if (!(await checkNetworkConnectivity())) {
-      Future.delayed(const Duration(seconds: 3), () {
-        // Hide loading indicator
-        setState(() {
-          _searchLoading = false;
-        });
-      });
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: const Text(
-          'No Internet Connection',
-          textAlign: TextAlign.center,
-        ),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        duration: const Duration(seconds: 5),
-        margin: EdgeInsets.only(
-          // ignore: use_build_context_synchronously
-          bottom: MediaQuery.of(context).size.height * 0.04,
-          right: 15,
-          left: 15,
-        ),
-        backgroundColor: Colors.red,
-      ));
+  // Future<dynamic> createSearch({
+  //   required String registrationNo,
+  //   required int amount,
+  //   required String phoneNumber,
+  // }) async {
+  //   if (!(await checkNetworkConnectivity())) {
+  //     Future.delayed(const Duration(seconds: 3), () {
+  //       // Hide loading indicator
+  //       setState(() {
+  //         _searchLoading = false;
+  //       });
+  //     });
+  //     // ignore: use_build_context_synchronously
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //       content: const Text(
+  //         'No Internet Connection',
+  //         textAlign: TextAlign.center,
+  //       ),
+  //       behavior: SnackBarBehavior.floating,
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(10),
+  //       ),
+  //       duration: const Duration(seconds: 5),
+  //       margin: EdgeInsets.only(
+  //         // ignore: use_build_context_synchronously
+  //         bottom: MediaQuery.of(context).size.height * 0.04,
+  //         right: 15,
+  //         left: 15,
+  //       ),
+  //       backgroundColor: Colors.red,
+  //     ));
 
-      // Return an empty list when there is no internet connection
-      return [];
-    }
+  //     // Return an empty list when there is no internet connection
+  //     return [];
+  //   }
 
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? jwt = prefs.getString('jwt');
-    Map<String, dynamic> token = jsonDecode(jwt!);
-    Map<String, dynamic> body = {
-      "registrationNo": registrationNo,
-      "policyNo": 'N/A',
-      "insuranceType": 'N/A',
-      "insuredPerson": 'N/A',
-      "insurer": 'N/A',
-      "username": username,
-      "amount": amount,
-      "phoneNumber": phoneNumber,
-    };
-    var url = Uri.parse('$baseUrl/create_search_vehicle');
-    final postRequestResponse = await http.Client().post(url,
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Bearer ${token['access_token']}'
-        },
-        body: jsonEncode(body));
-    // print(postRequestResponse.body);
-    if (postRequestResponse.statusCode == 200) {
-      // var message = json.decode(postRequestResponse.body)['message'];
-      // var sellerId = json.decode(postRequestResponse.body)['id'];
+  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   final String? jwt = prefs.getString('jwt');
+  //   Map<String, dynamic> token = jsonDecode(jwt!);
+  //   Map<String, dynamic> body = {
+  //     "registrationNo": registrationNo,
+  //     "policyNo": 'N/A',
+  //     "insuranceType": 'N/A',
+  //     "insuredPerson": 'N/A',
+  //     "insurer": 'N/A',
+  //     "username": username,
+  //     "amount": amount,
+  //     "phoneNumber": phoneNumber,
+  //   };
+  //   var url = Uri.parse('$baseUrl/create_search_vehicle');
+  //   final postRequestResponse = await http.Client().post(url,
+  //       headers: {
+  //         'Content-Type': 'application/json; charset=UTF-8',
+  //         'Authorization': 'Bearer ${token['access_token']}'
+  //       },
+  //       body: jsonEncode(body));
+  //   // print(postRequestResponse.body);
+  //   if (postRequestResponse.statusCode == 200) {
+  //     // var message = json.decode(postRequestResponse.body)['message'];
+  //     // var sellerId = json.decode(postRequestResponse.body)['id'];
 
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: const Text(
-          'Search request successful. Wait to input M-PESA PIN for payment to proceed.',
-          textAlign: TextAlign.center,
-        ),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        duration: const Duration(seconds: 5),
-        margin: EdgeInsets.only(
-            // ignore: use_build_context_synchronously
-            bottom: MediaQuery.of(context).size.height * 0.04,
-            right: 10,
-            left: 10),
-        backgroundColor: const Color(0xff4c505b),
-      ));
-      // // ignore: use_build_context_synchronously
-      // Navigator.pushAndRemoveUntil(
-      //     context,
-      //     MaterialPageRoute(
-      //         builder: (context) => PaymentScreen(
-      //               sellerId: sellerId!,
-      //             )),
-      //     (route) => true);
-      // Navigator.of(context).pushReplacementNamed(SearchScreen.routeName);
-    } else if (postRequestResponse.statusCode != 200) {
-      var message = json.decode(postRequestResponse.body)['message'];
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
-          '$message',
-          textAlign: TextAlign.center,
-        ),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        duration: const Duration(seconds: 3),
-        margin: EdgeInsets.only(
-            // ignore: use_build_context_synchronously
-            bottom: MediaQuery.of(context).size.height * 0.04,
-            right: 15,
-            left: 15),
-        backgroundColor: Colors.red,
-      ));
+  //     // ignore: use_build_context_synchronously
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //       content: const Text(
+  //         'Search request successful. Wait to input M-PESA PIN for payment to proceed.',
+  //         textAlign: TextAlign.center,
+  //       ),
+  //       behavior: SnackBarBehavior.floating,
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(10),
+  //       ),
+  //       duration: const Duration(seconds: 5),
+  //       margin: EdgeInsets.only(
+  //           // ignore: use_build_context_synchronously
+  //           bottom: MediaQuery.of(context).size.height * 0.04,
+  //           right: 10,
+  //           left: 10),
+  //       backgroundColor: const Color(0xff4c505b),
+  //     ));
+  //     // // ignore: use_build_context_synchronously
+  //     // Navigator.pushAndRemoveUntil(
+  //     //     context,
+  //     //     MaterialPageRoute(
+  //     //         builder: (context) => PaymentScreen(
+  //     //               sellerId: sellerId!,
+  //     //             )),
+  //     //     (route) => true);
+  //     // Navigator.of(context).pushReplacementNamed(SearchScreen.routeName);
+  //   } else if (postRequestResponse.statusCode != 200) {
+  //     var message = json.decode(postRequestResponse.body)['message'];
+  //     // ignore: use_build_context_synchronously
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //       content: Text(
+  //         '$message',
+  //         textAlign: TextAlign.center,
+  //       ),
+  //       behavior: SnackBarBehavior.floating,
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(10),
+  //       ),
+  //       duration: const Duration(seconds: 3),
+  //       margin: EdgeInsets.only(
+  //           // ignore: use_build_context_synchronously
+  //           bottom: MediaQuery.of(context).size.height * 0.04,
+  //           right: 15,
+  //           left: 15),
+  //       backgroundColor: Colors.red,
+  //     ));
 
-      //Start a separate timer to check if 5 minutes have passed
-      Timer(const Duration(minutes: 3), () async {
-        // If 5 minutes have passed, navigate to SearchScreen
-        // SharedPreferences prefs = await SharedPreferences.getInstance();
+  //     //Start a separate timer to check if 5 minutes have passed
+  //     Timer(const Duration(minutes: 3), () async {
+  //       // If 5 minutes have passed, navigate to SearchScreen
+  //       // SharedPreferences prefs = await SharedPreferences.getInstance();
 
-        // if (mounted) {
-        //   prefs
-        //       .remove('jwt')
-        //       .then((value) => Navigator.pushAndRemoveUntil(
-        //           context,
-        //           MaterialPageRoute(builder: (context) => const SignInScreen()),
-        //           (route) => false))
-        //       .onError((error, stackTrace) =>
-        //           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        //             content: Text('$error'),
-        //           )));
-        // }
-      });
-    }
-  }
+  //       // if (mounted) {
+  //       //   prefs
+  //       //       .remove('jwt')
+  //       //       .then((value) => Navigator.pushAndRemoveUntil(
+  //       //           context,
+  //       //           MaterialPageRoute(builder: (context) => const SignInScreen()),
+  //       //           (route) => false))
+  //       //       .onError((error, stackTrace) =>
+  //       //           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //       //             content: Text('$error'),
+  //       //           )));
+  //       // }
+  //     });
+  //   }
+  // }
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../home/Home.dart';
 import '../home/home_screen.dart';
 import '../utils/validators.dart';
 
@@ -304,10 +305,8 @@ class _SignInScreenState extends State<SignInScreen>
       ));
 
       // ignore: use_build_context_synchronously
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const SearchScreen()),
-          (route) => false);
+      Navigator.pushAndRemoveUntil(context,
+          MaterialPageRoute(builder: (context) => Home()), (route) => false);
       var jsonResponse = postRequestResponse.body;
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('jwt', jsonResponse);
