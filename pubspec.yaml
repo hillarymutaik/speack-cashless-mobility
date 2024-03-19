@@ -27,10 +27,4 @@ flutter:
 
   assets:
     - assets/
-  # fonts:
-  #   - family: Montserrat
-  #     fonts:
-  #       - asset: assets/fonts/Regular.ttf
-  #   - family: Roman
-  #     fonts:
-  #       - asset: assets/fonts/Roman.ttf
+    - assets/data.json

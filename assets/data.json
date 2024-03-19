@@ -1,0 +1,88 @@
+{
+    "users": [
+      {
+        "id": 1,
+        "phoneNumber": "1234567890",
+        "username": "user1",
+        "email": "user1@example.com",
+        "fullName": "User One",
+        "password": "password1",
+        "status": "ACTIVE",
+        "role": "OWNER",
+        "createdAt": "2024-03-19T12:00:00Z",
+        "lastUpdatedAt": "2024-03-19T12:00:00Z"
+      },
+      {
+        "id": 2,
+        "phoneNumber": "9876543210",
+        "username": "user2",
+        "email": "user2@example.com",
+        "fullName": "User Two",
+        "password": "password2",
+        "status": "DORMANT",
+        "role": "DRIVER",
+        "createdAt": "2024-03-18T12:00:00Z",
+        "lastUpdatedAt": "2024-03-18T12:00:00Z"
+      }
+    ],
+    "vehicles": [
+      {
+        "id": 1,
+        "userId": 1,
+        "fleetNumber": "ABC123",
+        "numberPlate": "XYZ456",
+        "createdAt": "2024-03-19T12:00:00Z",
+        "lastUpdatedAt": "2024-03-19T12:00:00Z"
+      }
+    ],
+    "transactions": [
+      {
+        "id": 1,
+        "originatorConversationId": "conv1",
+        "driverPhone": "1234567890",
+        "resultDesc": "Success",
+        "resultCode": "0",
+        "merchantRequestId": "merch1",
+        "checkoutRequestId": "check1",
+        "amount": 50.0,
+        "balanceBefore": 100.0,
+        "balanceAfter": 150.0,
+        "serviceCharge": 1.0,
+        "mpesaReceiptNumber": "receipt1",
+        "transactionDate": "2024-03-19T12:00:00Z",
+        "clientPhoneNumber": "9876543210",
+        "clientName": "Client One",
+        "paymentStatus": "COMPLETED",
+        "fleetNumber": "ABC123",
+        "transactionType": "CREDIT",
+        "walletId": 1,
+        "createdAt": "2024-03-19T12:00:00Z",
+        "updatedAt": "2024-03-19T12:00:00Z"
+      }
+    ],
+    "wallets": [
+      {
+        "id": 1,
+        "currentBalance": 150.0,
+        "lastUpdatedAt": "2024-03-19T12:00:00Z",
+        "vehicleId": 1
+      }
+    ],
+    "fleet_numbers": [
+      {
+        "id": 1,
+        "fleetNumber": "ABC123"
+      }
+    ],
+    "security_pins": [
+      {
+        "id": 1,
+        "pin": "1234",
+        "userId": 1,
+        "numberOfTrials": 0,
+        "isLocked": false,
+        "lockExpiryDate": null
+      }
+    ]
+  }
+  

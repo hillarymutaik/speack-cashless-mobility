@@ -46,7 +46,7 @@ class _SignInScreenState extends State<SignInScreen>
             image: AssetImage('assets/log.png'), fit: BoxFit.cover),
       ),
       child: Scaffold(
-        backgroundColor: Colors.green.withOpacity(.7),
+        backgroundColor: Colors.black,
         body: Stack(
           children: [
             Container(),
@@ -73,7 +73,7 @@ class _SignInScreenState extends State<SignInScreen>
                         '\nContinue with username for sign in',
                         style: TextStyle(
                             fontSize: 16,
-                            color: Color(0xff4c505b),
+                            color: Colors.white70,
                             fontWeight: FontWeight.w800),
                       ),
                     ])),
@@ -159,13 +159,13 @@ class _SignInScreenState extends State<SignInScreen>
                               const Text(
                                 'Sign In',
                                 style: TextStyle(
-                                    color: Color(0xff4c505b),
+                                    color: Colors.white70,
                                     fontSize: 23,
                                     fontWeight: FontWeight.w700),
                               ),
                               CircleAvatar(
                                 radius: 30,
-                                backgroundColor: const Color(0xff4c505b),
+                                backgroundColor: Colors.white70,
                                 child: IconButton(
                                     color: Colors.white,
                                     onPressed: () {
@@ -190,7 +190,7 @@ class _SignInScreenState extends State<SignInScreen>
                                       }
                                     },
                                     icon: _isLoading
-                                        ? const Center(
+                                        ? Center(
                                             child: SizedBox(
                                             height: 20,
                                             width: 20,
@@ -198,13 +198,13 @@ class _SignInScreenState extends State<SignInScreen>
                                               strokeWidth: 2.5,
                                               valueColor:
                                                   AlwaysStoppedAnimation(
-                                                Colors.white,
+                                                Colors.blue.shade800,
                                               ),
                                             ),
                                           ))
-                                        : const Icon(
+                                        : Icon(
                                             Icons.arrow_forward,
-                                            color: Colors.white,
+                                            color: Colors.blue.shade800,
                                           )),
                               )
                             ],
@@ -225,11 +225,11 @@ class _SignInScreenState extends State<SignInScreen>
               right: 0,
               child: Center(
                 child: Text(
-                  'Vehicle Search',
+                  'Speack Cashless Mobility',
                   style: TextStyle(
                     fontSize: 10,
                     fontStyle: FontStyle.italic,
-                    color: Color(0xff4c505b),
+                    color: Colors.white,
                   ),
                 ),
               ),

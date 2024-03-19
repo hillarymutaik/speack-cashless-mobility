@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,8 +18,6 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  final _searchKey = GlobalKey<FormState>();
-
   bool _searchLoading = false;
   final TextEditingController _regNoController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
@@ -53,11 +52,26 @@ class _SearchScreenState extends State<SearchScreen> {
   void initState() {
     super.initState();
     account();
+    loadData();
   }
 
   Future<bool> checkNetworkConnectivity() async {
     var connectivityResult = await Connectivity().checkConnectivity();
     return connectivityResult != ConnectivityResult.none;
+  }
+
+  Map<String, dynamic> _data = {};
+
+  Future<void> loadData() async {
+    try {
+      String jsonString = await rootBundle.loadString('assets/data.json');
+      Map<String, dynamic> data = jsonDecode(jsonString);
+      setState(() {
+        _data = data;
+      });
+    } catch (e) {
+      print("Error retrieving data: $e");
+    }
   }
 
   @override
@@ -68,7 +82,7 @@ class _SearchScreenState extends State<SearchScreen> {
             image: AssetImage('assets/log.png'), fit: BoxFit.cover),
       ),
       child: Scaffold(
-        backgroundColor: Colors.green.withOpacity(.7),
+        backgroundColor: Colors.blue.withOpacity(.7),
         // drawer: const SideMenu(),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -93,240 +107,40 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             SingleChildScrollView(
               child: Container(
+                height: MediaQuery.of(context).size.height,
                 padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.18),
-                child: Form(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  key: _searchKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 35, vertical: 18),
-                        child: Text(
-                          'Enter search details below:',
-                          style: TextStyle(
-                              color: Colors.black87.withOpacity(0.5),
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700),
+                child: ListView.builder(
+                  itemCount: _data.length,
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (context, index) {
+                    String model = _data.keys.elementAt(index);
+                    List<dynamic> items = _data[model];
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            model.toUpperCase(),
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(left: 35, right: 35),
-                        child: Column(
-                          children: [
-                            // const SizedBox(
-                            //   height: 20,
-                            // ),
-                            TextFormField(
-                              style: const TextStyle(
-                                  color: Color(0xff4c505b),
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600),
-                              controller: _regNoController,
-                              validator: regNoValidator,
-                              cursorColor: Colors.red.shade900,
-                              decoration: InputDecoration(
-                                  contentPadding: const EdgeInsets.all(15),
-                                  suffixIcon: Icon(
-                                    Icons.app_registration_rounded,
-                                    color: const Color.fromARGB(255, 2, 32, 71)
-                                        .withOpacity(.6),
-                                    size: 20,
-                                  ),
-                                  fillColor: Colors.grey.shade100,
-                                  filled: true,
-                                  hintText: "Registration number",
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  )),
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            TextFormField(
-                              keyboardType: TextInputType.number,
-                              style: const TextStyle(
-                                  color: Color(0xff4c505b),
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600),
-                              obscureText: false,
-                              controller: _amountController,
-                              validator: (String? value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Amount required';
-                                }
-
-                                if (double.tryParse(value) == null) {
-                                  return 'Enter a valid number';
-                                }
-
-                                double minimumAmount =
-                                    [1, 2, 3].contains(sellerId) ? 1.0 : 450.0;
-
-                                if (double.parse(value) < minimumAmount) {
-                                  return 'Minimum amount is KSH ${minimumAmount.toStringAsFixed(2)}';
-                                }
-
-                                return null; // Validation passed
-                              },
-                              cursorColor: Colors.red.shade900,
-                              decoration: InputDecoration(
-                                fillColor: Colors.grey.shade100,
-                                filled: true,
-                                hintText: "Enter amount",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                contentPadding: const EdgeInsets.all(15),
-                                suffixIcon: Icon(
-                                  Icons.money_rounded,
-                                  color: const Color.fromARGB(255, 2, 32, 71)
-                                      .withOpacity(.6),
-                                  size: 20,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            TextFormField(
-                              keyboardType: TextInputType.number,
-                              style: const TextStyle(
-                                  color: Color(0xff4c505b),
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600),
-                              obscureText: false,
-                              controller: _phoneController,
-                              validator: phoneValidator,
-                              cursorColor: Colors.red.shade900,
-                              decoration: InputDecoration(
-                                fillColor: Colors.grey.shade100,
-                                filled: true,
-                                hintText: "M-PESA number",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                contentPadding: const EdgeInsets.all(15),
-                                suffixIcon: Icon(
-                                  Icons.phone_android_rounded,
-                                  color: const Color.fromARGB(255, 2, 32, 71)
-                                      .withOpacity(.6),
-                                  size: 20,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  'Pay',
-                                  style: TextStyle(
-                                      fontSize: 25,
-                                      color: Color(0xff4c505b),
-                                      fontWeight: FontWeight.w700),
-                                ),
-                                CircleAvatar(
-                                  radius: 30,
-                                  backgroundColor: const Color(0xff4c505b),
-                                  child: IconButton(
-                                      color: Colors.white,
-                                      onPressed: () {
-                                        if (_searchKey.currentState!
-                                            .validate()) {
-                                          setState(() {
-                                            _searchLoading = true;
-                                          });
-                                          createSearch(
-                                                  registrationNo:
-                                                      _regNoController.text,
-                                                  amount: int.parse(
-                                                      _amountController.text),
-                                                  phoneNumber:
-                                                      _phoneController.text)
-                                              .then((value) {
-                                            setState(() {
-                                              _searchLoading = false;
-                                            });
-                                          });
-                                        } else {
-                                          setState(() {
-                                            _searchLoading = false;
-                                          });
-                                        }
-                                      },
-                                      icon: _searchLoading
-                                          ? const Center(
-                                              child: SizedBox(
-                                              height: 20,
-                                              width: 20,
-                                              child: CircularProgressIndicator(
-                                                strokeWidth: 2.5,
-                                                valueColor:
-                                                    AlwaysStoppedAnimation(
-                                                  Colors.white,
-                                                ),
-                                              ),
-                                            ))
-                                          : const Icon(
-                                              Icons.arrow_forward,
-                                              color: Colors.white,
-                                            )),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * .05,
-                            ),
-                            GestureDetector(
-                                onTap: () {
-                                  // Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //         builder: (context) => PaymentScreen(
-                                  //               sellerId: sellerId!,
-                                  //             )));
-                                },
-                                // radius: 20,
-                                // backgroundColor: Colors.blue.shade900,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 5, vertical: 12),
-                                  decoration: const BoxDecoration(
-                                      color: Color(0xff4c505b),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(6),
-                                      )),
-                                  child: const Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Icon(
-                                          Icons.arrow_forward_ios_rounded,
-                                          color: Colors.transparent,
-                                        ),
-                                        Text(
-                                          'Check Payments',
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w800),
-                                        ),
-                                        Icon(
-                                          Icons.arrow_forward_ios_rounded,
-                                          color: Colors.white,
-                                        )
-                                      ]),
-                                ))
-                          ],
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          itemCount: items.length,
+                          itemBuilder: (context, idx) {
+                            return ListTile(
+                              title: Text(items[idx].toString()),
+                            );
+                          },
                         ),
-                      )
-                    ],
-                  ),
+                      ],
+                    );
+                  },
                 ),
               ),
             ),
@@ -335,7 +149,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     const EdgeInsets.symmetric(horizontal: 35, vertical: 5),
                 child: const Align(
                     alignment: Alignment.bottomCenter,
-                    child: Text('Vehicle Search',
+                    child: Text('Speack Cashless Mobility',
                         style: TextStyle(
                           fontSize: 10,
                           fontStyle: FontStyle.italic,

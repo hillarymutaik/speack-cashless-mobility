@@ -54,7 +54,7 @@ class _SplashScreenState extends State<SplashScreen> {
               image: AssetImage('assets/log.png'), fit: BoxFit.cover),
         ),
         child: Scaffold(
-          backgroundColor: Colors.green.withOpacity(.7),
+          backgroundColor: Colors.black,
           body: Center(
             child: Image.asset(
               'assets/logo.jpg',
