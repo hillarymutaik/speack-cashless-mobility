@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:speack_cashless_mobility/screens/transactions.dart';
+import 'package:speack_cashless_mobility/screens/vehicles.dart';
 
 import '../screens/fleet_screen.dart';
 import '../screens/pins.dart';
@@ -117,9 +119,9 @@ class _SearchScreenState extends State<HomeScreen> {
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 3),
+                              horizontal: 20, vertical: 18),
                           margin: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 2),
+                              horizontal: 10, vertical: 10),
                           decoration: BoxDecoration(
                               color: Colors.grey,
                               border: Border.all(
@@ -164,7 +166,7 @@ class _SearchScreenState extends State<HomeScreen> {
                     const Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
-                        'Pins',
+                        'Vehicles',
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
@@ -174,14 +176,13 @@ class _SearchScreenState extends State<HomeScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (ctx) =>
-                                      const SecurityPinsScreen()));
+                                  builder: (ctx) => VehiclesScreen()));
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 3),
+                              horizontal: 20, vertical: 18),
                           margin: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 2),
+                              horizontal: 10, vertical: 10),
                           decoration: BoxDecoration(
                               color: Colors.grey,
                               border: Border.all(
@@ -193,8 +194,9 @@ class _SearchScreenState extends State<HomeScreen> {
                             child: Row(
                               children: [
                                 const Icon(
-                                  Icons.pin,
+                                  Icons.bus_alert_rounded,
                                   color: Colors.white,
+                                  size: 35.0,
                                 ),
                                 Container(
                                   margin: const EdgeInsets.symmetric(
@@ -205,7 +207,7 @@ class _SearchScreenState extends State<HomeScreen> {
                                 ),
                                 const Expanded(
                                   child: Text(
-                                    'Pins',
+                                    'Vehicles',
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 ),
@@ -217,7 +219,180 @@ class _SearchScreenState extends State<HomeScreen> {
                               ],
                             ),
                           ),
-                        ))
+                        )),
+                    const Divider(
+                      color: Colors.black,
+                      endIndent: 5.0,
+                      indent: 5,
+                    ),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                              child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (ctx) =>
+                                                TransactionsScreen()));
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 18),
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 10),
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey,
+                                        border: Border.all(
+                                          color: Colors.transparent,
+                                        ),
+                                        borderRadius: BorderRadius.circular(8)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 6),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const Icon(
+                                            Icons.pin,
+                                            color: Colors.white,
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.symmetric(
+                                                horizontal: 5),
+                                            width: 1,
+                                            height: 24,
+                                            color: Colors.white,
+                                          ),
+                                          const Text(
+                                            'Summary',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          const Icon(
+                                            Icons.arrow_forward_ios,
+                                            size: 12,
+                                            color: Colors.white70,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ))),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                              child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (ctx) =>
+                                                const SecurityPinsScreen()));
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 18),
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 10),
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey,
+                                        border: Border.all(
+                                          color: Colors.transparent,
+                                        ),
+                                        borderRadius: BorderRadius.circular(8)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 6),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const Icon(
+                                            Icons.pin,
+                                            color: Colors.white,
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.symmetric(
+                                                horizontal: 12),
+                                            width: 1,
+                                            height: 24,
+                                            color: Colors.white,
+                                          ),
+                                          const Text(
+                                            'Pins',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          const Icon(
+                                            Icons.arrow_forward_ios,
+                                            size: 12,
+                                            color: Colors.white70,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )))
+                        ]),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'Vehicles',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (ctx) => VehiclesScreen()));
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 18),
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 10),
+                          decoration: BoxDecoration(
+                              color: Colors.grey,
+                              border: Border.all(
+                                color: Colors.transparent,
+                              ),
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.bus_alert_rounded,
+                                  color: Colors.white,
+                                  size: 35.0,
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 12),
+                                  width: 1,
+                                  height: 24,
+                                  color: Colors.white,
+                                ),
+                                const Expanded(
+                                  child: Text(
+                                    'Vehicles',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 12,
+                                  color: Colors.white70,
+                                ),
+                              ],
+                            ),
+                          ),
+                        )),
                   ])),
         ),
       ),

@@ -54,14 +54,22 @@ class _WalletsScreenState extends State<WalletScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        title: const Text('Wallet',
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.bold)),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 25),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(
-                height: 60,
-              ),
               Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
