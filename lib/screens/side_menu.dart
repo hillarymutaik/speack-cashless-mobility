@@ -132,34 +132,6 @@ class _SideMenuState extends State<SideMenu> {
                   Navigator.pop(context);
                 },
               )),
-          // Container(
-          //     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-          //     margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-          //     decoration: BoxDecoration(
-          //         color: Colors.transparent,
-          //         border: Border.all(
-          //           color: Colors.transparent,
-          //         ),
-          //         borderRadius: BorderRadius.circular(10)),
-          //     child: AccountLinkWidget(
-          //       icon: Icon(
-          //         Icons.person_2_rounded,
-          //         color: Colors.red.shade900,
-          //         // size: 30,
-          //       ),
-          //       text: const Text(
-          //         'Speack Limited',
-          //         style: TextStyle(
-          //           fontSize: 18,
-          //           color: Colors.white70,
-          //           fontWeight: FontWeight.bold,
-          //         ),
-          //       ),
-          //       onTap: (e) {
-          //         // Navigate to the '/profile' route
-          //         Navigator.pop(context);
-          //       },
-          //     )),
           Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
@@ -173,7 +145,6 @@ class _SideMenuState extends State<SideMenu> {
                 icon: Icon(
                   Icons.wallet_rounded,
                   color: Colors.red.shade900,
-                  // size: 30,
                 ),
                 text: const Text(
                   'Wallet',
