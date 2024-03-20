@@ -1,6 +1,7 @@
 // ignore_for_file: use_key_in_widget_constructors
 import 'package:flutter/material.dart';
 import '../profile/profile_screen.dart';
+import '../screens/loans/loans_screen.dart';
 import '../screens/wallet/wallet_screen.dart';
 import 'home_screen.dart';
 
@@ -15,6 +16,7 @@ class _HomeState extends State<Home> {
   int currentIndex = 0;
   final screens = [
     const HomeScreen(),
+    const LoansHomeScreen(),
     WalletScreen(),
     WalletScreen(),
     ProfileScreen()
@@ -51,6 +53,12 @@ class _HomeState extends State<Home> {
               Icons.wallet_rounded,
             ),
             label: 'Wallet',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(
+              Icons.percent_rounded,
+            ),
+            label: 'Commission',
           ),
           BottomNavigationBarItem(
             icon: ClipOval(

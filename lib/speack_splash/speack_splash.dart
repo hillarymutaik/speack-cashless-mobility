@@ -24,25 +24,23 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void _initialize() async {
-    if (!_isInit) {
-      Timer(const Duration(seconds: 2), () async {
-        final SharedPreferences prefs = await SharedPreferences.getInstance();
-        String? jwt = prefs.getString('jwt');
-        if (jwt != null) {
-          // ignore: use_build_context_synchronously
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => Home()),
-              (route) => false);
-        } else {
-          // ignore: use_build_context_synchronously
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => const SignInScreen()),
-              (route) => false);
-        }
-      });
-    }
+    // if (!_isInit) {
+    Timer(const Duration(seconds: 2), () async {
+      // final SharedPreferences prefs = await SharedPreferences.getInstance();
+      // String? jwt = prefs.getString('jwt');
+      // if (jwt != null) {
+      // ignore: use_build_context_synchronously
+      Navigator.pushAndRemoveUntil(context,
+          MaterialPageRoute(builder: (context) => Home()), (route) => false);
+      // } else {
+      //   // ignore: use_build_context_synchronously
+      // Navigator.pushAndRemoveUntil(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => const SignInScreen()),
+      //     (route) => true);
+      // }
+    });
+    // }
   }
 
   @override

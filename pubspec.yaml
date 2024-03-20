@@ -14,6 +14,8 @@ dependencies:
   shared_preferences:
   progress_indicators: ^1.0.0
   connectivity_plus:
+  image_picker: ^0.8.4+4
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

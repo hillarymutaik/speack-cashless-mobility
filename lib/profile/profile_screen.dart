@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../auth/login_screen.dart';
+import 'package:image_picker/image_picker.dart';
 
 // ignore: use_key_in_widget_constructors
 class ProfileScreen extends StatefulWidget {
@@ -12,28 +13,28 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _LocationPageState extends State<ProfileScreen> {
-  String? tokenzz = "";
-  String username = '';
-  String phone = '';
-  String fullname = '';
-  String email = '';
+  // String? tokenzz = "";
+  // String username = '';
+  // String phone = '';
+  // String fullname = '';
+  // String email = '';
 
-  void account() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    tokenzz = prefs.getString('jwt')!;
-    Map<String, dynamic> token = jsonDecode(tokenzz!);
-    setState(() {
-      username = '${token['user']['username']}';
-      phone = '${token['user']['phone']}';
-      fullname = '${token['user']['fullname']}';
-      email = '${token['user']['email']}';
-    });
-  }
+  // void account() async {
+  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   tokenzz = prefs.getString('jwt')!;
+  //   Map<String, dynamic> token = jsonDecode(tokenzz!);
+  //   setState(() {
+  //     username = '${token['user']['username']}';
+  //     phone = '${token['user']['phone']}';
+  //     fullname = '${token['user']['fullname']}';
+  //     email = '${token['user']['email']}';
+  //   });
+  // }
 
   @override
   void initState() {
     super.initState();
-    account();
+    // account();
   }
 
   // void _launchURL() async {
@@ -81,6 +82,54 @@ class _LocationPageState extends State<ProfileScreen> {
   //   }
   // }
 
+  String backgroundImage = 'assets/logo.jpg';
+  String logoImage = 'assets/logo.jpg';
+
+  // Future<void> _getBackground(ImageSource source) async {
+  //   final picker = ImagePicker();
+  //   final pickedFile = await picker.getImage(source: source);
+
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       if (source == ImageSource.camera) {
+  //         backgroundImage = pickedFile.path;
+  //       } else {
+  //         backgroundImage = pickedFile.path;
+  //       }
+  //     });
+  //   }
+  // }
+
+  // Future<void> _getLogo(ImageSource source) async {
+  //   final picker = ImagePicker();
+  //   final pickedFile = await picker.getImage(source: source);
+
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       if (source == ImageSource.camera) {
+  //         backgroundImage = pickedFile.path;
+  //       } else {
+  //         backgroundImage = pickedFile.path;
+  //       }
+  //     });
+  //   }
+  // }
+
+  Future<void> _getImage(ImageSource source, String imageType) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: source);
+
+    if (pickedFile != null) {
+      setState(() {
+        if (imageType == 'background') {
+          backgroundImage = pickedFile.path;
+        } else if (imageType == 'logo') {
+          logoImage = pickedFile.path;
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -108,30 +157,79 @@ class _LocationPageState extends State<ProfileScreen> {
               alignment: AlignmentDirectional.bottomCenter,
               children: [
                 Opacity(
-                    opacity: .5,
-                    child: Container(
-                        height: MediaQuery.of(context).size.height * .33,
-                        width: size.width,
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage('assets/logo.jpg'),
-                              fit: BoxFit.cover),
-                          borderRadius: BorderRadius.vertical(
-                              bottom: Radius.circular(10)),
-                          boxShadow: [
-                            BoxShadow(
+                  opacity: 0.8,
+                  child: GestureDetector(
+                    onTap: () {
+                      _getImage(ImageSource.gallery, 'background');
+                    },
+                    child: Stack(
+                      children: [
+                        Container(
+                          height: MediaQuery.of(context).size.height * 0.33,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage(backgroundImage),
+                              fit: BoxFit.cover,
+                            ),
+                            borderRadius: const BorderRadius.vertical(
+                                bottom: Radius.circular(10)),
+                            boxShadow: const [
+                              BoxShadow(
                                 color: Colors.white,
                                 blurRadius: 5,
-                                offset: Offset(2, 2)),
-                          ],
+                                offset: Offset(2, 2),
+                              ),
+                            ],
+                          ),
+                          margin: const EdgeInsets.only(bottom: 0),
                         ),
-                        margin: const EdgeInsets.only(bottom: 0))),
-                ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(100)),
-                  child: Image.asset(
-                    'assets/logo.jpg',
-                    fit: BoxFit.cover,
-                    height: MediaQuery.of(context).size.height * .12,
+                        Positioned(
+                          top: 5,
+                          right: 5,
+                          child: Container(
+                            margin: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.grey.withOpacity(0.5),
+                            ),
+                            child: IconButton(
+                              onPressed: () {
+                                _getImage(ImageSource.gallery, 'background');
+                              },
+                              icon: const Icon(Icons.camera_alt_rounded,
+                                  size: 20, color: Colors.grey),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    _getImage(ImageSource.gallery, 'logo');
+                  },
+                  child: Stack(
+                    alignment: AlignmentDirectional.topEnd,
+                    children: [
+                      ClipRRect(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(100)),
+                        child: Image.asset(
+                          logoImage,
+                          fit: BoxFit.cover,
+                          height: MediaQuery.of(context).size.height * 0.12,
+                        ),
+                      ),
+                      Positioned(
+                        top: 25,
+                        right: 2,
+                        child: Icon(Icons.camera_alt_rounded,
+                            size: 18,
+                            color: Colors.grey.shade200.withOpacity(0.4)),
+                      ),
+                    ],
                   ),
                 ),
               ],

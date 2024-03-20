@@ -78,13 +78,15 @@ class _SignInScreenState extends State<SignInScreen>
                       ),
                     ])),
             SingleChildScrollView(
-                child: Container(
-              padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.44),
-              child: Form(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                key: _formKey,
-                child: Column(
+              child: Container(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.44),
+                child:
+                    // Form(
+                    //   autovalidateMode: AutovalidateMode.onUserInteraction,
+                    //   key: _formKey,
+                    //   child:
+                    Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
@@ -169,25 +171,31 @@ class _SignInScreenState extends State<SignInScreen>
                                 child: IconButton(
                                     color: Colors.white,
                                     onPressed: () {
-                                      if (_formKey.currentState!.validate()) {
-                                        setState(() {
-                                          _isLoading = true;
-                                        });
-                                        loginUser(
-                                                username:
-                                                    _usernameController.text,
-                                                password:
-                                                    _passwordController.text)
-                                            .then((value) {
-                                          setState(() {
-                                            _isLoading = false;
-                                          });
-                                        });
-                                      } else {
-                                        setState(() {
-                                          _isLoading = false;
-                                        });
-                                      }
+                                      //     // ignore: use_build_context_synchronously
+                                      Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Home()),
+                                          (route) => false);
+                                      // if (_formKey.currentState!.validate()) {
+                                      //   setState(() {
+                                      //     _isLoading = true;
+                                      //   });
+                                      //   loginUser(
+                                      //           username:
+                                      //               _usernameController.text,
+                                      //           password:
+                                      //               _passwordController.text)
+                                      //       .then((value) {
+                                      //     setState(() {
+                                      //       _isLoading = false;
+                                      //     });
+                                      //   });
+                                      // } else {
+                                      //   setState(() {
+                                      //     _isLoading = false;
+                                      //   });
+                                      // }
                                     },
                                     icon: _isLoading
                                         ? Center(
@@ -218,7 +226,7 @@ class _SignInScreenState extends State<SignInScreen>
                   ],
                 ),
               ),
-            )),
+            ),
             const Positioned(
               bottom: 10,
               left: 0,
@@ -240,96 +248,96 @@ class _SignInScreenState extends State<SignInScreen>
     );
   }
 
-  Future<dynamic> loginUser({String? username, String? password}) async {
-    if (!(await checkNetworkConnectivity())) {
-      Future.delayed(const Duration(seconds: 3), () {
-        // Hide loading indicator
-        setState(() {
-          _isLoading = false;
-        });
-      });
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: const Text(
-          'No Internet Connection',
-          textAlign: TextAlign.center,
-        ),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        duration: const Duration(seconds: 5),
-        margin: EdgeInsets.only(
-          // ignore: use_build_context_synchronously
-          bottom: MediaQuery.of(context).size.height * 0.04,
-          right: 15,
-          left: 15,
-        ),
-        backgroundColor: Colors.red,
-      ));
+  // Future<dynamic> loginUser({String? username, String? password}) async {
+  //   if (!(await checkNetworkConnectivity())) {
+  //     Future.delayed(const Duration(seconds: 3), () {
+  //       // Hide loading indicator
+  //       setState(() {
+  //         _isLoading = false;
+  //       });
+  //     });
+  //     // ignore: use_build_context_synchronously
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //       content: const Text(
+  //         'No Internet Connection',
+  //         textAlign: TextAlign.center,
+  //       ),
+  //       behavior: SnackBarBehavior.floating,
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(10),
+  //       ),
+  //       duration: const Duration(seconds: 5),
+  //       margin: EdgeInsets.only(
+  //         // ignore: use_build_context_synchronously
+  //         bottom: MediaQuery.of(context).size.height * 0.04,
+  //         right: 15,
+  //         left: 15,
+  //       ),
+  //       backgroundColor: Colors.red,
+  //     ));
 
-      // Return an empty list when there is no internet connection
-      return [];
-    }
-    Map<String, dynamic> body = {"username": username, "password": password};
-    var url = Uri.parse('$baseUrl/login');
-    final postRequestResponse = await http.Client().post(url,
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(body));
-    // print(postRequestResponse.body);
-    Map<String, dynamic> singingResponse = {
-      'access_token': jsonDecode(postRequestResponse.body)['access_token']
-    };
-    if (postRequestResponse.statusCode == 200) {
-      // var message = json.decode(postRequestResponse.body)['desc'];
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: const Text(
-          'Logged in successfully',
-          textAlign: TextAlign.center,
-        ),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        duration: const Duration(seconds: 1),
-        margin: EdgeInsets.only(
-            // ignore: use_build_context_synchronously
-            bottom: MediaQuery.of(context).size.height * 0.04,
-            right: 15,
-            left: 15),
-        backgroundColor: const Color(0xff4c505b),
-      ));
+  //     // Return an empty list when there is no internet connection
+  //     return [];
+  //   }
+  //   Map<String, dynamic> body = {"username": username, "password": password};
+  //   var url = Uri.parse('$baseUrl/login');
+  //   final postRequestResponse = await http.Client().post(url,
+  //       headers: {
+  //         'Content-Type': 'application/json; charset=UTF-8',
+  //       },
+  //       body: jsonEncode(body));
+  //   // print(postRequestResponse.body);
+  //   Map<String, dynamic> singingResponse = {
+  //     'access_token': jsonDecode(postRequestResponse.body)['access_token']
+  //   };
+  //   if (postRequestResponse.statusCode == 200) {
+  //     // var message = json.decode(postRequestResponse.body)['desc'];
+  //     // ignore: use_build_context_synchronously
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //       content: const Text(
+  //         'Logged in successfully',
+  //         textAlign: TextAlign.center,
+  //       ),
+  //       behavior: SnackBarBehavior.floating,
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(10),
+  //       ),
+  //       duration: const Duration(seconds: 1),
+  //       margin: EdgeInsets.only(
+  //           // ignore: use_build_context_synchronously
+  //           bottom: MediaQuery.of(context).size.height * 0.04,
+  //           right: 15,
+  //           left: 15),
+  //       backgroundColor: const Color(0xff4c505b),
+  //     ));
 
-      // ignore: use_build_context_synchronously
-      Navigator.pushAndRemoveUntil(context,
-          MaterialPageRoute(builder: (context) => Home()), (route) => false);
-      var jsonResponse = postRequestResponse.body;
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('jwt', jsonResponse);
-      return singingResponse;
-    } else if (postRequestResponse.statusCode != 200) {
-      var message = json.decode(postRequestResponse.body)['message'];
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
-          '$message',
-          textAlign: TextAlign.center,
-        ),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        duration: const Duration(seconds: 3),
-        margin: EdgeInsets.only(
-            // ignore: use_build_context_synchronously
-            bottom: MediaQuery.of(context).size.height * 0.04,
-            right: 15,
-            left: 15),
-        backgroundColor: Colors.red,
-      ));
-    }
-  }
+  //     // ignore: use_build_context_synchronously
+  //     Navigator.pushAndRemoveUntil(context,
+  //         MaterialPageRoute(builder: (context) => Home()), (route) => false);
+  //     var jsonResponse = postRequestResponse.body;
+  //     SharedPreferences prefs = await SharedPreferences.getInstance();
+  //     prefs.setString('jwt', jsonResponse);
+  //     return singingResponse;
+  //   } else if (postRequestResponse.statusCode != 200) {
+  //     var message = json.decode(postRequestResponse.body)['message'];
+  //     // ignore: use_build_context_synchronously
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //       content: Text(
+  //         '$message',
+  //         textAlign: TextAlign.center,
+  //       ),
+  //       behavior: SnackBarBehavior.floating,
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(10),
+  //       ),
+  //       duration: const Duration(seconds: 3),
+  //       margin: EdgeInsets.only(
+  //           // ignore: use_build_context_synchronously
+  //           bottom: MediaQuery.of(context).size.height * 0.04,
+  //           right: 15,
+  //           left: 15),
+  //       backgroundColor: Colors.red,
+  //     ));
+  //   }
+  // }
 }
