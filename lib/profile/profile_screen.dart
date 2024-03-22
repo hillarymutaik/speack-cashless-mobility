@@ -1,7 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
 
 import '../auth/login_screen.dart';
 import 'package:image_picker/image_picker.dart';
@@ -34,9 +35,8 @@ class _LocationPageState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    // account();
+    _loadImages();
   }
-
   // void _launchURL() async {
   //   const url = 'https://supermetro.gopay.ke/privacy';
   //   // ignore: deprecated_member_use
@@ -81,10 +81,6 @@ class _LocationPageState extends State<ProfileScreen> {
   //     eLog(err);
   //   }
   // }
-
-  String backgroundImage = 'assets/logo.jpg';
-  String logoImage = 'assets/logo.jpg';
-
   // Future<void> _getBackground(ImageSource source) async {
   //   final picker = ImagePicker();
   //   final pickedFile = await picker.getImage(source: source);
@@ -114,6 +110,51 @@ class _LocationPageState extends State<ProfileScreen> {
   //     });
   //   }
   // }
+  String backgroundImage = 'assets/logo.jpg';
+  String logoImage = 'assets/logo.jpg';
+
+  Future<void> _loadImages() async {
+    try {
+      final file = File('image_paths.json');
+      if (await file.exists()) {
+        final jsonString = await file.readAsString();
+        final jsonMap = json.decode(jsonString);
+        setState(() {
+          backgroundImage = jsonMap['backgroundImage'];
+          logoImage = jsonMap['logoImage'];
+        });
+      }
+    } catch (e) {
+      print('Error loading images: $e');
+    }
+  }
+
+  Future<void> _saveImage(Uint8List bytes, String imageType) async {
+    final String assetsDirectory =
+        'assets/images'; // Define your assets directory
+    final String fileName =
+        imageType == 'background' ? 'background.jpg' : 'logo.jpg';
+
+    final Directory directory = Directory(assetsDirectory);
+    if (!(await directory.exists())) {
+      directory.createSync(recursive: true);
+    }
+
+    final String imagePath = '${directory.path}/$fileName';
+    final File imageFile = File(imagePath);
+
+    await imageFile.writeAsBytes(bytes);
+
+    setState(() {
+      if (imageType == 'background') {
+        backgroundImage = imagePath;
+      } else if (imageType == 'logo') {
+        logoImage = imagePath;
+      }
+    });
+
+    print('Image saved to: $imagePath');
+  }
 
   Future<void> _getImage(ImageSource source, String imageType) async {
     final picker = ImagePicker();
@@ -127,13 +168,13 @@ class _LocationPageState extends State<ProfileScreen> {
           logoImage = pickedFile.path;
         }
       });
+      final imageBytes = await pickedFile.readAsBytes();
+      await _saveImage(imageBytes, imageType); // Correct the function call
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
@@ -185,7 +226,7 @@ class _LocationPageState extends State<ProfileScreen> {
                           margin: const EdgeInsets.only(bottom: 0),
                         ),
                         Positioned(
-                          top: 5,
+                          bottom: 25,
                           right: 5,
                           child: Container(
                             margin: const EdgeInsets.all(5),
@@ -385,20 +426,20 @@ class _LocationPageState extends State<ProfileScreen> {
                           action: SnackBarAction(
                             label: 'Yes',
                             onPressed: () async {
-                              SharedPreferences prefs =
-                                  await SharedPreferences.getInstance();
-                              prefs
-                                  .remove('jwt')
-                                  .then((value) => Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const SignInScreen())))
-                                  .onError((error, stackTrace) =>
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                        content: Text('$error'),
-                                      )));
+                              // SharedPreferences prefs =
+                              //     await SharedPreferences.getInstance();
+                              // prefs
+                              //     .remove('jwt')
+                              //     .then((value) => Navigator.pushReplacement(
+                              //         context,
+                              //         MaterialPageRoute(
+                              //             builder: (context) =>
+                              //                 const SignInScreen())))
+                              //     .onError((error, stackTrace) =>
+                              //         ScaffoldMessenger.of(context)
+                              //             .showSnackBar(SnackBar(
+                              //           content: Text('$error'),
+                              //         )));
                             },
                           ),
                           margin: EdgeInsets.only(

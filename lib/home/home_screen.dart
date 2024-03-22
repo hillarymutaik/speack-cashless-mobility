@@ -33,27 +33,27 @@ class _SearchScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  String? tokenzz = "";
-  String username = '';
-  int? sellerId;
-  String fullName = '';
-  String email = '';
-  void account() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    tokenzz = prefs.getString('jwt')!;
-    Map<String, dynamic> token = jsonDecode(tokenzz!);
-    setState(() {
-      username = '${token['user']['username']}';
-      sellerId = int.parse(token['user']['id'].toString());
-      fullName = '${token['user']['fullName']}';
-      email = '${token['user']['email']}';
-    });
-  }
+  // String? tokenzz = "";
+  // String username = '';
+  // int? sellerId;
+  // String fullName = '';
+  // String email = '';
+  // void account() async {
+  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   tokenzz = prefs.getString('jwt')!;
+  //   Map<String, dynamic> token = jsonDecode(tokenzz!);
+  //   setState(() {
+  //     username = '${token['user']['username']}';
+  //     sellerId = int.parse(token['user']['id'].toString());
+  //     fullName = '${token['user']['fullName']}';
+  //     email = '${token['user']['email']}';
+  //   });
+  // }
 
   @override
   void initState() {
     super.initState();
-    account();
+    // account();
     // loadData();
   }
 

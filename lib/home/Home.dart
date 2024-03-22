@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import '../profile/profile_screen.dart';
 import '../screens/loans/loans_screen.dart';
+import '../screens/wallet/pin.dart';
 import '../screens/wallet/wallet_screen.dart';
 import 'home_screen.dart';
 
@@ -17,7 +18,7 @@ class _HomeState extends State<Home> {
   final screens = [
     const HomeScreen(),
     const LoansHomeScreen(),
-    WalletScreen(),
+    const PinScreen(),
     WalletScreen(),
     ProfileScreen()
   ];
