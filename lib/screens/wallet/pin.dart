@@ -125,8 +125,7 @@ class KeyboardKey extends StatelessWidget {
       onTap: onPressed,
       borderRadius: BorderRadius.circular(8.0),
       child: Container(
-        // height: MediaQuery.of(context).size.height * .05,
-        // width: MediaQuery.of(context).size.width * .12,
+       
         alignment: Alignment.center,
         child: Text(
           character,
