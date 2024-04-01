@@ -16,6 +16,7 @@ dependencies:
   connectivity_plus:
   image_picker: 
   path_provider: 
+  device_info: ^2.0.0
 
 dev_dependencies:
   flutter_test:

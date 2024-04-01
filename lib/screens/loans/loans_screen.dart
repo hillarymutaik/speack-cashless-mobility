@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../utils/validators.dart';
-import 'components/colors_frave.dart';
-import 'components/form_field_frave.dart';
-import 'components/text_custom.dart';
+import '../../utils/colors_frave.dart';
+import '../../utils/form_field_frave.dart';
 
 class LoansHomeScreen extends StatelessWidget {
   const LoansHomeScreen({super.key});
@@ -43,24 +42,14 @@ class LoansHomeScreen extends StatelessWidget {
                 tabs: [
                   Tab(
                       icon: Text(
-                    'Applied',
+                    'Dispersed',
                     style: TextStyle(fontFamily: 'Baloo2', fontSize: 13),
                   )),
                   Tab(
                       icon: Text(
-                    'Approved',
+                    'Rejected',
                     style: TextStyle(fontFamily: 'Baloo2', fontSize: 13),
-                  )),
-                  Tab(
-                      icon: Text(
-                    'Declined',
-                    style: TextStyle(fontFamily: 'Baloo2', fontSize: 13),
-                  )),
-                  Tab(
-                      icon: Text(
-                    'Repaid',
-                    style: TextStyle(fontFamily: 'Baloo2', fontSize: 13),
-                  )),
+                  ))
                 ],
               ),
             )),
@@ -68,8 +57,6 @@ class LoansHomeScreen extends StatelessWidget {
           children: [
             AppliedLoans(), // QueueScreen(),
             ApprovedLoans(),
-            DeclinedLoans(), //CollectedScreen(),
-            ClearedLoansScreen(),
           ],
         ),
       ),

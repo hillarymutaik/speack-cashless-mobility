@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
 const bool isDark = false;
-const String baseUrl = 'https://ntsa.gopay.ke/api/v1';
+const String baseUrl = 'http://52.23.50.252:9077/api';
 const Color backgroundColor = Colors.white;
 
 final phoneValidator = MultiValidator([
@@ -20,14 +20,15 @@ final emailValidator = MultiValidator([
 final passwordValidator = MultiValidator(
   [
     RequiredValidator(errorText: 'Password required'),
-    MinLengthValidator(6, errorText: 'Password must be at least 6 digits long'),
+    MinLengthValidator(8,
+        errorText: 'Password must be at least 8 characters long'),
   ],
 );
 
-final username = MultiValidator([
-  RequiredValidator(errorText: 'Username required'),
+final name = MultiValidator([
+  RequiredValidator(errorText: 'Name required'),
   MinLengthValidator(5, errorText: 'E.g joseph'),
-  MaxLengthValidator(10, errorText: 'Enter a valid username'),
+  MaxLengthValidator(10, errorText: 'Enter a valid name'),
 ]);
 
 final regNoValidator = MultiValidator([
@@ -46,28 +47,8 @@ String? amountValidator(String? value) {
   }
 
   if (double.parse(value) < 1) {
-    return 'Minimum amount is KSH450.00';
+    return 'Minimum amount is KSH10.00';
   }
 
   return null; // Validation passed
 }
-
-// final amountValidator = MultiValidator([
-//   RequiredValidator(errorText: 'Amount required'),
-//   CustomValidator((value) {
-//     if (value == null || value.isEmpty) {
-//       return null; // Allow empty values as it's already covered by RequiredValidator
-//     }
-//
-//     if (double.tryParse(value) == null) {
-//       return 'Enter a valid number'; // Check if the value is a valid number
-//     }
-//
-//     if (double.parse(value) < 450) {
-//       return 'Minimum amount is Ksh450';
-//     }
-//
-//     return null; // Validation passed
-//   }),
-//   MaxLengthValidator(5, errorText: 'Enter a valid amount'),
-// ]);

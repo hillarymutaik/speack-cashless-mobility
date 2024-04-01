@@ -6,11 +6,12 @@ class PinScreen extends StatefulWidget {
   const PinScreen({Key? key}) : super(key: key);
 
   @override
-  State<PinScreen> createState() => _SearchScreenState();
+  State<PinScreen> createState() => _PinScreenState();
 }
 
-class _SearchScreenState extends State<PinScreen> {
+class _PinScreenState extends State<PinScreen> {
   String enteredPin = '';
+  final String correctPin = '1234'; // Define the correct PIN here
 
   final List<String> _keyboardCharacters = [
     '1',
@@ -22,15 +23,23 @@ class _SearchScreenState extends State<PinScreen> {
     '7',
     '8',
     '9',
+    'Cancel',
     '0',
+    'Ok',
   ];
   bool pinVisible = true;
 
   List<Widget> _buildStars() {
     List<Widget> stars = [];
-    for (int i = 1; i < 5; i++) {
+    Color starColor = enteredPin == correctPin
+        ? const Color.fromARGB(255, 51, 126, 187)
+        : Colors.red;
+    for (int i = 0; i < 4; i++) {
       stars.add(
-        const Icon(Icons.star, color: Colors.green),
+        Icon(
+          Icons.star,
+          color: starColor,
+        ),
       );
     }
     return stars;
@@ -39,76 +48,96 @@ class _SearchScreenState extends State<PinScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // appBar: AppBar(
-        //   title: const Text('Password Keyboard'),
-        // ),
-        body: Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Icon(
-            Icons.lock_outline_rounded,
-            size: 60,
-            color: Colors.black,
-          ),
-          const SizedBox(height: 15.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: _buildStars(),
-          ),
-          // Visibility(
-          //   visible: pinVisible,
-          //   child: Text(
-          //     enteredPin,
-          //     style: const TextStyle(fontSize: 24.0),
-          //   ),
-          // ),
-          const SizedBox(height: 15.0),
-          Expanded(
-              child: Container(
-            padding: const EdgeInsets.all(20.0),
-            child: CustomPaint(
-              painter: GridViewDividerPainter(
-                crossAxisCount: 3,
-                mainAxisSpacing: 10.0,
-                crossAxisSpacing: 10.0,
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(18.0), // Add margin for spacing
+              decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                shape: BoxShape.circle,
+                border: Border.all(
+                    color: const Color.fromARGB(255, 51, 126, 187),
+                    width: 0.8), // Add border
               ),
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 10.0,
-                  crossAxisSpacing: 10.0,
-                  childAspectRatio: MediaQuery.of(context).size.width /
-                      (MediaQuery.of(context).size.height * 0.5),
-                ),
-                itemCount: _keyboardCharacters.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return KeyboardKey(
-                    character: _keyboardCharacters[index],
-                    onPressed: () {
-                      setState(() {
-                        enteredPin += _keyboardCharacters[index];
-                      });
-                      print('Pressed: ${_keyboardCharacters[index]}');
-                      if (enteredPin == '6095') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => WalletScreen()),
-                        );
-                      }
-                    },
-                  );
-                },
+              child: const Icon(
+                Icons.lock_outline_rounded,
+                size: 40,
+                color: Color.fromARGB(255, 51, 126, 187),
               ),
             ),
-          )),
-        ],
+            const SizedBox(height: 15.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: _buildStars(),
+            ),
+            const SizedBox(height: 15.0),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(10.0),
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    mainAxisSpacing: 10.0,
+                    crossAxisSpacing: 10.0,
+                    childAspectRatio: (MediaQuery.of(context).size.width - 10) /
+                        (MediaQuery.of(context).size.height * 0.5),
+                  ),
+                  itemCount: _keyboardCharacters.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Center(
+                        // Align items in the center of each grid cell
+                        child: KeyboardKey(
+                      character: _keyboardCharacters[index],
+                      onPressed: () {
+                        setState(() {
+                          enteredPin += _keyboardCharacters[index];
+                        });
+                        if (enteredPin == correctPin) {
+                          Future.delayed(const Duration(seconds: 1), () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => WalletScreen(),
+                              ),
+                            );
+                          });
+                        } else if (enteredPin != correctPin &&
+                            enteredPin.length == 4) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: const Center(
+                                child: Text('Incorrect PIN. Please try again.'),
+                              ),
+                              duration: const Duration(seconds: 3),
+                              behavior: SnackBarBehavior.floating,
+                              margin: const EdgeInsets.all(15.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              backgroundColor:
+                                  Colors.red[400], // Set background color
+                            ),
+                          );
+                          setState(() {
+                            enteredPin = ''; // Clear entered PIN if wrong
+                          });
+                        }
+                      },
+                    ));
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
-    ));
+    );
   }
 }
 
@@ -116,8 +145,11 @@ class KeyboardKey extends StatelessWidget {
   final String character;
   final VoidCallback onPressed;
 
-  const KeyboardKey(
-      {super.key, required this.character, required this.onPressed});
+  const KeyboardKey({
+    Key? key,
+    required this.character,
+    required this.onPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -126,56 +158,16 @@ class KeyboardKey extends StatelessWidget {
       borderRadius: BorderRadius.circular(8.0),
       child: Container(
         alignment: Alignment.center,
+        margin: const EdgeInsets.all(10.0), // Add margin for spacing
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black87, width: 0.8), // Add border
+          borderRadius: BorderRadius.circular(15.0),
+        ),
         child: Text(
           character,
-          style: const TextStyle(fontSize: 24.0),
+          style: const TextStyle(fontSize: 25.0),
         ),
       ),
     );
-  }
-}
-
-class GridViewDividerPainter extends CustomPainter {
-  final int crossAxisCount;
-  final double mainAxisSpacing;
-  final double crossAxisSpacing;
-
-  GridViewDividerPainter({
-    required this.crossAxisCount,
-    required this.mainAxisSpacing,
-    required this.crossAxisSpacing,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final double itemWidth =
-        (size.width - (crossAxisSpacing * (crossAxisCount - 1))) /
-            crossAxisCount;
-    final double itemHeight =
-        (size.height - (mainAxisSpacing * (crossAxisCount - 1))) /
-            crossAxisCount;
-
-    final Paint paint = Paint()
-      ..color = Colors.black
-      ..strokeWidth = 2.0;
-
-    // Draw horizontal lines
-    for (int i = 1; i < crossAxisCount; i++) {
-      final double y =
-          i * (itemHeight + mainAxisSpacing) - (mainAxisSpacing / 2);
-      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
-    }
-
-    // Draw vertical lines
-    for (int i = 1; i < crossAxisCount; i++) {
-      final double x =
-          i * (itemWidth + crossAxisSpacing) - (crossAxisSpacing / 2);
-      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
   }
 }

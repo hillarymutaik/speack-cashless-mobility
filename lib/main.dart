@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'auth/login_screen.dart';
 import 'home/home_screen.dart';
-import 'speack_splash/speack_splash.dart';
+import 'screens/splash/speack_splash.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

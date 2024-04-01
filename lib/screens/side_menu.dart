@@ -7,6 +7,7 @@ import 'fleet_screen.dart';
 import 'transactions.dart';
 import 'users.dart';
 import 'vehicles.dart';
+import 'wallet/pin.dart';
 import 'wallet/wallet_screen.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:get/get.dart';
@@ -156,37 +157,11 @@ class _SideMenuState extends State<SideMenu> {
                 ),
                 onTap: (e) {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (ctx) => WalletScreen()));
+                      MaterialPageRoute(builder: (ctx) => const PinScreen()));
                   // requestOTP();
                 },
               )),
-          // Container(
-          //     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-          //     margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-          //     decoration: BoxDecoration(
-          //         color: Colors.transparent,
-          //         border: Border.all(
-          //           color: Colors.transparent,
-          //         ),
-          //         borderRadius: BorderRadius.circular(10)),
-          //     child: AccountLinkWidget(
-          //       icon: Icon(
-          //         Icons.phone_android,
-          //         color: Colors.red.shade900,
-          //         // size: 30,
-          //       ),
-          //       text: const Text(
-          //         '+254727918955',
-          //         style: TextStyle(
-          //           fontSize: 18,
-          //           color: Colors.white70,
-          //           fontWeight: FontWeight.bold,
-          //         ),
-          //       ),
-          //       onTap: (e) {
-          //         Navigator.pop(context);
-          //       },
-          //     )),
+
           Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),

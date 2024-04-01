@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../auth/login_screen.dart';
-import '../home/Home.dart';
+import '../../auth/login_screen.dart';
+import '../../home/Home.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -24,23 +24,25 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void _initialize() async {
-    // if (!_isInit) {
-    Timer(const Duration(seconds: 2), () async {
-      // final SharedPreferences prefs = await SharedPreferences.getInstance();
-      // String? jwt = prefs.getString('jwt');
-      // if (jwt != null) {
-      // ignore: use_build_context_synchronously
-      Navigator.pushAndRemoveUntil(context,
-          MaterialPageRoute(builder: (context) => Home()), (route) => false);
-      // } else {
-      //   // ignore: use_build_context_synchronously
-      // Navigator.pushAndRemoveUntil(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => const SignInScreen()),
-      //     (route) => true);
-      // }
-    });
-    // }
+    if (!_isInit) {
+      Timer(const Duration(seconds: 2), () async {
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        String? jwt = prefs.getString('jwt');
+        if (jwt != null) {
+          //ignore: use_build_context_synchronously
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => Home()),
+              (route) => false);
+        } else {
+          // ignore: use_build_context_synchronously
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const SignInScreen()),
+              (route) => true);
+        }
+      });
+    }
   }
 
   @override
