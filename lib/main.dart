@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'auth/login_screen.dart';
-import 'home/home_screen.dart';
-import 'screens/splash/speack_splash.dart';
+import 'screens/splash/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,12 +21,7 @@ class SpeackCashless extends StatelessWidget {
           bodyMedium: TextStyle(fontSize: 13.0),
         ),
       ),
-      initialRoute: SplashScreen.routeName,
-      routes: {
-        SplashScreen.routeName: (_) => const SplashScreen(),
-        SignInScreen.routeName: (_) => const SignInScreen(),
-        HomeScreen.routeName: (_) => const HomeScreen(),
-      },
+      home: const SplashScreen(),
     );
   }
 }

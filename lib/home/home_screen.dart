@@ -1,19 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
+// import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:speack_cashless_mobility/screens/transactions.dart';
-import 'package:speack_cashless_mobility/screens/vehicles.dart';
 
 import '../screens/fleet_screen.dart';
-import '../screens/pins.dart';
+// import '../screens/pins.dart';
 import '../screens/side_menu.dart';
+import '../screens/transactions.dart';
+import '../screens/vehicles.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-  static const routeName = 'search-screen';
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _SearchScreenState();
@@ -57,13 +56,11 @@ class _SearchScreenState extends State<HomeScreen> {
     // loadData();
   }
 
-  Future<bool> checkNetworkConnectivity() async {
-    var connectivityResult = await Connectivity().checkConnectivity();
-    return connectivityResult != ConnectivityResult.none;
-  }
-
+  // Future<bool> checkNetworkConnectivity() async {
+  //   var connectivityResult = await Connectivity().checkConnectivity();
+  //   return connectivityResult != ConnectivityResult.none;
+  // }
   // Map<String, dynamic> _data = {};
-
   // Future<void> loadData() async {
   //   try {
   //     String jsonString = await rootBundle.loadString('assets/data.json');
@@ -78,323 +75,343 @@ class _SearchScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-            image: AssetImage('assets/log.png'), fit: BoxFit.cover),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      drawer: const SideMenu(),
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+        elevation: 0,
+        automaticallyImplyLeading: true,
+        iconTheme: const IconThemeData(color: Colors.white, size: 30),
       ),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        drawer: const SideMenu(),
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          automaticallyImplyLeading: true,
-          iconTheme: const IconThemeData(
-            color: Color.fromARGB(255, 2, 46, 100),
-          ),
-        ),
-        body: SingleChildScrollView(
-          child: Container(
-              height: MediaQuery.of(context).size.height,
-              padding:
-                  EdgeInsets.all(MediaQuery.of(context).size.height * 0.008),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        'Fleets',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+      body: SingleChildScrollView(
+        child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Stack(
+                alignment: AlignmentDirectional.bottomCenter,
+                children: [
+                  Container(
+                      height: MediaQuery.of(context).size.height * .18,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: const BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius:
+                            BorderRadius.vertical(bottom: Radius.circular(20)),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.white,
+                              blurRadius: 5,
+                              offset: Offset(2, 2)),
+                        ],
                       ),
-                    ),
-                    InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (ctx) => FleetNumbersScreen()));
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 18),
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 10),
-                          decoration: BoxDecoration(
-                              color: Colors.grey,
-                              border: Border.all(
-                                color: Colors.transparent,
+                      margin: const EdgeInsets.only(bottom: 70),
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 80),
+                        child: const Center(
+                            child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Good afternoon,',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16, // Adjust the font size as needed
+                                fontWeight:
+                                    FontWeight.bold, // Optionally, make it bold
                               ),
-                              borderRadius: BorderRadius.circular(8)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 6),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.car_crash_rounded,
-                                  color: Colors.white,
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 12),
-                                  width: 1,
-                                  height: 24,
-                                  color: Colors.white,
-                                ),
-                                const Expanded(
-                                  child: Text(
-                                    'Fleets',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                                const Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 12,
-                                  color: Colors.white70,
-                                ),
-                              ],
                             ),
-                          ),
-                        )),
-                    const Divider(
-                      color: Colors.black,
-                      endIndent: 5.0,
-                      indent: 5,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        'Vehicles',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (ctx) => VehiclesScreen()));
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 18),
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 10),
-                          decoration: BoxDecoration(
-                              color: Colors.grey,
-                              border: Border.all(
-                                color: Colors.transparent,
+                            Text(
+                              'Hillary',
+                              style: TextStyle(
+                                fontSize: 18, // Adjust the font size as needed
+                                fontWeight:
+                                    FontWeight.bold, // Optionally, make it bold
+                                color: Colors
+                                    .blue, // Optionally, change the text color
                               ),
-                              borderRadius: BorderRadius.circular(8)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 6),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.bus_alert_rounded,
-                                  color: Colors.white,
-                                  size: 35.0,
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 12),
-                                  width: 1,
-                                  height: 24,
-                                  color: Colors.white,
-                                ),
-                                const Expanded(
-                                  child: Text(
-                                    'Vehicles',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                                const Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 12,
-                                  color: Colors.white70,
-                                ),
-                              ],
                             ),
-                          ),
+                          ],
                         )),
-                    const Divider(
-                      color: Colors.black,
-                      endIndent: 5.0,
-                      indent: 5,
-                    ),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      )),
+                  InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (ctx) => FleetNumbersScreen()));
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 30),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 10),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black54,
+                                blurRadius: 5,
+                                offset: Offset(0, 0)),
+                          ],
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.car_crash_rounded,
+                                color: Colors.black,
+                                size: 35,
+                              ),
+                              Container(
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 12),
+                                width: 1,
+                                height: 24,
+                                color: Colors.black,
+                              ),
+                              const Expanded(
+                                child: Text(
+                                  'Fleets',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 20),
+                                ),
+                              ),
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                size: 20,
+                                color: Colors.black,
+                              ),
+                            ],
+                          ),
+                        ),
+                      )),
+                ],
+              ),
+              InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (ctx) => VehiclesScreen()));
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 30),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 15),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(
+                          color: Colors.transparent,
+                        ),
+                        boxShadow: const [
+                          BoxShadow(
+                              color: Colors.black54,
+                              blurRadius: 10,
+                              offset: Offset(0, 0)),
+                        ],
+                        borderRadius: BorderRadius.circular(15)),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: Row(
                         children: [
-                          Expanded(
-                              child: InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (ctx) =>
-                                                TransactionsScreen()));
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 18),
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 10),
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey,
-                                        border: Border.all(
-                                          color: Colors.transparent,
-                                        ),
-                                        borderRadius: BorderRadius.circular(8)),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 6),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Icon(
-                                            Icons.pin,
-                                            color: Colors.white,
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.symmetric(
-                                                horizontal: 5),
-                                            width: 1,
-                                            height: 24,
-                                            color: Colors.white,
-                                          ),
-                                          const Text(
-                                            'Summary',
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                          const Icon(
-                                            Icons.arrow_forward_ios,
-                                            size: 12,
-                                            color: Colors.white70,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ))),
-                          const SizedBox(
-                            width: 10,
+                          const Icon(
+                            Icons.bus_alert_rounded,
+                            color: Colors.black,
+                            size: 35.0,
                           ),
-                          Expanded(
-                              child: InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (ctx) =>
-                                                const SecurityPinsScreen()));
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 18),
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 10),
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey,
-                                        border: Border.all(
-                                          color: Colors.transparent,
-                                        ),
-                                        borderRadius: BorderRadius.circular(8)),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 6),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Icon(
-                                            Icons.pin,
-                                            color: Colors.white,
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.symmetric(
-                                                horizontal: 12),
-                                            width: 1,
-                                            height: 24,
-                                            color: Colors.white,
-                                          ),
-                                          const Text(
-                                            'Pins',
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                          const Icon(
-                                            Icons.arrow_forward_ios,
-                                            size: 12,
-                                            color: Colors.white70,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )))
-                        ]),
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        'Vehicles',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 12),
+                            width: 1,
+                            height: 24,
+                            color: Colors.black,
+                          ),
+                          const Expanded(
+                            child: Text(
+                              'Vehicles',
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 20),
+                            ),
+                          ),
+                          const Icon(
+                            Icons.arrow_forward_ios,
+                            size: 12,
+                            color: Colors.black,
+                          ),
+                        ],
                       ),
                     ),
-                    InkWell(
+                  )),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Expanded(
+                    child: InkWell(
                         onTap: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (ctx) => VehiclesScreen()));
+                                  builder: (ctx) => TransactionsScreen()));
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 18),
+                              horizontal: 16, vertical: 30),
                           margin: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 10),
+                              horizontal: 15, vertical: 15),
                           decoration: BoxDecoration(
-                              color: Colors.grey,
+                              color: Colors.white,
                               border: Border.all(
                                 color: Colors.transparent,
                               ),
-                              borderRadius: BorderRadius.circular(8)),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Colors.black54,
+                                    blurRadius: 5,
+                                    offset: Offset(0, 0)),
+                              ],
+                              borderRadius: BorderRadius.circular(15)),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 6),
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Icon(
-                                  Icons.bus_alert_rounded,
-                                  color: Colors.white,
-                                  size: 35.0,
+                                  Icons.pin,
+                                  color: Colors.black,
+                                ),
+                                Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  width: 1,
+                                  height: 24,
+                                  color: Colors.black,
+                                ),
+                                const Text(
+                                  'Summary',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                const Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 12,
+                                  color: Colors.black,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ))),
+                const SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                    child: InkWell(
+                        onTap: () {
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (ctx) =>
+                          //             const SecurityPinsScreen()));
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 30),
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 15),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                color: Colors.transparent,
+                              ),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Colors.black54,
+                                    blurRadius: 5,
+                                    offset: Offset(0, 0)),
+                              ],
+                              borderRadius: BorderRadius.circular(15)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Icon(
+                                  Icons.pin,
+                                  color: Colors.black,
                                 ),
                                 Container(
                                   margin: const EdgeInsets.symmetric(
                                       horizontal: 12),
                                   width: 1,
                                   height: 24,
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 ),
-                                const Expanded(
-                                  child: Text(
-                                    'Vehicles',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
+                                const Text(
+                                  'Pins',
+                                  style: TextStyle(color: Colors.black),
                                 ),
                                 const Icon(
                                   Icons.arrow_forward_ios,
                                   size: 12,
-                                  color: Colors.white70,
+                                  color: Colors.black,
                                 ),
                               ],
                             ),
                           ),
-                        )),
-                  ])),
-        ),
+                        )))
+              ]),
+              InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (ctx) => VehiclesScreen()));
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 30),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 15),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(
+                          color: Colors.transparent,
+                        ),
+                        boxShadow: const [
+                          BoxShadow(
+                              color: Colors.black54,
+                              blurRadius: 5,
+                              offset: Offset(0, 0)),
+                        ],
+                        borderRadius: BorderRadius.circular(15)),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.bus_alert_rounded,
+                            color: Colors.black,
+                            size: 35.0,
+                          ),
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 12),
+                            width: 1,
+                            height: 24,
+                            color: Colors.black,
+                          ),
+                          const Expanded(
+                            child: Text(
+                              'Transactions History',
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 20),
+                            ),
+                          ),
+                          const Icon(
+                            Icons.arrow_forward_ios,
+                            size: 12,
+                            color: Colors.black,
+                          ),
+                        ],
+                      ),
+                    ),
+                  )),
+            ])),
       ),
     );
   }

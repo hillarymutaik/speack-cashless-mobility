@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'wallet_screen.dart';
 
 class PinScreen extends StatefulWidget {
-  const PinScreen({Key? key}) : super(key: key);
+  const PinScreen({super.key});
 
   @override
   State<PinScreen> createState() => _PinScreenState();
@@ -51,47 +51,44 @@ class _PinScreenState extends State<PinScreen> {
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
+        padding: const EdgeInsets.only(left: 16.0, right: 16, top: 60),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
               alignment: Alignment.center,
-              padding: const EdgeInsets.all(18.0), // Add margin for spacing
+              padding: const EdgeInsets.all(30.0), // Add margin for spacing
               decoration: BoxDecoration(
                 color: Colors.grey.shade100,
                 shape: BoxShape.circle,
-                border: Border.all(
-                    color: const Color.fromARGB(255, 51, 126, 187),
-                    width: 0.8), // Add border
+                border:
+                    Border.all(color: Colors.blue, width: 0.5), // Add border
               ),
               child: const Icon(
                 Icons.lock_outline_rounded,
                 size: 40,
-                color: Color.fromARGB(255, 51, 126, 187),
+                color: Colors.blue,
               ),
             ),
-            const SizedBox(height: 15.0),
+            const SizedBox(height: 10.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: _buildStars(),
             ),
-            const SizedBox(height: 15.0),
             Expanded(
               child: Container(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(5.0),
                 child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
-                    mainAxisSpacing: 10.0,
-                    crossAxisSpacing: 10.0,
+                    mainAxisSpacing: 5.0,
+                    crossAxisSpacing: 15.0,
                     childAspectRatio: (MediaQuery.of(context).size.width - 10) /
                         (MediaQuery.of(context).size.height * 0.5),
                   ),
                   itemCount: _keyboardCharacters.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Center(
-                        // Align items in the center of each grid cell
                         child: KeyboardKey(
                       character: _keyboardCharacters[index],
                       onPressed: () {
@@ -158,14 +155,15 @@ class KeyboardKey extends StatelessWidget {
       borderRadius: BorderRadius.circular(8.0),
       child: Container(
         alignment: Alignment.center,
-        margin: const EdgeInsets.all(10.0), // Add margin for spacing
+        margin: const EdgeInsets.symmetric(
+            horizontal: 6.0, vertical: 10), // Add margin for spacing
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.black87, width: 0.8), // Add border
+          border: Border.all(color: Colors.blue, width: 0.5), // Add border
           borderRadius: BorderRadius.circular(15.0),
         ),
         child: Text(
           character,
-          style: const TextStyle(fontSize: 25.0),
+          style: const TextStyle(fontSize: 20.0),
         ),
       ),
     );

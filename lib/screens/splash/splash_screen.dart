@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison, use_build_context_synchronously
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -7,9 +9,8 @@ import '../../auth/login_screen.dart';
 import '../../home/Home.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
-  static const routeName = 'splash-screen';
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
@@ -28,14 +29,14 @@ class _SplashScreenState extends State<SplashScreen> {
       Timer(const Duration(seconds: 2), () async {
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         String? jwt = prefs.getString('jwt');
+        // String? jwt =
+        // "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiT1dORVIifV0sInN1YiI6IjI1NDcyNzkxODk1NSIsImlzcyI6Imh0dHBzOi8vc3BlYWNrLmNvLmtlIiwiaWF0IjoxNzEyMjEyNTIzLCJleHAiOjE3MTIyOTg5MjN9.BSNxf3BsVrhkT4Z90BT27kAnvvzT1gHQkgWNcoDlu7M";
         if (jwt != null) {
-          //ignore: use_build_context_synchronously
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => Home()),
               (route) => false);
         } else {
-          // ignore: use_build_context_synchronously
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => const SignInScreen()),

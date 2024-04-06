@@ -8,10 +8,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/validators.dart';
 import 'login_screen.dart';
 import 'package:flutter/services.dart';
-import 'package:device_info/device_info.dart';
-import 'dart:io';
+// import 'package:device_info/device_info.dart';
+// import 'dart:io';
 
 class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
+
   @override
   State<SignUpScreen> createState() => _SignupPageState();
 }
@@ -48,22 +50,22 @@ class _SignupPageState extends State<SignUpScreen> {
       String? phone,
       String? email,
       String? password}) async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    late String deviceId;
+    // DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    // late String deviceId;
 
-    try {
-      if (Platform.isAndroid) {
-        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-        deviceId = androidInfo.androidId; // Use androidId as device ID
-      } else if (Platform.isIOS) {
-        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-        deviceId =
-            iosInfo.identifierForVendor; // Use identifierForVendor as device ID
-      }
-    } on PlatformException {
-      deviceId = 'Failed to get device ID.';
-    }
-    print('Device ID: $deviceId');
+    // try {
+    //   if (Platform.isAndroid) {
+    //     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    //     deviceId = androidInfo.androidId; // Use androidId as device ID
+    //   } else if (Platform.isIOS) {
+    //     IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+    //     deviceId =
+    //         iosInfo.identifierForVendor; // Use identifierForVendor as device ID
+    //   }
+    // } on PlatformException {
+    //   deviceId = 'Failed to get device ID.';
+    // }
+    // print('Device ID: $deviceId');
 
     Map<String, dynamic> body = {
       "fullName": fullname,
@@ -71,7 +73,7 @@ class _SignupPageState extends State<SignUpScreen> {
       "email": email,
       "password": password,
       "role": "OWNER",
-      "deviceId": deviceId
+      "deviceId": 'deviceId123'
     };
 
     var url = Uri.parse('$baseUrl/auth/register');
@@ -83,9 +85,9 @@ class _SignupPageState extends State<SignUpScreen> {
     Map<String, dynamic> singingResponse = {
       'message': jsonDecode(postRequestResponse.body)['message'],
       'success': jsonDecode(postRequestResponse.body)['success'],
-      'access_token': jsonDecode(postRequestResponse.body)['access_token'],
+      'access_token': jsonDecode(postRequestResponse.body)['data']['token'],
     };
-    // print(postRequestResponse);
+    print(postRequestResponse);
     if (postRequestResponse.statusCode == 200) {
       var jsonResponse = postRequestResponse.body;
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -94,9 +96,16 @@ class _SignupPageState extends State<SignUpScreen> {
     return singingResponse;
   }
 
-  TextEditingController _conPassController = TextEditingController();
+  final TextEditingController _conPassController = TextEditingController();
   // ignore: prefer_typing_uninitialized_variables
   var confirmPass;
+  late final _signUpFormKey;
+
+  @override
+  void initState() {
+    super.initState();
+    _signUpFormKey = GlobalKey<FormState>();
+  }
 
   @override
   void dispose() {
@@ -112,7 +121,7 @@ class _SignupPageState extends State<SignUpScreen> {
   bool agree = false;
 
   void _launchURL() async {
-    const url = 'https://supermetro.gopay.ke/privacy';
+    // const url = 'http://52.23.50.252:9077/privacy';
     // ignore: deprecated_member_use
     // if (await canLaunch(url)) {
     //   // ignore: deprecated_member_use
@@ -123,7 +132,7 @@ class _SignupPageState extends State<SignUpScreen> {
   }
 
   void _launchTerms() async {
-    const url = 'https://supermetro.gopay.ke/terms';
+    // const url = 'http://52.23.50.252:9077/terms';
     // // ignore: deprecated_member_use
     // if (await canLaunch(url)) {
     //   // ignore: deprecated_member_use
@@ -173,22 +182,6 @@ class _SignupPageState extends State<SignUpScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            // Container(
-                            //     padding: const EdgeInsets.all(15),
-                            //     decoration: BoxDecoration(
-                            //         color: Colors.white,
-                            //         borderRadius: BorderRadius.circular(15),
-                            //         boxShadow: [
-                            //           BoxShadow(
-                            //               color: Colors.grey.shade200,
-                            //               blurRadius: 30.0,
-                            //               offset: const Offset(2, 2))
-                            //         ]),
-                            //     child: Column(
-                            //         crossAxisAlignment: CrossAxisAlignment.center,
-                            //         mainAxisAlignment:
-                            //             MainAxisAlignment.spaceEvenly,
-                            //         children: <Widget>[
                             TextFormField(
                               controller: fullname,
                               decoration: InputDecoration(
@@ -222,10 +215,11 @@ class _SignupPageState extends State<SignUpScreen> {
                                 ),
                               ),
                               validator: (value) {
-                                if (value!.isEmpty)
+                                if (value!.isEmpty) {
                                   return "Name cannot be empty";
-                                else
+                                } else {
                                   return null;
+                                }
                               },
                             ),
                             SizedBox(
@@ -449,12 +443,17 @@ class _SignupPageState extends State<SignUpScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Container(
+                                  height: 30,
+                                  width: 30,
                                   decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(color: Colors.blue),
+                                    shape: BoxShape.rectangle,
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: Colors.blue,
+                                    ),
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                    padding: const EdgeInsets.all(0.5),
                                     child: Checkbox(
                                       checkColor: Colors.blue,
                                       focusColor: Colors.blue.shade300,

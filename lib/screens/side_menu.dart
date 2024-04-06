@@ -1,14 +1,12 @@
 // import 'package:driver_app/blocs/auth/auth_bloc.dart';
 // import 'package:driver_app/cubit/guest/guest_cubit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
+import 'commission/commission_screen.dart';
 import 'fleet_screen.dart';
-import 'transactions.dart';
 import 'users.dart';
 import 'vehicles.dart';
-import 'wallet/pin.dart';
-import 'wallet/wallet_screen.dart';
+import 'wallet/wallet_pin.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:get/get.dart';
 
@@ -16,8 +14,8 @@ import 'wallet/wallet_screen.dart';
 
 class SideMenu extends StatefulWidget {
   const SideMenu({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<SideMenu> createState() => _SideMenuState();
@@ -117,7 +115,7 @@ class _SideMenuState extends State<SideMenu> {
               child: AccountLinkWidget(
                 icon: Icon(
                   Icons.dashboard,
-                  color: Colors.red.shade900,
+                  color: Colors.blue.shade200,
                   // size: 30,
                 ),
                 text: const Text(
@@ -145,7 +143,7 @@ class _SideMenuState extends State<SideMenu> {
               child: AccountLinkWidget(
                 icon: Icon(
                   Icons.wallet_rounded,
-                  color: Colors.red.shade900,
+                  color: Colors.blue.shade200,
                 ),
                 text: const Text(
                   'Wallet',
@@ -173,8 +171,36 @@ class _SideMenuState extends State<SideMenu> {
                   borderRadius: BorderRadius.circular(10)),
               child: AccountLinkWidget(
                 icon: Icon(
+                  Icons.percent_rounded,
+                  color: Colors.blue.shade200,
+                ),
+                text: const Text(
+                  'Commission',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white70,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onTap: (e) {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (ctx) => CommissionScreen()));
+                  // requestOTP();
+                },
+              )),
+          Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  border: Border.all(
+                    color: Colors.transparent,
+                  ),
+                  borderRadius: BorderRadius.circular(10)),
+              child: AccountLinkWidget(
+                icon: Icon(
                   Icons.people_alt_rounded,
-                  color: Colors.red.shade900,
+                  color: Colors.blue.shade200,
                   // size: 30,
                 ),
                 text: const Text(
@@ -202,7 +228,7 @@ class _SideMenuState extends State<SideMenu> {
               child: AccountLinkWidget(
                 icon: Icon(
                   Icons.motorcycle_rounded,
-                  color: Colors.red.shade900,
+                  color: Colors.blue.shade200,
                   // size: 30,
                 ),
                 text: const Text(
@@ -230,7 +256,7 @@ class _SideMenuState extends State<SideMenu> {
               child: AccountLinkWidget(
                 icon: Icon(
                   Icons.bus_alert_rounded,
-                  color: Colors.red.shade900,
+                  color: Colors.blue.shade200,
                   // size: 30,
                 ),
                 text: const Text(
@@ -249,7 +275,7 @@ class _SideMenuState extends State<SideMenu> {
                 },
               )),
           SizedBox(
-            height: MediaQuery.of(context).size.height * .12,
+            height: MediaQuery.of(context).size.height * .07,
           ),
           const Divider(
             color: Colors.white,
@@ -274,7 +300,7 @@ class _SideMenuState extends State<SideMenu> {
             child: AccountLinkWidget(
               icon: const Icon(
                 Icons.logout,
-                color: Colors.redAccent,
+                color: Colors.red,
                 // size: 30,
               ),
               text: const Text('Logout',
@@ -437,15 +463,15 @@ class AccountLinkWidget extends StatelessWidget {
               margin: const EdgeInsets.symmetric(horizontal: 12),
               width: 1,
               height: 24,
-              color: Colors.white,
+              color: Colors.blue.shade200,
             ),
             Expanded(
               child: text,
             ),
-            const Icon(
+            Icon(
               Icons.arrow_forward_ios,
               size: 12,
-              color: Colors.white70,
+              color: Colors.blue.shade200,
             ),
           ],
         ),

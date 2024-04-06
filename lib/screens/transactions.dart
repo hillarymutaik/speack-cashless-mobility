@@ -43,7 +43,19 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Transactions'),
+        backgroundColor: Colors.blue,
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.white),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(10.0),
+            bottomRight: Radius.circular(10.0),
+          ),
+        ),
+        title: const Text(
+          'Transactions',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: _transactionsData.isEmpty
           ? const Center(child: CircularProgressIndicator())

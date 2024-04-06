@@ -36,7 +36,19 @@ class _FleetNumbersScreenState extends State<FleetNumbersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Fleet Numbers'),
+        backgroundColor: Colors.blue,
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.white),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(10.0),
+            bottomRight: Radius.circular(10.0),
+          ),
+        ),
+        title: const Text(
+          'Fleet Numbers',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: _fleetNumbersData.isEmpty
           ? const Center(child: CircularProgressIndicator())

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../auth/login_screen.dart';
-import 'package:image_picker/image_picker.dart';
+// import 'package:image_picker/image_picker.dart';
 
 // ignore: use_key_in_widget_constructors
 class ProfileScreen extends StatefulWidget {
@@ -156,22 +156,22 @@ class _LocationPageState extends State<ProfileScreen> {
     print('Image saved to: $imagePath');
   }
 
-  Future<void> _getImage(ImageSource source, String imageType) async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: source);
+  // Future<void> _getImage(ImageSource source, String imageType) async {
+  //   final picker = ImagePicker();
+  //   final pickedFile = await picker.getImage(source: source);
 
-    if (pickedFile != null) {
-      setState(() {
-        if (imageType == 'background') {
-          backgroundImage = pickedFile.path;
-        } else if (imageType == 'logo') {
-          logoImage = pickedFile.path;
-        }
-      });
-      final imageBytes = await pickedFile.readAsBytes();
-      await _saveImage(imageBytes, imageType); // Correct the function call
-    }
-  }
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       if (imageType == 'background') {
+  //         backgroundImage = pickedFile.path;
+  //       } else if (imageType == 'logo') {
+  //         logoImage = pickedFile.path;
+  //       }
+  //     });
+  //     final imageBytes = await pickedFile.readAsBytes();
+  //     await _saveImage(imageBytes, imageType); // Correct the function call
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -201,7 +201,7 @@ class _LocationPageState extends State<ProfileScreen> {
                   opacity: 0.8,
                   child: GestureDetector(
                     onTap: () {
-                      _getImage(ImageSource.gallery, 'background');
+                      // _getImage(ImageSource.gallery, 'background');
                     },
                     child: Stack(
                       children: [
@@ -236,7 +236,7 @@ class _LocationPageState extends State<ProfileScreen> {
                             ),
                             child: IconButton(
                               onPressed: () {
-                                _getImage(ImageSource.gallery, 'background');
+                                // _getImage(ImageSource.gallery, 'background');
                               },
                               icon: const Icon(Icons.camera_alt_rounded,
                                   size: 20, color: Colors.grey),
@@ -249,7 +249,7 @@ class _LocationPageState extends State<ProfileScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    _getImage(ImageSource.gallery, 'logo');
+                    // _getImage(ImageSource.gallery, 'logo');
                   },
                   child: Stack(
                     alignment: AlignmentDirectional.topEnd,

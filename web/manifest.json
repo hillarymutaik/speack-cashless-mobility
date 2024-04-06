@@ -1,6 +1,6 @@
 {
-    "name": "speack_cashless_mobility",
-    "short_name": "speack_cashless_mobility",
+    "name": "speack_cashless",
+    "short_name": "speack_cashless",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

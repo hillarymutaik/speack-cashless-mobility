@@ -42,7 +42,19 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Vehicles'),
+        backgroundColor: Colors.blue,
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: const Text(
+          'Vehicles',
+          style: TextStyle(color: Colors.white),
+        ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(10.0),
+            bottomRight: Radius.circular(10.0),
+          ),
+        ),
       ),
       body: _vehicleData.isEmpty
           ? const Center(child: CircularProgressIndicator())

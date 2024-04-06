@@ -23,10 +23,10 @@ class FormFieldFrave extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
-      style: TextStyle(
+      style: const TextStyle(
         fontFamily: 'Roboto',
         fontSize: 13,
-        color: const Color.fromARGB(255, 1, 40, 99),
+        color: Color.fromARGB(255, 1, 40, 99),
       ),
       obscureText: isPassword,
       maxLines: maxLine,
@@ -40,7 +40,7 @@ class FormFieldFrave extends StatelessWidget {
             borderSide: BorderSide(width: .25, color: Colors.grey)),
         contentPadding: const EdgeInsets.only(left: 15.0),
         hintText: hintText,
-        hintStyle: TextStyle(
+        hintStyle: const TextStyle(
             fontFamily: 'Roboto', color: Colors.black54, fontSize: 12),
       ),
       validator: validator,
