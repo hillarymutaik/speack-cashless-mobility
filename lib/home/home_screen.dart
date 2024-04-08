@@ -19,7 +19,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<HomeScreen> {
-  // bool _searchLoading = false;
   final TextEditingController _regNoController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -32,28 +31,22 @@ class _SearchScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  // String? tokenzz = "";
-  // String username = '';
-  // int? sellerId;
-  // String fullName = '';
-  // String email = '';
-  // void account() async {
-  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   tokenzz = prefs.getString('jwt')!;
-  //   Map<String, dynamic> token = jsonDecode(tokenzz!);
-  //   setState(() {
-  //     username = '${token['user']['username']}';
-  //     sellerId = int.parse(token['user']['id'].toString());
-  //     fullName = '${token['user']['fullName']}';
-  //     email = '${token['user']['email']}';
-  //   });
-  // }
+  String? tokenzz = '';
+  String fullname = '';
+
+  void account() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    tokenzz = prefs.getString('jwt')!;
+    Map<String, dynamic> token = jsonDecode(tokenzz!);
+    setState(() {
+      fullname = '${token['data']['user']['fullName']}';
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    // account();
-    // loadData();
+    account();
   }
 
   // Future<bool> checkNetworkConnectivity() async {
@@ -72,6 +65,17 @@ class _SearchScreenState extends State<HomeScreen> {
   //     print("Error retrieving data: $e");
   //   }
   // }
+
+  String _getGreetingMessage() {
+    var hour = DateTime.now().hour;
+    if (hour < 12) {
+      return 'Good morning,';
+    } else if (hour < 17) {
+      return 'Good afternoon,';
+    } else {
+      return 'Good evening,';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,30 +110,31 @@ class _SearchScreenState extends State<HomeScreen> {
                               offset: Offset(2, 2)),
                         ],
                       ),
-                      margin: const EdgeInsets.only(bottom: 70),
+                      margin: const EdgeInsets.only(bottom: 65),
                       child: Container(
                         margin: const EdgeInsets.only(bottom: 80),
-                        child: const Center(
+                        child: Center(
                             child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              'Good afternoon,',
+                              _getGreetingMessage(),
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 16, // Adjust the font size as needed
-                                fontWeight:
-                                    FontWeight.bold, // Optionally, make it bold
+                                fontSize: 15, // Adjust the font size as needed
+                                fontWeight: FontWeight
+                                    .normal, // Optionally, make it bold
                               ),
                             ),
                             Text(
-                              'Hillary',
+                              '$fullname',
                               style: TextStyle(
-                                fontSize: 18, // Adjust the font size as needed
+                                fontSize: 16, // Adjust the font size as needed
                                 fontWeight:
                                     FontWeight.bold, // Optionally, make it bold
+                                fontStyle: FontStyle.italic,
                                 color: Colors
-                                    .blue, // Optionally, change the text color
+                                    .white70, // Optionally, change the text color
                               ),
                             ),
                           ],

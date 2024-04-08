@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously, prefer_interpolation_to_compose_strings, duplicate_ignore, prefer_typing_uninitialized_variables, implicit_call_tearoffs
-
 import 'dart:convert';
 
 // import 'package:connectivity_plus/connectivity_plus.dart';
@@ -14,22 +12,23 @@ import 'register_screen.dart';
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
 
-  // static const routeName = 'signin-screen';
-
   @override
   State createState() => _SignInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
-  bool loadingCollect = false;
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
+
+  @override
+  _SignInScreenState createState() => _SignInScreenState();
+}
+
+class _SignInScreenState extends State<SignInScreen>
+    with SingleTickerProviderStateMixin {
   final _loginKey = GlobalKey<FormState>();
+
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  @override
-  void initState() {
-    // applyCubit = context.read<MainCubit>();
-    super.initState();
-  }
 
   @override
   void dispose() {
@@ -38,8 +37,6 @@ class _SignInScreenState extends State<SignInScreen> {
     super.dispose();
   }
 
-// class _SignInScreenState extends State<SignInScreen>
-//     with SingleTickerProviderStateMixin {
   bool _isLoading = false;
 
   bool seepwd = true;
@@ -51,234 +48,275 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
         backgroundColor: Colors.black,
-        body: Container(
-            height: screenSize.height,
-            width: screenSize.width,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-            child: Form(
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              key: _loginKey,
-              child: SingleChildScrollView(
+        body: SingleChildScrollView(
+            child: Container(
+                height: size.height,
+                width: size.width,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Center(
-                        child: SizedBox(
-                            height: 250,
-                            child: Image.asset(
-                              'assets/logo.jpg',
-                              fit: BoxFit.fitWidth,
-                            ))),
-                    const Text(
-                      'Welcome Back,\n',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 22),
-                    ),
-                    Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 0, vertical: 5),
-                        child: const Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '\nContinue with phone number for sign in',
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white70,
-                                    fontWeight: FontWeight.w800),
-                              ),
-                            ])),
-                    Container(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 5, vertical: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            TextFormField(
-                              keyboardType: TextInputType.number,
-                              style: const TextStyle(
-                                  color: Color(0xff4c505b),
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600),
-                              controller: _usernameController,
-                              validator: phoneValidator,
-                              cursorColor: Colors.red.shade900,
-                              decoration: InputDecoration(
-                                  fillColor: Colors.grey.shade100,
-                                  filled: true,
-                                  hintText: "Phone number",
-                                  // contentPadding: EdgeInsets.symmetric(
-                                  //   horizontal: 15,
-                                  // ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  )),
-                            ),
-                            const SizedBox(
-                              height: 16,
-                            ),
-                            TextFormField(
-                              keyboardType: TextInputType.text,
-                              style: const TextStyle(
-                                  color: Color(0xff4c505b),
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600),
-                              obscureText: seepwd,
-                              controller: _passwordController,
-                              validator: passwordValidator,
-                              cursorColor: Colors.red.shade900,
-                              decoration: InputDecoration(
-                                fillColor: Colors.grey.shade100,
-                                filled: true,
-                                hintText: "Password",
-                                // contentPadding: EdgeInsets.symmetric(
-                                //     horizontal: 15, vertical: 2),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        height: size.height * 0.3,
+                        width: size.height * 0.25,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            image: DecorationImage(
+                                image: AssetImage(
+                                  'assets/logo.jpg',
                                 ),
-                                suffixIcon: IconButton(
-                                  color: const Color.fromARGB(255, 2, 32, 71)
-                                      .withOpacity(.6),
-                                  icon: Icon(
-                                    seepwd
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
-                                    size: 20,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      seepwd = !seepwd;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 25,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                fit: BoxFit.cover)),
+                      ),
+                      Container(
+                        height: size.height * 0.025,
+                      ),
+                      const Text(
+                        'Welcome Back,\n',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 22),
+                      ),
+                      Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 0, vertical: 5),
+                          child: const Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Sign In',
+                                Text(
+                                  'Continue with phone number for sign in',
                                   style: TextStyle(
-                                      color: Colors.lightBlue,
-                                      fontSize: 23,
-                                      fontWeight: FontWeight.w700),
+                                      fontSize: 16,
+                                      color: Colors.white70,
+                                      fontWeight: FontWeight.w800),
                                 ),
-                                CircleAvatar(
-                                  radius: 26,
-                                  backgroundColor: Colors.white,
-                                  child: IconButton(
-                                      color: Colors.white,
-                                      onPressed: () {
-                                        if (_loginKey.currentState!
-                                            .validate()) {
-                                          setState(() {
-                                            _isLoading = true;
-                                          });
-                                          loginUser(
-                                                  username:
-                                                      _usernameController.text,
-                                                  password:
-                                                      _passwordController.text)
-                                              .then((value) {
+                              ])),
+                      Form(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        key: _loginKey,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 0.0, horizontal: 15),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 15, horizontal: 15),
+                                  decoration: BoxDecoration(
+                                      color: Colors.black,
+                                      borderRadius: BorderRadius.circular(15),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: Colors.black54,
+                                            blurRadius: 35.0,
+                                            offset: Offset(0, 0))
+                                      ]),
+                                  child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        TextFormField(
+                                          keyboardType: TextInputType.number,
+                                          style: const TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 71, 178, 228),
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600),
+                                          controller: _usernameController,
+                                          validator: phoneValidator,
+                                          cursorColor: Colors.blue.shade900,
+                                          decoration: InputDecoration(
+                                              fillColor: Colors.grey.shade100,
+                                              filled: true,
+                                              hintText: "Phone number",
+                                              contentPadding: EdgeInsets.all(
+                                                15,
+                                              ),
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              )),
+                                        ),
+                                        const SizedBox(
+                                          height: 16,
+                                        ),
+                                        TextFormField(
+                                          keyboardType: TextInputType.text,
+                                          style: const TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 71, 178, 228),
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600),
+                                          obscureText: seepwd,
+                                          controller: _passwordController,
+                                          validator: passwordValidator,
+                                          cursorColor: Colors.blue.shade900,
+                                          decoration: InputDecoration(
+                                            fillColor: Colors.grey.shade100,
+                                            filled: true,
+                                            hintText: "Password",
+                                            contentPadding: EdgeInsets.all(
+                                              15,
+                                            ),
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            suffixIcon: IconButton(
+                                              color: const Color.fromARGB(
+                                                      255, 2, 32, 71)
+                                                  .withOpacity(.6),
+                                              icon: Icon(
+                                                seepwd
+                                                    ? Icons.visibility_off
+                                                    : Icons.visibility,
+                                                size: 20,
+                                              ),
+                                              onPressed: () {
+                                                setState(() {
+                                                  seepwd = !seepwd;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ])),
+                              Container(
+                                height: size.height * 0.025,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    'Sign In',
+                                    style: TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 71, 178, 228),
+                                        fontSize: 23,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  CircleAvatar(
+                                    radius: 26,
+                                    backgroundColor: Colors.white,
+                                    child: IconButton(
+                                        color: Colors.white,
+                                        onPressed: () {
+                                          if (_loginKey.currentState!
+                                              .validate()) {
+                                            setState(() {
+                                              _isLoading = true;
+                                            });
+                                            loginUser(
+                                                    username:
+                                                        _usernameController
+                                                            .text,
+                                                    password:
+                                                        _passwordController
+                                                            .text)
+                                                .then((value) {
+                                              setState(() {
+                                                _isLoading = false;
+                                              });
+                                              Navigator.pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Home()),
+                                                  (route) => false);
+                                            });
+                                          } else {
                                             setState(() {
                                               _isLoading = false;
                                             });
-                                            Navigator.pushAndRemoveUntil(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        Home()),
-                                                (route) => false);
-                                          });
-                                        } else {
-                                          setState(() {
-                                            _isLoading = false;
-                                          });
-                                        }
-                                      },
-                                      icon: _isLoading
-                                          ? const Center(
-                                              child: SizedBox(
-                                              height: 20,
-                                              width: 20,
-                                              child: CircularProgressIndicator(
-                                                strokeWidth: 2.5,
-                                                valueColor:
-                                                    AlwaysStoppedAnimation(
-                                                  Colors.lightBlue,
+                                          }
+                                        },
+                                        icon: _isLoading
+                                            ? const Center(
+                                                child: SizedBox(
+                                                height: 20,
+                                                width: 20,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  strokeWidth: 2.5,
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation(
+                                                    Colors.blue,
+                                                  ),
                                                 ),
-                                              ),
-                                            ))
-                                          : const Icon(
-                                              Icons.arrow_forward,
-                                              color: Colors.lightBlue,
-                                            )),
-                                )
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 80,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text(
-                                  "Don't have an account ?",
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontFamily: 'Baloo2',
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => SignUpScreen()),
-                                    );
-                                  },
-                                  child: const Text(
-                                    "Register",
+                                              ))
+                                            : const Icon(
+                                                Icons.arrow_forward,
+                                                color: Colors.blue,
+                                              )),
+                                  )
+                                ],
+                              ),
+                              Container(
+                                height: size.height * 0.05,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    "Don't have an account ?",
                                     style: TextStyle(
-                                        decoration: TextDecoration.underline,
-                                        fontSize: 16,
+                                        fontSize: 15,
                                         fontFamily: 'Baloo2',
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.lightBlue),
+                                        color: Colors.white),
                                   ),
-                                )
-                              ],
-                            ),
-                          ],
-                        )),
-                    const Center(
-                      child: Text(
-                        'Speack Cashless Mobility',
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontStyle: FontStyle.italic,
-                          color: Colors.white70,
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                SignUpScreen()),
+                                      );
+                                    },
+                                    child: const Text(
+                                      "Register",
+                                      style: TextStyle(
+                                          decoration: TextDecoration.underline,
+                                          fontSize: 16,
+                                          fontFamily: 'Baloo2',
+                                          fontWeight: FontWeight.bold,
+                                          color: Color.fromARGB(
+                                              255, 71, 178, 228)),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Container(
+                                height: size.height * 0.05,
+                              ),
+                              const Center(
+                                child: Text(
+                                  'Speack Cashless Mobility',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontStyle: FontStyle.italic,
+                                    color: Colors.white70,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            )));
+                      )
+                    ]))));
   }
 
-  Future<void> loginUser({String? username, String? password}) async {
+  Future<dynamic> loginUser({String? username, String? password}) async {
     setState(() {
       _isLoading = true;
     });
@@ -320,7 +358,11 @@ class _SignInScreenState extends State<SignInScreen> {
       headers: {'Content-Type': 'application/json; charset=UTF-8'},
       body: jsonEncode(body),
     );
+    // print(postRequestResponse.body);
 
+    Map<String, dynamic> singingResponse = {
+      'token': jsonDecode(postRequestResponse.body)['token'],
+    };
     if (postRequestResponse.statusCode == 200) {
       var jsonResponse = json.decode(postRequestResponse.body);
       var message = jsonResponse['data']['user']['fullName'];
@@ -328,7 +370,7 @@ class _SignInScreenState extends State<SignInScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            '$message you\'re logged in successfully',
+            '$message, you are logged in successfully',
             textAlign: TextAlign.center,
           ),
           behavior: SnackBarBehavior.floating,
@@ -341,18 +383,19 @@ class _SignInScreenState extends State<SignInScreen> {
             right: 15,
             left: 15,
           ),
-          backgroundColor: const Color(0xff4c505b),
+          backgroundColor: Color.fromARGB(255, 1, 145, 56),
         ),
       );
+
+      var jsonResponses = postRequestResponse.body;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('jwt', jsonResponses);
 
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => Home()),
         (route) => false,
       );
-
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('jwt', jsonResponse['data']['token']);
     } else {
       var message = json.decode(postRequestResponse.body)['message'];
 
@@ -375,10 +418,10 @@ class _SignInScreenState extends State<SignInScreen> {
           backgroundColor: Colors.red,
         ),
       );
+      setState(() {
+        _isLoading = false;
+      });
     }
-
-    setState(() {
-      _isLoading = false;
-    });
+    return singingResponse;
   }
 }

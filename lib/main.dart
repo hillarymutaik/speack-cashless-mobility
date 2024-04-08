@@ -18,10 +18,10 @@ class SpeackCashless extends StatelessWidget {
         fontFamily: 'Montserrat',
         textTheme: const TextTheme(
           bodyLarge: TextStyle(fontSize: 13.0),
-          bodyMedium: TextStyle(fontSize: 13.0),
+          bodyMedium: TextStyle(fontSize: 12.0),
         ),
       ),
-      home: const SplashScreen(),
+      home: SplashScreen(),
     );
   }
 }

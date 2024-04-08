@@ -1,19 +1,20 @@
 name: speack_cashless_mobility
 version: 1.0.0+1
+publish_to: none
 
 environment:
-  sdk: '>=3.2.6 <4.0.0'
+  sdk: '>=2.19.0 <4.0.0'
 dependencies:
   flutter:
     sdk: flutter
+  intl: any
+  shared_preferences: any
+  form_field_validator: any
+  http: any 
+  progress_indicators: any
+  url_launcher: any
 
-  cupertino_icons: ^1.0.2
-  form_field_validator: ^1.1.0
-  intl:
-  http:
-  shared_preferences:
-  progress_indicators: ^1.0.0
-  connectivity_plus:
+  # connectivity_plus:
   # image_picker: 
   # path_provider: 
   # device_info: ^2.0.0
@@ -21,14 +22,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-  flutter_lints: ^2.0.0
-
-
 flutter:
-
   uses-material-design: true
-
   assets:
     - assets/
     - assets/data.json

@@ -6,19 +6,19 @@ import '../screens/wallet/wallet_pin.dart';
 import 'home_screen.dart';
 
 class Home extends StatefulWidget {
+  const Home({super.key});
+
   @override
   State createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
   bool isLoading = false;
-
   int currentIndex = 0;
   final screens = [
-    const HomeScreen(),
+    HomeScreen(),
     const LoansHomeScreen(),
     const PinScreen(),
-    // WalletScreen(),
     ProfileScreen()
   ];
 

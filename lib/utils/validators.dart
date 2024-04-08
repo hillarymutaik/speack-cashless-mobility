@@ -25,18 +25,17 @@ final passwordValidator = MultiValidator(
   ],
 );
 
+final pinValidator = MultiValidator(
+  [
+    RequiredValidator(errorText: 'PIN required'),
+    MinLengthValidator(4, errorText: 'PIN must be at least 4 characters long'),
+  ],
+);
 final name = MultiValidator([
   RequiredValidator(errorText: 'Name required'),
   MinLengthValidator(5, errorText: 'E.g joseph'),
   MaxLengthValidator(10, errorText: 'Enter a valid name'),
 ]);
-
-final regNoValidator = MultiValidator([
-  RequiredValidator(errorText: 'Registration number required'),
-  MinLengthValidator(7, errorText: 'E.g Kxx123x, KMxx123x'),
-  MaxLengthValidator(8, errorText: 'Enter a valid registration number'),
-]);
-
 String? amountValidator(String? value) {
   if (value == null || value.isEmpty) {
     return 'Amount required';

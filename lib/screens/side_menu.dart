@@ -1,7 +1,11 @@
 // import 'package:driver_app/blocs/auth/auth_bloc.dart';
 // import 'package:driver_app/cubit/guest/guest_cubit.dart';
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../auth/login_screen.dart';
 import 'commission/commission_screen.dart';
 import 'fleet_screen.dart';
 import 'users.dart';
@@ -22,22 +26,24 @@ class SideMenu extends StatefulWidget {
 }
 
 class _SideMenuState extends State<SideMenu> {
-  String username = '';
-  String phone = '';
-  String fullname = '';
-  String email = '';
-  String? token;
+  String? tokenzz;
+  String? fullname;
+  String? email;
+
+  void account() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    tokenzz = prefs.getString('jwt')!;
+    Map<String, dynamic> token = jsonDecode(tokenzz!);
+    setState(() {
+      fullname = '${token['data']['user']['fullName']}';
+      email = '${token['data']['user']['email']}';
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    // final authState = context.read<AuthBloc>().state;
-    // username = authState.user?.username ?? '';
-    // phone = authState.user?.phone ?? '';
-    // fullname = authState.user?.fullname ?? '';
-    // email = authState.user?.email ?? '';
-    // final auth = context.read<AuthBloc>().state;
-    // token = auth.token;
+    account();
   }
 
   @override
@@ -47,22 +53,21 @@ class _SideMenuState extends State<SideMenu> {
       child: ListView(
         children: [
           UserAccountsDrawerHeader(
-            // accountName: Container(
-            //     padding:
-            //         const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            //     margin: const EdgeInsets.symmetric(horizontal: 90, vertical: 5),
-            //     decoration: BoxDecoration(
-            //         color: Colors.white70.withOpacity(.1),
-            //         border: Border.all(color: Colors.transparent),
-            //         borderRadius: BorderRadius.circular(8)),
-            //     child: const Text(
-            //       'Speack',
-            //       style: TextStyle(
-            //         fontSize: 16,
-            //         color: Colors.white,
-            //         fontWeight: FontWeight.bold,
-            //       ),
-            //     )),
+            accountName: Container(
+                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.symmetric(horizontal: 75, vertical: 5),
+                decoration: BoxDecoration(
+                    color: Colors.white70.withOpacity(.1),
+                    border: Border.all(color: Colors.transparent),
+                    borderRadius: BorderRadius.circular(8)),
+                child: Text(
+                  '$fullname',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )),
             accountEmail: Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
@@ -74,12 +79,12 @@ class _SideMenuState extends State<SideMenu> {
                       color: Colors.transparent,
                     ),
                     borderRadius: BorderRadius.circular(8)),
-                child: const Text(
-                  'Speack Limited',
+                child: Text(
+                  '$email',
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 14,
                     color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.normal,
                   ),
                 )),
             currentAccountPicture: CircleAvatar(
@@ -98,10 +103,9 @@ class _SideMenuState extends State<SideMenu> {
             decoration: const BoxDecoration(
               color: Colors.black87,
             ),
-            accountName: null,
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height * .025,
+            height: MediaQuery.of(context).size.height * .01,
           ),
           Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
@@ -156,7 +160,6 @@ class _SideMenuState extends State<SideMenu> {
                 onTap: (e) {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (ctx) => const PinScreen()));
-                  // requestOTP();
                 },
               )),
 
@@ -327,9 +330,9 @@ class _SideMenuState extends State<SideMenu> {
                               const Text(
                                 "Are you sure to logout?",
                                 style: TextStyle(
-                                    color: Color.fromARGB(255, 128, 65, 100),
+                                    color: Colors.black,
                                     fontSize: 18.0,
-                                    fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.normal),
                               ),
                               Row(
                                 mainAxisAlignment:
@@ -341,10 +344,6 @@ class _SideMenuState extends State<SideMenu> {
                                       Navigator.of(context).pop();
                                     },
                                     child: Container(
-                                      // height: MediaQuery.of(context)
-                                      //         .size
-                                      //         .height *
-                                      //     0.045,
                                       width: MediaQuery.of(context).size.width,
                                       margin: EdgeInsets.all(
                                         MediaQuery.of(context).size.height *
@@ -352,8 +351,8 @@ class _SideMenuState extends State<SideMenu> {
                                       ),
                                       padding: const EdgeInsets.all(6),
                                       decoration: BoxDecoration(
-                                          color: Colors.redAccent.withOpacity(
-                                              0.8), //Get.theme.primaryColor,
+                                          color:
+                                              Colors.redAccent.withOpacity(0.6),
                                           border: Border.all(
                                             color: Colors.grey.withOpacity(0.2),
                                           ),
@@ -377,15 +376,24 @@ class _SideMenuState extends State<SideMenu> {
                                   Expanded(
                                     child: GestureDetector(
                                       onTap: () async {
-                                        // context
-                                        //     .read<GuestCubit>()
-                                        //     .signOut();
+                                        SharedPreferences prefs =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        prefs
+                                            .remove('jwt')
+                                            .then((value) =>
+                                                Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const SignInScreen())))
+                                            .onError((error, stackTrace) =>
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                  content: Text('$error'),
+                                                )));
                                       },
                                       child: Container(
-                                        // height: MediaQuery.of(context)
-                                        //         .size
-                                        //         .height *
-                                        //     0.045,
                                         width:
                                             MediaQuery.of(context).size.width,
                                         margin: EdgeInsets.all(
@@ -394,11 +402,8 @@ class _SideMenuState extends State<SideMenu> {
                                         ),
                                         padding: const EdgeInsets.all(6),
                                         decoration: BoxDecoration(
-                                            color: const Color.fromARGB(
-                                                255,
-                                                128,
-                                                65,
-                                                100), //Get.theme.primaryColor,
+                                            color: Colors
+                                                .blue, //Get.theme.primaryColor,
                                             border: Border.all(
                                               color:
                                                   Colors.grey.withOpacity(0.2),
@@ -406,12 +411,12 @@ class _SideMenuState extends State<SideMenu> {
                                             borderRadius:
                                                 BorderRadius.circular(6)),
                                         child: const Center(
-                                          child: Text("Logout",
+                                          child: Text("Yes",
                                               maxLines: 2,
                                               softWrap: false,
                                               overflow: TextOverflow.fade,
                                               style: TextStyle(
-                                                  fontSize: 15,
+                                                  fontSize: 18,
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.white)),
                                         ),
@@ -427,8 +432,6 @@ class _SideMenuState extends State<SideMenu> {
                     });
               },
             ),
-            //   );
-            // },
           ),
         ],
       ),

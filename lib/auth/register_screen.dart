@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../utils/validators.dart';
 import 'login_screen.dart';
 import 'package:flutter/services.dart';
@@ -23,7 +24,7 @@ class _SignupPageState extends State<SignUpScreen> {
   bool seepwd = true;
   bool seeconpwd = true;
 
-  final _formkey = GlobalKey<FormState>();
+  final _signUpFormKey = GlobalKey<FormState>();
   var jsonResponses;
   bool isLoading = false;
   late ScaffoldMessengerState scaffoldMessenger;
@@ -34,7 +35,7 @@ class _SignupPageState extends State<SignUpScreen> {
   TextEditingController password = TextEditingController();
 
   moveToLogin(BuildContext context) async {
-    if (_formkey.currentState!.validate()) {
+    if (_signUpFormKey.currentState!.validate()) {
       setState(() {
         changebutton = true;
       });
@@ -99,12 +100,10 @@ class _SignupPageState extends State<SignUpScreen> {
   final TextEditingController _conPassController = TextEditingController();
   // ignore: prefer_typing_uninitialized_variables
   var confirmPass;
-  late final _signUpFormKey;
 
   @override
   void initState() {
     super.initState();
-    _signUpFormKey = GlobalKey<FormState>();
   }
 
   @override
@@ -121,25 +120,25 @@ class _SignupPageState extends State<SignUpScreen> {
   bool agree = false;
 
   void _launchURL() async {
-    // const url = 'http://52.23.50.252:9077/privacy';
-    // ignore: deprecated_member_use
-    // if (await canLaunch(url)) {
-    //   // ignore: deprecated_member_use
-    //   await launch(url);
-    // } else {
-    //   throw 'Could not launch $url';
-    // }
+    const url = 'http://52.23.50.252:9077/privacy';
+    //ignore: deprecated_member_use
+    if (await canLaunch(url)) {
+      // ignore: deprecated_member_use
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   void _launchTerms() async {
-    // const url = 'http://52.23.50.252:9077/terms';
-    // // ignore: deprecated_member_use
-    // if (await canLaunch(url)) {
-    //   // ignore: deprecated_member_use
-    //   await launch(url);
-    // } else {
-    //   throw 'Could not launch $url';
-    // }
+    const url = 'http://52.23.50.252:9077/terms';
+    // ignore: deprecated_member_use
+    if (await canLaunch(url)) {
+      // ignore: deprecated_member_use
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override
@@ -149,7 +148,7 @@ class _SignupPageState extends State<SignUpScreen> {
         backgroundColor: Colors.black,
         body: SingleChildScrollView(
           child: Form(
-            key: _formkey,
+            key: _signUpFormKey,
             child: SizedBox(
               height: size.height,
               width: size.width,
@@ -523,7 +522,7 @@ class _SignupPageState extends State<SignUpScreen> {
                                 child: ElevatedButton(
                                   onPressed: agree
                                       ? () async {
-                                          if (_formkey.currentState!
+                                          if (_signUpFormKey.currentState!
                                               .validate()) {
                                             setState(() {
                                               isLoading = true;

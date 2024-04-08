@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 import '../../home/Home.dart';
 import '../../utils/colors_frave.dart';
@@ -26,8 +27,10 @@ class LoanData {
 
   factory LoanData.fromJson(Map<String, dynamic> json) {
     return LoanData(
-      loanLimit: json['amount'] != null ? json['amount'].toDouble() : 0.0,
-      balance: json['balance'] != null ? json['balance'].toDouble() : 0.0,
+      loanLimit:
+          json['amount'].toString() != null ? json['amount'].toDouble() : 0.0,
+      balance:
+          json['balance'].toString() != null ? json['balance'].toDouble() : 0.0,
       reviewedAt: json['reviewedAt'] ?? '',
       lastUpdatedAt: json['lastUpdatedAt'] ?? '',
     );
@@ -111,13 +114,15 @@ class _AppliedLoansState extends State<AppliedLoans> {
   late List<Loan> loans = [];
 
   Future<void> fetchLoans() async {
-    final http.Response response = await http.get(
-        Uri.parse('http://52.23.50.252:9077/api/loans/applications'),
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiT1dORVIifV0sInN1YiI6IjI1NDcyNzkxODk1NSIsImlzcyI6Imh0dHBzOi8vc3BlYWNrLmNvLmtlIiwiaWF0IjoxNzEyMjEyNTIzLCJleHAiOjE3MTIyOTg5MjN9.BSNxf3BsVrhkT4Z90BT27kAnvvzT1gHQkgWNcoDlu7M'
-        });
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? jwt = prefs.getString('jwt');
+    Map<String, dynamic> token = jsonDecode(jwt!);
+
+    final http.Response response =
+        await http.get(Uri.parse('$baseUrl/loans/applications'), headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer ${token['data']['token']}'
+    });
     print("Loans::: ${response.body}");
 
     if (response.statusCode == 200) {
@@ -131,16 +136,19 @@ class _AppliedLoansState extends State<AppliedLoans> {
   }
 
   Future<void> _fetchLoanData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? jwt = prefs.getString('jwt');
+    Map<String, dynamic> token = jsonDecode(jwt!);
     setState(() {
-      dataLoading = true; // Set dataLoading flag to true before fetching data
+      dataLoading = true;
     });
 
-    final http.Response response = await http
-        .get(Uri.parse('http://52.23.50.252:9077/api/loans/limit'), headers: {
+    final http.Response response =
+        await http.get(Uri.parse('$baseUrl/loans/limit'), headers: {
       'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiT1dORVIifV0sInN1YiI6IjI1NDcyNzkxODk1NSIsImlzcyI6Imh0dHBzOi8vc3BlYWNrLmNvLmtlIiwiaWF0IjoxNzEyMjEyNTIzLCJleHAiOjE3MTIyOTg5MjN9.BSNxf3BsVrhkT4Z90BT27kAnvvzT1gHQkgWNcoDlu7M'
+      'Authorization': 'Bearer ${token['data']['token']}'
     });
+    print("Token::: ${token['data']['token']}");
     print("Limit::: ${response.body}");
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
@@ -239,8 +247,6 @@ class _AppliedLoansState extends State<AppliedLoans> {
                                     child: Container(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 10, vertical: 15),
-                                        // width: 40,
-                                        // height: 50,
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(12),
@@ -250,11 +256,11 @@ class _AppliedLoansState extends State<AppliedLoans> {
                                             child: dataLoading
                                                 ? const Center(
                                                     child: SizedBox(
-                                                    height: 20,
-                                                    width: 20,
+                                                    height: 15,
+                                                    width: 15,
                                                     child:
                                                         CircularProgressIndicator(
-                                                      strokeWidth: 2.5,
+                                                      strokeWidth: 2,
                                                       valueColor:
                                                           AlwaysStoppedAnimation(
                                                         Colors.lightBlue,
@@ -557,12 +563,12 @@ class _AppliedLoansState extends State<AppliedLoans> {
               //   ),
               // )
 
-              loans != null
-                  ? SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                          final loan = loans[index];
-                          return Padding(
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    final loan = loans[index];
+                    return (loans.length < 0)
+                        ? Padding(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 15,
                               vertical: 3,
@@ -673,22 +679,17 @@ class _AppliedLoansState extends State<AppliedLoans> {
                                 ],
                               ),
                             ),
+                          )
+                        : Center(
+                            child: Text(
+                              "There are no applications.",
+                              style: TextStyle(color: Colors.black),
+                            ),
                           );
-                        },
-                        childCount: loans.length,
-                      ),
-                    )
-                  : const Center(
-                      child: SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2.5,
-                        valueColor: AlwaysStoppedAnimation(
-                          Colors.lightBlue,
-                        ),
-                      ),
-                    ))
+                  },
+                  childCount: loans.length,
+                ),
+              )
             ],
           )
           // }
@@ -895,9 +896,9 @@ class _ApplyLoanSheetState extends State<ApplyLoanSheet> {
   }
 
   Future<void> appyLoans({required double amount}) async {
-    setState(() {
-      _applyLoading = true;
-    });
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? jwt = prefs.getString('jwt');
+    Map<String, dynamic> token = jsonDecode(jwt!);
 
     // if (!(await checkNetworkConnectivity())) {
     //   _scaffoldKey.currentState?.showSnackBar(
@@ -926,9 +927,6 @@ class _ApplyLoanSheetState extends State<ApplyLoanSheet> {
     //   return;
     // }
 
-    // final SharedPreferences prefs = await SharedPreferences.getInstance();
-    // final String? jwt = prefs.getString('jwt');
-    // Map<String, dynamic> token = jsonDecode(jwt!);
     Map<String, String> body = {
       'amount': amount.toString(),
     };
@@ -937,8 +935,7 @@ class _ApplyLoanSheetState extends State<ApplyLoanSheet> {
     final postRequestResponse = await http.post(url,
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiT1dORVIifV0sInN1YiI6IjI1NDcyNzkxODk1NSIsImlzcyI6Imh0dHBzOi8vc3BlYWNrLmNvLmtlIiwiaWF0IjoxNzEyMjEyNTIzLCJleHAiOjE3MTIyOTg5MjN9.BSNxf3BsVrhkT4Z90BT27kAnvvzT1gHQkgWNcoDlu7M'
+          'Authorization': 'Bearer ${token['data']['token']}'
         },
         body: jsonEncode(body));
     print(postRequestResponse.body);
@@ -946,12 +943,7 @@ class _ApplyLoanSheetState extends State<ApplyLoanSheet> {
     if (postRequestResponse.statusCode == 200) {
       var jsonResponse = json.decode(postRequestResponse.body);
       var message = jsonResponse['desc'];
-// {
-//   "code": "string",
-//   "status": "string",
-//   "desc": "string",
-//   "transactionRefId": "string"
-// }
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -1202,14 +1194,14 @@ class _ApprovedScreenState extends State<RejectedLoans> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Name: name}',
+                                    'Name: name',
                                     style: TextStyle(
                                         color: ColorsFrave.primaryColor,
                                         fontFamily: 'Baloo2',
                                         fontSize: 15),
                                   ),
                                   Text(
-                                    'Member No: member_number}',
+                                    'Member No: member_number',
                                     style: TextStyle(
                                         color: ColorsFrave.primaryColor,
                                         fontFamily: 'Baloo2',
@@ -1220,7 +1212,7 @@ class _ApprovedScreenState extends State<RejectedLoans> {
                               height: 5,
                             ),
                             Text(
-                              'Amount(KSH): .amount}',
+                              'Amount(KSH): .amount',
                               style: TextStyle(
                                   color: ColorsFrave.primaryColor,
                                   fontFamily: 'Baloo2',
@@ -1230,7 +1222,7 @@ class _ApprovedScreenState extends State<RejectedLoans> {
                               height: 5,
                             ),
                             Text(
-                              'Purpose: description}',
+                              'Purpose: description',
                               style: TextStyle(
                                   color: ColorsFrave.primaryColor,
                                   fontFamily: 'Baloo2',

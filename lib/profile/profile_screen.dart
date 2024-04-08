@@ -3,8 +3,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:speack_cashless_mobility/utils/validators.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../auth/login_screen.dart';
+import 'change_pin.dart';
 // import 'package:image_picker/image_picker.dart';
 
 // ignore: use_key_in_widget_constructors
@@ -14,73 +19,56 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _LocationPageState extends State<ProfileScreen> {
-  // String? tokenzz = "";
-  // String username = '';
-  // String phone = '';
-  // String fullname = '';
-  // String email = '';
+  String? tokenzz;
+  String? username;
+  String? phone;
+  String? fullname;
+  String? email;
+  String? status;
 
-  // void account() async {
-  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   tokenzz = prefs.getString('jwt')!;
-  //   Map<String, dynamic> token = jsonDecode(tokenzz!);
-  //   setState(() {
-  //     username = '${token['user']['username']}';
-  //     phone = '${token['user']['phone']}';
-  //     fullname = '${token['user']['fullname']}';
-  //     email = '${token['user']['email']}';
-  //   });
-  // }
+  void account() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    tokenzz = prefs.getString('jwt')!;
+    Map<String, dynamic> token = jsonDecode(tokenzz!);
+    print(token);
+    setState(() {
+      username = '${token['data']['user']['username']}';
+      phone = '${token['data']['user']['phoneNumber']}';
+      fullname = '${token['data']['user']['fullName']}';
+      email = '${token['data']['user']['email']}';
+      status = '${token['data']['user']['status']}';
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     _loadImages();
+    account();
   }
-  // void _launchURL() async {
-  //   const url = 'https://supermetro.gopay.ke/privacy';
-  //   // ignore: deprecated_member_use
-  //   if (await canLaunch(url)) {
-  //     // ignore: deprecated_member_use
-  //     await launch(url);
-  //   } else {
-  //     throw 'Could not launch $url';
-  //   }
-  // }
 
-  // void _launchTerms() async {
-  //   const url = 'https://supermetro.gopay.ke/terms';
-  //   // ignore: deprecated_member_use
-  //   if (await canLaunch(url)) {
-  //     // ignore: deprecated_member_use
-  //     await launch(url);
-  //   } else {
-  //     throw 'Could not launch $url';
-  //   }
-  // }
+  void _launchURL() async {
+    const url = 'http://52.23.50.252:9077/api/privacy';
+    // ignore: deprecated_member_use
+    if (await canLaunch(url)) {
+      // ignore: deprecated_member_use
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
-  // void listenChatChannel() {
-  //   LaravelEcho.instance.private('trip.${994}').listen('.trip.started', (e) {
-  //     if (e is PusherEvent) {
-  //       if (e.data != null) {
-  //         vLog(jsonDecode(e.data!));
-  //         //_handleNewMessage(jsonDecode(e.data!));
-  //       } else {
-  //         vLog('There is no data');
-  //       }
-  //     }
-  //   }).error((err) {
-  //     eLog(err);
-  //   });
-  // }
+  void _launchTerms() async {
+    const url = 'http://52.23.50.252:9077/api/terms';
+    // ignore: deprecated_member_use
+    if (await canLaunch(url)) {
+      // ignore: deprecated_member_use
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
-  // void leaveChatChannel() {
-  //   try {
-  //     LaravelEcho.instance.leave('trip.994');
-  //   } catch (err) {
-  //     eLog(err);
-  //   }
-  // }
   // Future<void> _getBackground(ImageSource source) async {
   //   final picker = ImagePicker();
   //   final pickedFile = await picker.getImage(source: source);
@@ -189,6 +177,15 @@ class _LocationPageState extends State<ProfileScreen> {
               )),
           centerTitle: false,
           automaticallyImplyLeading: false,
+          actions: [
+            Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: Text("$status",
+                    style: TextStyle(
+                      fontSize: 8,
+                      color: Colors.lightGreenAccent.shade200,
+                    ))),
+          ],
         ),
         body: SingleChildScrollView(
             child: Column(
@@ -291,8 +288,8 @@ class _LocationPageState extends State<ProfileScreen> {
                       Icons.person_outline,
                       color: Colors.blueGrey,
                     ),
-                    text: const Text(
-                      'Speack Limited',
+                    text: Text(
+                      '$fullname',
                       style: TextStyle(
                         fontSize: 15,
                         color: Colors.black,
@@ -306,8 +303,8 @@ class _LocationPageState extends State<ProfileScreen> {
                       Icons.phone,
                       color: Colors.blueGrey,
                     ),
-                    text: const Text(
-                      '+254727918955',
+                    text: Text(
+                      '$phone',
                       style: TextStyle(
                         fontSize: 13,
                         color: Colors.black,
@@ -321,8 +318,8 @@ class _LocationPageState extends State<ProfileScreen> {
                       Icons.email,
                       color: Colors.blueGrey,
                     ),
-                    text: const Text(
-                      'speacklimited@gmail.com',
+                    text: Text(
+                      '$email',
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.black,
@@ -334,6 +331,53 @@ class _LocationPageState extends State<ProfileScreen> {
                 ],
               ),
             ),
+            Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                decoration: BoxDecoration(
+                    color: Colors.transparent.withOpacity(.1),
+                    borderRadius: BorderRadius.circular(8)),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (ctx) => ChangePasswordScreen()));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.pin_rounded,
+                          color: Colors.blueGrey,
+                        ),
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 12),
+                          width: 1,
+                          height: 24,
+                          color: Colors.grey.withOpacity(0.8),
+                        ),
+                        Expanded(
+                          child: const Text(
+                            'Change Wallet Pin',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                        const Icon(
+                          Icons.edit_rounded,
+                          size: 12,
+                          color: Colors.blueGrey,
+                        ),
+                      ],
+                    ),
+                  ),
+                )),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
@@ -426,20 +470,20 @@ class _LocationPageState extends State<ProfileScreen> {
                           action: SnackBarAction(
                             label: 'Yes',
                             onPressed: () async {
-                              // SharedPreferences prefs =
-                              //     await SharedPreferences.getInstance();
-                              // prefs
-                              //     .remove('jwt')
-                              //     .then((value) => Navigator.pushReplacement(
-                              //         context,
-                              //         MaterialPageRoute(
-                              //             builder: (context) =>
-                              //                 const SignInScreen())))
-                              //     .onError((error, stackTrace) =>
-                              //         ScaffoldMessenger.of(context)
-                              //             .showSnackBar(SnackBar(
-                              //           content: Text('$error'),
-                              //         )));
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              prefs
+                                  .remove('jwt')
+                                  .then((value) => Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const SignInScreen())))
+                                  .onError((error, stackTrace) =>
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                        content: Text('$error'),
+                                      )));
                             },
                           ),
                           margin: EdgeInsets.only(
