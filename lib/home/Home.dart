@@ -30,9 +30,9 @@ class _HomeState extends State<Home> {
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.white,
         elevation: 15,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: Colors.lightBlueAccent,
         unselectedItemColor:
-            const Color.fromARGB(255, 2, 46, 99).withOpacity(0.8),
+            const Color.fromARGB(255, 2, 46, 99).withOpacity(0.6),
         currentIndex: currentIndex,
         onTap: (index) => setState(() => currentIndex = index),
         items: [
@@ -60,7 +60,7 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(
             icon: ClipOval(
               child: Image.asset(
-                'assets/logo.jpg', // Replace 'assets/profile_image.png' with your image path
+                'assets/logo.jpg',
                 width: 30,
                 height: 30,
                 fit: BoxFit.fill,

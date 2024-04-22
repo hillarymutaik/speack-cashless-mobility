@@ -1,5 +1,4 @@
-// ignore_for_file: use_key_in_widget_constructors
-
+// ignore_for_file: use_key_in_widget_constructors, unused_field, unused_element
 import 'dart:convert';
 
 // import 'package:connectivity_plus/connectivity_plus.dart';
@@ -7,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-import '../../utils/validators.dart';
 import '../transactions.dart';
 
 class CommissionScreen extends StatefulWidget {
@@ -36,7 +34,7 @@ class _CommissionScreenState extends State<CommissionScreen> {
     }
   }
 
-  final _walletKey = GlobalKey<FormState>();
+  // final _walletKey = GlobalKey<FormState>();
   bool _isRequesting = false;
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -60,10 +58,6 @@ class _CommissionScreenState extends State<CommissionScreen> {
     DateFormat formatter = DateFormat('h:mm a d MMM y');
     return formatter.format(dateTime);
   }
-
-  bool _enterPhoneNumberManually = false;
-
-  String? _selectedPhoneNumber;
 
   final List<String> _phoneNumbers = [
     '0727918955',

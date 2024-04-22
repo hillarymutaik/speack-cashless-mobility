@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../home/Home.dart';
 import '../utils/colors_frave.dart';
 import '../utils/validators.dart';
+import 'change_pin.dart';
 import 'set_wallet_pin.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class ChangePasswordScreen extends StatefulWidget {
-  final String otpRefId;
-
-  const ChangePasswordScreen({super.key, required this.otpRefId});
+class OTPPINScreen extends StatefulWidget {
   @override
-  _ChangePasswordScreenState createState() => _ChangePasswordScreenState();
+  State<OTPPINScreen> createState() => _OTPPINScreenState();
 }
 
-class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
-  late TextEditingController _pinController;
+class _OTPPINScreenState extends State<OTPPINScreen> {
   late TextEditingController _otpController;
+  late TextEditingController _descController;
 
   final _keyForm = GlobalKey<FormState>();
 
@@ -25,21 +22,21 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   void initState() {
     super.initState();
 
-    _pinController = TextEditingController();
     _otpController = TextEditingController();
+    _descController = TextEditingController();
   }
 
   @override
   void dispose() {
     clearTextEditingController();
-    _pinController.dispose();
     _otpController.dispose();
+    _descController.dispose();
     super.dispose();
   }
 
   void clearTextEditingController() {
-    _pinController.clear();
     _otpController.clear();
+    _descController.clear();
   }
 
   bool curseepin = true;
@@ -53,7 +50,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text('Change PIN',
+        title: const Text('OTP',
             style: TextStyle(fontSize: 18, color: Colors.lightBlueAccent)),
         centerTitle: true,
         leadingWidth: 70,
@@ -73,7 +70,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
               child: TextButton(
                   style: TextButton.styleFrom(
-                      backgroundColor: Colors.lightBlueAccent,
+                      backgroundColor:
+                          Colors.lightBlueAccent, // Button background color
+
                       shape: RoundedRectangleBorder(
                         borderRadius:
                             BorderRadius.circular(8.0), // Button border radius
@@ -83,9 +82,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       setState(() {
                         _pinLoading = true;
                       });
-                      changeWalletPin(
-                              pin: _pinController.text,
-                              otp: _otpController.text)
+                      otpWalletPin(
+                              otpRefId: _otpController.text,
+                              desc: _descController.text)
                           .then((value) {
                         setState(() {
                           _pinLoading = false;
@@ -130,47 +129,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 20.0),
-                const Text('PIN'),
-                const SizedBox(height: 5.0),
-                TextFormField(
-                  controller: _pinController,
-                  style: TextStyle(
-                      fontFamily: 'Baloo2', color: Colors.grey, fontSize: 18),
-                  obscureText: curseepin,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0)),
-                    enabledBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(width: .5, color: Colors.grey)),
-                    contentPadding: const EdgeInsets.only(left: 15.0),
-                    hintText: '****',
-                    hintStyle:
-                        TextStyle(fontFamily: 'Baloo2', color: Colors.grey),
-                    suffixIcon: IconButton(
-                      color:
-                          const Color.fromARGB(255, 2, 32, 71).withOpacity(.6),
-                      icon: Icon(
-                        curseepin ? Icons.visibility_off : Icons.visibility,
-                        size: 20,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          curseepin = !curseepin;
-                        });
-                      },
-                    ),
-                  ),
-                  validator: pinValidator,
-                ),
-                const SizedBox(height: 20.0),
-                const Text('OTP'),
+                const Text('Enter OTP'),
                 const SizedBox(height: 5.0),
                 TextFormField(
                   controller: _otpController,
                   style: TextStyle(
                       fontFamily: 'Baloo2', color: Colors.grey, fontSize: 18),
-                  obscureText: seepin,
+                  obscureText: false,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -178,22 +143,56 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     enabledBorder: const OutlineInputBorder(
                         borderSide: BorderSide(width: .5, color: Colors.grey)),
                     contentPadding: const EdgeInsets.only(left: 15.0),
-                    hintText: '****',
+                    hintText: '',
                     hintStyle:
                         TextStyle(fontFamily: 'Baloo2', color: Colors.grey),
-                    suffixIcon: IconButton(
-                      color:
-                          const Color.fromARGB(255, 2, 32, 71).withOpacity(.6),
-                      icon: Icon(
-                        seepin ? Icons.visibility_off : Icons.visibility,
-                        size: 20,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          seepin = !seepin;
-                        });
-                      },
-                    ),
+                    // suffixIcon: IconButton(
+                    //   color:
+                    //       const Color.fromARGB(255, 2, 32, 71).withOpacity(.6),
+                    //   icon: Icon(
+                    //     curseepin ? Icons.visibility_off : Icons.visibility,
+                    //     size: 20,
+                    //   ),
+                    //   onPressed: () {
+                    //     setState(() {
+                    //       curseepin = !curseepin;
+                    //     });
+                    //   },
+                    // ),
+                  ),
+                  validator: pinValidator,
+                ),
+                const SizedBox(height: 20.0),
+                const Text('Reason'),
+                const SizedBox(height: 5.0),
+                TextFormField(
+                  controller: _descController,
+                  style: TextStyle(
+                      fontFamily: 'Baloo2', color: Colors.grey, fontSize: 18),
+                  obscureText: false,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0)),
+                    enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(width: .5, color: Colors.grey)),
+                    contentPadding: const EdgeInsets.only(left: 15.0),
+                    hintText: '',
+                    hintStyle:
+                        TextStyle(fontFamily: 'Baloo2', color: Colors.grey),
+                    // suffixIcon: IconButton(
+                    //   color:
+                    //       const Color.fromARGB(255, 2, 32, 71).withOpacity(.6),
+                    //   icon: Icon(
+                    //     seepin ? Icons.visibility_off : Icons.visibility,
+                    //     size: 20,
+                    //   ),
+                    //   onPressed: () {
+                    //     setState(() {
+                    //       seepin = !seepin;
+                    //     });
+                    //   },
+                    // ),
                   ),
                   validator: pinValidator,
                 ),
@@ -238,8 +237,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     );
   }
 
-  Future<void> changeWalletPin(
-      {required String pin, required String otp}) async {
+  Future<void> otpWalletPin(
+      {required String otpRefId, required String desc}) async {
     setState(() {
       _pinLoading = true;
     });
@@ -248,12 +247,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     final String? jwt = prefs.getString('jwt');
     Map<String, dynamic> token = jsonDecode(jwt!);
 
-    Map<String, String> body = {
-      "pin": pin,
-      "otp": otp,
-      "otpRefId": widget.otpRefId
-    };
-    var url = Uri.parse('$baseUrl/security-pins/reset');
+    Map<String, String> body = {"otpRefId": otpRefId, "desc": desc};
+    var url = Uri.parse('$baseUrl/security-pins/reset/otp');
     final postRequestResponse = await http.post(
       url,
       headers: {
@@ -266,60 +261,33 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
     if (postRequestResponse.statusCode == 200) {
       var jsonResponse = json.decode(postRequestResponse.body);
-      var status = jsonResponse['status'];
-
+      var otpRefId = jsonResponse['otpRefId'];
       var message = jsonResponse['desc'];
 
-      if (status == 'Ok') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '$message',
-              textAlign: TextAlign.center,
-            ),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            duration: const Duration(seconds: 2),
-            margin: const EdgeInsets.only(
-              bottom: 10,
-              right: 15,
-              left: 15,
-            ),
-            backgroundColor: Color.fromARGB(255, 1, 145, 56),
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '$message',
+            textAlign: TextAlign.center,
           ),
-        );
-        Navigator.pushAndRemoveUntil<void>(
-            context,
-            MaterialPageRoute<void>(builder: (BuildContext context) => Home()),
-            (Route<dynamic> route) => false);
-      } else {
-        var message = jsonResponse['desc'];
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '$message',
-              textAlign: TextAlign.center,
-            ),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            duration: const Duration(seconds: 5),
-            margin: const EdgeInsets.only(
-              bottom: 10,
-              right: 15,
-              left: 15,
-            ),
-            backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
-        );
-        setState(() {
-          _pinLoading = false;
-        });
-      }
+          duration: const Duration(seconds: 2),
+          margin: const EdgeInsets.only(
+            bottom: 10,
+            right: 15,
+            left: 15,
+          ),
+          backgroundColor: Color.fromARGB(255, 1, 145, 56),
+        ),
+      );
+      Navigator.pop(context);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (ctx) => ChangePasswordScreen(otpRefId: otpRefId)));
     } else if (postRequestResponse.statusCode == 400) {
       var message = json.decode(postRequestResponse.body)['message'];
 

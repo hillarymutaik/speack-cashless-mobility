@@ -49,7 +49,7 @@ class _SetWalletPinScreenState extends State<SetWalletPinScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         title: const Text('Set PIN',
-            style: TextStyle(fontSize: 18, color: ColorsFrave.primaryColor)),
+            style: TextStyle(fontSize: 18, color: Colors.lightBlueAccent)),
         centerTitle: true,
         leadingWidth: 70,
         leading: InkWell(
@@ -58,8 +58,7 @@ class _SetWalletPinScreenState extends State<SetWalletPinScreen> {
             children: const [
               SizedBox(width: 20.0),
               Text('Cancel',
-                  style:
-                      TextStyle(fontSize: 15, color: ColorsFrave.primaryColor))
+                  style: TextStyle(fontSize: 15, color: Colors.lightBlueAccent))
             ],
           ),
         ),
@@ -70,7 +69,7 @@ class _SetWalletPinScreenState extends State<SetWalletPinScreen> {
               child: TextButton(
                   style: TextButton.styleFrom(
                       backgroundColor:
-                          ColorsFrave.primaryColor, // Button background color
+                          Colors.lightBlueAccent, // Button background color
                       // padding: const EdgeInsets.all(
                       //     5.0), // Button padding
                       shape: RoundedRectangleBorder(
@@ -216,7 +215,7 @@ class _SetWalletPinScreenState extends State<SetWalletPinScreen> {
     Map<String, String> body = {
       "pin": pin!,
     };
-    var url = Uri.parse('$baseUrl/security-pins/validate');
+    var url = Uri.parse('$baseUrl/security-pins');
     final postRequestResponse = await http.post(
       url,
       headers: {
@@ -230,8 +229,9 @@ class _SetWalletPinScreenState extends State<SetWalletPinScreen> {
     if (postRequestResponse.statusCode == 200) {
       var jsonResponse = json.decode(postRequestResponse.body);
       var message = jsonResponse['desc'];
+      var status = jsonResponse['status'];
 
-      if ('staus' == 'Ok') {
+      if (status == 'Ok') {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(

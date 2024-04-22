@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:speack_cashless_mobility/utils/colors_frave.dart';
 import 'package:speack_cashless_mobility/utils/validators.dart';
 
 import 'wallet_screen.dart';
@@ -76,33 +75,33 @@ class _PinScreenState extends State<PinScreen> {
       body: jsonEncode(body),
     );
 
-    print(postRequestResponse.body);
+    // print(postRequestResponse.body);
 
     if (postRequestResponse.statusCode == 200) {
       var jsonResponse = json.decode(postRequestResponse.body);
       var status = jsonResponse['status'];
       var message = jsonResponse['desc'];
       if (status == 'OK') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '$message',
-              style: TextStyle(color: Colors.white, fontSize: 15),
-              textAlign: TextAlign.center,
-            ),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            duration: const Duration(milliseconds: 20),
-            margin: const EdgeInsets.only(
-              bottom: 10,
-              right: 25,
-              left: 25,
-            ),
-            backgroundColor: Colors.green,
-          ),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(
+        //     content: Text(
+        //       '$message',
+        //       style: TextStyle(color: Colors.white, fontSize: 15),
+        //       textAlign: TextAlign.center,
+        //     ),
+        //     behavior: SnackBarBehavior.floating,
+        //     shape: RoundedRectangleBorder(
+        //       borderRadius: BorderRadius.circular(10),
+        //     ),
+        //     duration: const Duration(milliseconds: 20),
+        //     margin: const EdgeInsets.only(
+        //       bottom: 10,
+        //       right: 25,
+        //       left: 25,
+        //     ),
+        //     backgroundColor: Colors.green,
+        //   ),
+        // );
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -180,13 +179,13 @@ class _PinScreenState extends State<PinScreen> {
               decoration: BoxDecoration(
                 color: Colors.grey.shade100,
                 shape: BoxShape.circle,
-                border:
-                    Border.all(color: Colors.blue, width: 0.5), // Add border
+                border: Border.all(
+                    color: Colors.lightBlueAccent, width: 0.5), // Add border
               ),
               child: const Icon(
                 Icons.lock_outline_rounded,
                 size: 40,
-                color: Colors.blue,
+                color: Colors.lightBlueAccent,
               ),
             ),
             const SizedBox(height: 10.0),
@@ -272,7 +271,8 @@ class _PinScreenState extends State<PinScreen> {
                                           style: TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.bold,
-                                              color: Colors.blue)))));
+                                              color:
+                                                  Colors.lightBlueAccent)))));
                     } else {
                       // Render numeric buttons
                       return Center(

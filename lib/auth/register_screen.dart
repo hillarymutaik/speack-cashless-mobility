@@ -1,16 +1,18 @@
 // ignore_for_file: avoid_unnecessary_containers
 
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../home/Home.dart';
 import '../utils/validators.dart';
 import 'login_screen.dart';
-import 'package:flutter/services.dart';
-// import 'package:device_info/device_info.dart';
-// import 'dart:io';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -33,6 +35,7 @@ class _SignupPageState extends State<SignUpScreen> {
   TextEditingController phone = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+  final TextEditingController _conPassController = TextEditingController();
 
   moveToLogin(BuildContext context) async {
     if (_signUpFormKey.currentState!.validate()) {
@@ -46,26 +49,26 @@ class _SignupPageState extends State<SignUpScreen> {
     }
   }
 
-  Future<dynamic> registerUser(
+  Future<void> registerUser(
       {String? fullname,
       String? phone,
       String? email,
       String? password}) async {
-    // DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    // late String deviceId;
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    late String deviceId;
 
-    // try {
-    //   if (Platform.isAndroid) {
-    //     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-    //     deviceId = androidInfo.androidId; // Use androidId as device ID
-    //   } else if (Platform.isIOS) {
-    //     IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-    //     deviceId =
-    //         iosInfo.identifierForVendor; // Use identifierForVendor as device ID
-    //   }
-    // } on PlatformException {
-    //   deviceId = 'Failed to get device ID.';
-    // }
+    try {
+      if (Platform.isAndroid) {
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        deviceId = androidInfo.androidId; // Use androidId as device ID
+      } else if (Platform.isIOS) {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        deviceId =
+            iosInfo.identifierForVendor; // Use identifierForVendor as device ID
+      }
+    } on PlatformException {
+      deviceId = 'Failed to get device ID.';
+    }
     // print('Device ID: $deviceId');
 
     Map<String, dynamic> body = {
@@ -74,7 +77,7 @@ class _SignupPageState extends State<SignUpScreen> {
       "email": email,
       "password": password,
       "role": "OWNER",
-      "deviceId": 'deviceId123'
+      "deviceId": deviceId
     };
 
     var url = Uri.parse('$baseUrl/auth/register');
@@ -83,28 +86,77 @@ class _SignupPageState extends State<SignUpScreen> {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(body));
-    Map<String, dynamic> singingResponse = {
-      'message': jsonDecode(postRequestResponse.body)['message'],
-      'success': jsonDecode(postRequestResponse.body)['success'],
-      'access_token': jsonDecode(postRequestResponse.body)['data']['token'],
-    };
-    print(postRequestResponse);
+
+    print(postRequestResponse.body);
     if (postRequestResponse.statusCode == 200) {
-      var jsonResponse = postRequestResponse.body;
+      var jsonResponse = json.decode(postRequestResponse.body);
+      var message = jsonResponse['data']['user']['fullName'];
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '$message, registered successfully',
+            textAlign: TextAlign.center,
+          ),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          duration: const Duration(seconds: 3),
+          margin: const EdgeInsets.only(
+            bottom: 10,
+            right: 15,
+            left: 15,
+          ),
+          backgroundColor: Color.fromARGB(255, 1, 145, 56),
+        ),
+      );
+
+      var jsonResponses = postRequestResponse.body;
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('jwt', jsonResponse);
+      prefs.setString('jwt', jsonResponses);
+      // Start the timer in the initState method
+      _timer = Timer(Duration(seconds: 1), () {
+        // Check if the widget is still mounted before navigating
+        if (mounted) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => Home()),
+            (route) => false,
+          );
+        }
+      });
+    } else {
+      var message = json.decode(postRequestResponse.body)['message'];
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '$message',
+            textAlign: TextAlign.center,
+          ),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          duration: const Duration(seconds: 3),
+          margin: const EdgeInsets.only(
+            bottom: 10,
+            right: 15,
+            left: 15,
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+      setState(() {
+        isLoading = false;
+      });
     }
-    return singingResponse;
   }
 
-  final TextEditingController _conPassController = TextEditingController();
   // ignore: prefer_typing_uninitialized_variables
   var confirmPass;
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  Timer? _timer;
 
   @override
   void dispose() {
@@ -113,6 +165,8 @@ class _SignupPageState extends State<SignUpScreen> {
     email.dispose();
     password.dispose();
     _conPassController.dispose();
+    _timer?.cancel();
+
     super.dispose();
   }
 
@@ -145,41 +199,61 @@ class _SignupPageState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.lightBlueAccent,
         body: SingleChildScrollView(
           child: Form(
             key: _signUpFormKey,
             child: SizedBox(
-              height: size.height,
+              // height: size.height,
               width: size.width,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    height: size.height * 0.04,
-                  ),
-                  Container(
-                    height: size.height * 0.18,
-                    width: size.height * 0.18,
-                    decoration: const BoxDecoration(
-                        color: Colors.black,
-                        image: DecorationImage(
-                            image: AssetImage(
-                              'assets/logo.jpg',
-                            ),
-                            fit: BoxFit.fill)),
-                  ),
+                  Image.asset('assets/logo1.png',
+                      height: size.height * .2,
+                      width: size.width * .2,
+                      fit: BoxFit.cover),
 
                   // -----------------TextFormFiled For Name ,Username and Password------------------------
                   Padding(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
+                          horizontal: 30, vertical: 5),
+                      child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Welcome,',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 22),
+                            )
+                          ])),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 5),
+                      child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Enter your credentials below to sign up.',
+                              style: TextStyle(
+                                  fontSize: 17,
+                                  color: Colors.white70,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ])),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 35,
                         vertical: 15,
                       ),
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             TextFormField(
                               controller: fullname,
@@ -435,11 +509,11 @@ class _SignupPageState extends State<SignUpScreen> {
                             ),
 
                             SizedBox(
-                              height: size.height * 0.01,
+                              height: size.height * 0.015,
                             ),
                             // ------------ Sign Up Container Button -----------
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
                                   height: 30,
@@ -448,14 +522,14 @@ class _SignupPageState extends State<SignUpScreen> {
                                     shape: BoxShape.rectangle,
                                     borderRadius: BorderRadius.circular(8),
                                     border: Border.all(
-                                      color: Colors.blue,
+                                      color: Colors.black87,
                                     ),
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsets.all(0.5),
+                                    padding: const EdgeInsets.all(0.0),
                                     child: Checkbox(
-                                      checkColor: Colors.blue,
-                                      focusColor: Colors.blue.shade300,
+                                      checkColor: Colors.lightBlueAccent,
+                                      focusColor: Colors.lightBlueAccent,
                                       value: agree,
                                       onChanged: (value) {
                                         setState(() {
@@ -465,52 +539,59 @@ class _SignupPageState extends State<SignUpScreen> {
                                     ),
                                   ),
                                 ),
-                                Row(children: [
-                                  const Text(
-                                    'I agree to ',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  ),
-                                  InkWell(
-                                    child: const Text(
-                                      'Terms & Conditions ',
-                                      maxLines: 2,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.blue,
-                                        fontWeight: FontWeight.normal,
+                                SizedBox(
+                                    width:
+                                        10), // Add space between checkbox and text
+                                Expanded(
+                                  child: Wrap(
+                                    spacing:
+                                        5, // Add spacing between text items
+                                    children: [
+                                      Text(
+                                        'I agree to',
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.normal,
+                                        ),
                                       ),
-                                    ),
-                                    onTap: () {
-                                      _launchTerms();
-                                    },
-                                  ),
-                                  const Text(
-                                    'and ',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  ),
-                                  InkWell(
-                                    child: const Text(
-                                      'Privacy Policy',
-                                      maxLines: 2,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.blue,
-                                        fontWeight: FontWeight.normal,
+                                      InkWell(
+                                        child: Text(
+                                          'Terms & Conditions',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.black87,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          _launchTerms();
+                                        },
                                       ),
-                                    ),
-                                    onTap: () {
-                                      _launchURL();
-                                    },
+                                      Text(
+                                        'and',
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                      InkWell(
+                                        child: Text(
+                                          'Privacy Policy',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.black87,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          _launchURL();
+                                        },
+                                      ),
+                                    ],
                                   ),
-                                ])
+                                ),
                               ],
                             ),
                             SizedBox(
@@ -538,65 +619,12 @@ class _SignupPageState extends State<SignUpScreen> {
                                               setState(() {
                                                 isLoading = false;
                                               });
-                                              final responseValue =
-                                                  value.cast<String, dynamic>();
-                                              if (responseValue['success']) {
-                                                ScaffoldMessenger.of(
-                                                        context)
-                                                    .showSnackBar(SnackBar(
-                                                        content: const Text(
-                                                          'Registered successfully!',
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                        ),
-                                                        behavior:
-                                                            SnackBarBehavior
-                                                                .floating,
-                                                        shape: RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8)),
-                                                        duration: const Duration(
-                                                            seconds: 2),
-                                                        margin: EdgeInsets.only(
-                                                            bottom: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .height *
-                                                                0.8,
-                                                            right: 20,
-                                                            left: 20),
-                                                        backgroundColor:
-                                                            Colors.green));
-                                                Navigator.pushReplacement(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          const SignInScreen()),
-                                                );
-                                              } else {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                      content: const Text(
-                                                          'Invalid credentials. Retry!'),
-                                                      backgroundColor:
-                                                          responseValue[
-                                                                  'success']
-                                                              ? Colors.green
-                                                              : Colors.red),
-                                                );
-                                                setState(() {
-                                                  isLoading = false;
-                                                });
-                                              }
                                             });
                                           }
                                         }
                                       : null,
                                   style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.blue.shade400,
+                                      backgroundColor: Colors.black,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
                                       ),
@@ -609,7 +637,7 @@ class _SignupPageState extends State<SignUpScreen> {
                                             height: 20,
                                             width: 20,
                                             child: CircularProgressIndicator(
-                                              strokeWidth: 1.5,
+                                              strokeWidth: 2.0,
                                               valueColor:
                                                   AlwaysStoppedAnimation(
                                                       Colors.white),
@@ -631,12 +659,12 @@ class _SignupPageState extends State<SignUpScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 const Text(
-                                  "Already have an account ?",
+                                  "Already have an account?",
                                   style: TextStyle(
-                                      fontSize: 15,
+                                      fontSize: 16,
                                       fontFamily: 'Baloo2',
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blue),
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.white),
                                 ),
                                 TextButton(
                                   onPressed: () {
@@ -650,11 +678,11 @@ class _SignupPageState extends State<SignUpScreen> {
                                   child: const Text(
                                     "Login",
                                     style: TextStyle(
-                                        decoration: TextDecoration.underline,
+                                        // decoration: TextDecoration.underline,
                                         fontSize: 16,
                                         fontFamily: 'Baloo2',
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.white),
+                                        color: Colors.black),
                                   ),
                                 ),
                                 //   ],
@@ -664,15 +692,18 @@ class _SignupPageState extends State<SignUpScreen> {
                           ])),
 
                   const Center(
-                      child: Text(
-                    "Powered by Speack",
-                    style: TextStyle(
-                      fontFamily: 'Baloo2',
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
+                    child: Text(
+                      'Speack Cashless Mobility',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontStyle: FontStyle.italic,
+                        color: Colors.black87,
+                      ),
                     ),
-                  ))
+                  ),
+                  SizedBox(
+                    height: 3,
+                  )
                 ],
               ),
             ),

@@ -7,13 +7,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../auth/login_screen.dart';
 import 'commission/commission_screen.dart';
-import 'fleet_screen.dart';
-import 'users.dart';
-import 'vehicles.dart';
-import 'wallet/wallet_pin.dart';
+// import 'fleet_screen.dart';
+// import 'users.dart';
+// import 'vehicles.dart';
+// import 'wallet/wallet_pin.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:get/get.dart';
-
 // import '../wallet/wallet_otp_request.dart';
 
 class SideMenu extends StatefulWidget {
@@ -49,7 +48,7 @@ class _SideMenuState extends State<SideMenu> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: Colors.black87,
+      backgroundColor: Colors.black.withOpacity(.9),
       child: ListView(
         children: [
           UserAccountsDrawerHeader(
@@ -109,7 +108,7 @@ class _SideMenuState extends State<SideMenu> {
           ),
           Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
                   color: Colors.transparent,
                   border: Border.all(
@@ -135,37 +134,10 @@ class _SideMenuState extends State<SideMenu> {
                   Navigator.pop(context);
                 },
               )),
-          Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  border: Border.all(
-                    color: Colors.transparent,
-                  ),
-                  borderRadius: BorderRadius.circular(10)),
-              child: AccountLinkWidget(
-                icon: Icon(
-                  Icons.wallet_rounded,
-                  color: Colors.blue.shade200,
-                ),
-                text: const Text(
-                  'Wallet',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white70,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                onTap: (e) {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (ctx) => const PinScreen()));
-                },
-              )),
 
           Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
                   color: Colors.transparent,
                   border: Border.all(
@@ -191,98 +163,7 @@ class _SideMenuState extends State<SideMenu> {
                   // requestOTP();
                 },
               )),
-          Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  border: Border.all(
-                    color: Colors.transparent,
-                  ),
-                  borderRadius: BorderRadius.circular(10)),
-              child: AccountLinkWidget(
-                icon: Icon(
-                  Icons.people_alt_rounded,
-                  color: Colors.blue.shade200,
-                  // size: 30,
-                ),
-                text: const Text(
-                  'Users',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white70,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                onTap: (e) {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (ctx) => UserDataScreen()));
-                },
-              )),
-          Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  border: Border.all(
-                    color: Colors.transparent,
-                  ),
-                  borderRadius: BorderRadius.circular(10)),
-              child: AccountLinkWidget(
-                icon: Icon(
-                  Icons.motorcycle_rounded,
-                  color: Colors.blue.shade200,
-                  // size: 30,
-                ),
-                text: const Text(
-                  'Vehicles',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white70,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                onTap: (e) {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (ctx) => VehiclesScreen()));
-                },
-              )),
-          Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  border: Border.all(
-                    color: Colors.transparent,
-                  ),
-                  borderRadius: BorderRadius.circular(10)),
-              child: AccountLinkWidget(
-                icon: Icon(
-                  Icons.bus_alert_rounded,
-                  color: Colors.blue.shade200,
-                  // size: 30,
-                ),
-                text: const Text(
-                  'Fleets',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white70,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                onTap: (e) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (ctx) => FleetNumbersScreen()));
-                },
-              )),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * .07,
-          ),
-          const Divider(
-            color: Colors.white,
-          ),
+
           // BlocConsumer<AuthBloc, AuthState>( VehiclesScreen
           //   listener: (context, state) {
           //     if (!state.isAuthenticated) {
@@ -292,10 +173,11 @@ class _SideMenuState extends State<SideMenu> {
           //   builder: (context, state) {
           //     return
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
-            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 23),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
             decoration: BoxDecoration(
-                color: Colors.white70.withOpacity(.1), //Get.theme.primaryColor,
+                color: Colors.transparent
+                    .withOpacity(.1), //Get.theme.primaryColor,
                 border: Border.all(
                   color: Colors.transparent,
                 ),

@@ -4,11 +4,12 @@ import 'dart:convert';
 
 // import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../home/Home.dart';
 import '../../utils/validators.dart';
-import '../transactions.dart';
+import 'package:http/http.dart' as http;
 
 class WalletScreen extends StatefulWidget {
   @override
@@ -18,21 +19,55 @@ class WalletScreen extends StatefulWidget {
 class _WalletsScreenState extends State<WalletScreen> {
   Map<String, dynamic>? _walletData;
 
+  String? _selectedPhoneNumber;
+
+  String? tokenzz;
+  String? fullName;
+
+  void account() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    tokenzz = prefs.getString('jwt')!;
+    Map<String, dynamic> token = jsonDecode(tokenzz!);
+    setState(() {
+      _selectedPhoneNumber = '${token['data']['user']['phoneNumber']}';
+      fullName = '${token['data']['user']['fullName']}';
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _loadWalletData();
+    account();
   }
 
   Future<void> _loadWalletData() async {
     try {
-      String jsonString = await rootBundle.loadString('assets/wallet.json');
-      Map<String, dynamic> data = jsonDecode(jsonString);
-      setState(() {
-        _walletData = data['wallets'][0]; // Fetching the first wallet only
-      });
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? jwt = prefs.getString('jwt');
+      Map<String, dynamic> token = jsonDecode(jwt!);
+
+      final http.Response response = await http.get(
+        Uri.parse('$baseUrl/accounts/wallet'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer ${token['data']['token']}'
+        },
+      );
+
+      print("Wallet::: ${response.body}");
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        setState(() {
+          _walletData = data; // Fetching the first wallet only
+        });
+      } else {
+        throw Exception('Failed to load wallet data: ${response.statusCode}');
+      }
     } catch (e) {
-      // print("Error retrieving wallets data: $e");
+      // Handle errors
+      print("Error retrieving wallet data: $e");
     }
   }
 
@@ -63,13 +98,7 @@ class _WalletsScreenState extends State<WalletScreen> {
 
   bool _enterPhoneNumberManually = false;
 
-  String? _selectedPhoneNumber;
-
-  final List<String> _phoneNumbers = [
-    '0727918955',
-    '0796010105',
-    '0720202020',
-  ];
+  final List<String> _phoneNumbers = [];
 
   Future<void> _openConfirmationDialog() async {
     return showDialog<void>(
@@ -78,11 +107,11 @@ class _WalletsScreenState extends State<WalletScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Confirm Withdrawal'),
-          content: const SingleChildScrollView(
+          content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
                 Text(
-                    'Dear customer, note the minimum withdrawal amount is Kshs 100.00 from your wallet.'),
+                    'Dear $fullName, note the minimum withdrawal amount is Kshs 100.00 from your wallet.'),
               ],
             ),
           ),
@@ -90,23 +119,33 @@ class _WalletsScreenState extends State<WalletScreen> {
             Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  // Navigator.of(context).pop(); // Close dialog
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: const Center(
+                      content: Center(
                         child: Text(
-                            ' Dear [customer name] you have cancelled your withdrawal of ksh. [Amount] thank you for using speack cashless mobility.'),
+                            ' Dear $fullName you have cancelled your withdrawal of KES ${_amountController.text} thank you for using speack cashless mobility.'),
                       ),
-                      duration: const Duration(seconds: 3),
+                      duration: const Duration(seconds: 5),
                       behavior: SnackBarBehavior.floating,
                       margin: const EdgeInsets.all(15.0),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
+                        borderRadius: BorderRadius.circular(15.0),
                       ),
                       backgroundColor: Colors.red[400], // Set background color
                     ),
                   );
+
+                  Future.delayed(const Duration(seconds: 5), () {
+                    Navigator.pushAndRemoveUntil<void>(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) => Home(),
+                      ),
+                      (Route<dynamic> route) => false,
+                    );
+                  });
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
@@ -124,7 +163,7 @@ class _WalletsScreenState extends State<WalletScreen> {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop(); // Close dialog
+                  Navigator.of(context).pop();
                   _processTransaction(); // Process transaction
                 },
                 style: ButtonStyle(
@@ -136,7 +175,7 @@ class _WalletsScreenState extends State<WalletScreen> {
                   textStyle: MaterialStateProperty.all<TextStyle>(
                       const TextStyle(fontSize: 16)), // Set text size
                 ),
-                child: const Text('OK'),
+                child: Text('OK'),
               ),
             ])
           ],
@@ -147,41 +186,70 @@ class _WalletsScreenState extends State<WalletScreen> {
 
   void _processTransaction() {
     setState(() {
-      _isRequesting = true;
+      _isRequesting = false;
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Center(
-          child: Text(
-              'Dear [customer name], you have successfully initiated a withdrawal of ksh. [amount] from your wallet. Please wait for a confirmation message as we process your request.'),
-        ),
-        duration: const Duration(seconds: 2),
-        behavior: SnackBarBehavior.floating,
-        margin: const EdgeInsets.all(15.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        backgroundColor: Colors.green[400], // Set background color
-      ),
-    );
+
     // Perform your transaction processing here
     // Once done, navigate to the next screen
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => TransactionsScreen()),
-    ).then((_) {
-      setState(() {
-        _isRequesting = false;
-      });
-    });
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                    'Dear $fullName, you have successfully initiated a withdrawal of KES ${_amountController.text} from your wallet. Please wait for a confirmation message as we process your request.',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil<void>(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext context) => Home(),
+                    ),
+                    (Route<dynamic> route) => false,
+                  );
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      Colors.grey.shade300), // Set background color
+
+                  foregroundColor: MaterialStateProperty.all<Color>(
+                      Colors.blue.shade400), // Set text color
+                  textStyle: MaterialStateProperty.all<TextStyle>(
+                      const TextStyle(fontSize: 16)), // Set text size
+                ),
+                child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 50),
+                    child: Text('OK')),
+              ),
+            ])
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_selectedPhoneNumber != null) {
+      _phoneNumbers.addAll([_selectedPhoneNumber!]);
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.lightBlueAccent,
         elevation: 0,
         automaticallyImplyLeading: true,
         centerTitle: true,
@@ -198,187 +266,89 @@ class _WalletsScreenState extends State<WalletScreen> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Stack(
-                      alignment: AlignmentDirectional.bottomCenter,
-                      children: [
-                        Container(
-                          // height: MediaQuery.of(context).size.height * .1,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: const BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.vertical(
-                                bottom: Radius.circular(20)),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.grey,
-                                  blurRadius: 10,
-                                  offset: Offset(0, 0)),
-                            ],
-                          ),
-                          margin: const EdgeInsets.only(bottom: 70),
-                          padding: EdgeInsets.only(
-                              left: 15,
-                              right: 15,
-                              top: 15,
-                              bottom: MediaQuery.of(context).size.height * .08),
-                          child: Container(
-                              height: MediaQuery.of(context).size.height * .16,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 30, vertical: 15),
-                              decoration: BoxDecoration(
-                                  color: Colors.grey.shade200,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                        color: Colors.transparent,
-                                        blurRadius: 20,
-                                        offset: Offset(0, 0))
-                                  ]),
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                              'Wallet ID: ${_walletData != null ? _walletData!['id'] : 'N/A'}',
-                                              style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold)),
-                                          Text(
-                                              'Vehicle ID: ${_walletData != null ? _walletData!['vehicleId'] : 'N/A'}',
-                                              style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold))
-                                        ]),
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
-                                    Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Text('Balance:',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold)),
-                                          Text(
-                                              'KSH ${_walletData != null ? _walletData!['currentBalance'] : 'N/A'}',
-                                              style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold)),
-                                        ]),
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
-                                    Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Text('Last Updated: ',
-                                              style: TextStyle(
-                                                  color: Colors.black54,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold)),
-                                          Text(
-                                              formatDateTime(
-                                                  '${_walletData != null ? _walletData!['lastUpdatedAt'] : ''}'),
-                                              style: const TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold)),
-                                        ]),
-                                  ])),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (ctx) => FleetNumbersScreen()));
-                          },
-                          child: Container(
-                              height: MediaQuery.of(context).size.height * .12,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 30, vertical: 10),
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 6),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                        color: Colors.grey,
-                                        blurRadius: 15,
-                                        offset: Offset(0, 0))
-                                  ]),
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                              'Wallet ID: ${_walletData != null ? _walletData!['id'] : 'N/A'}',
-                                              style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.bold)),
-                                          Text(
-                                              'Vehicle ID: ${_walletData != null ? _walletData!['vehicleId'] : 'N/A'}',
-                                              style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.bold))
-                                        ]),
-                                    const SizedBox(
-                                      height: 6,
-                                    ),
-                                    Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Text('Balance:',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.bold)),
-                                          Text(
-                                              'KSH ${_walletData != null ? _walletData!['currentBalance'] : 'N/A'}',
-                                              style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.bold)),
-                                        ]),
-                                    const SizedBox(
-                                      height: 6,
-                                    ),
-                                    Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Text('Last Updated: ',
-                                              style: TextStyle(
-                                                  color: Colors.black54,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold)),
-                                          Text(
-                                              formatDateTime(
-                                                  '${_walletData != null ? _walletData!['lastUpdatedAt'] : ''}'),
-                                              style: const TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold)),
-                                        ]),
-                                  ])),
-                        ),
-                      ],
+                    Container(
+                      // height: MediaQuery.of(context).size.height * .1,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: const BoxDecoration(
+                        color: Colors.lightBlueAccent,
+                        borderRadius:
+                            BorderRadius.vertical(bottom: Radius.circular(20)),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.white,
+                              blurRadius: 10,
+                              offset: Offset(0, 0)),
+                        ],
+                      ),
+                      padding: EdgeInsets.all(
+                        20,
+                      ),
+                      child: Container(
+                          // height: MediaQuery.of(context).size.height * .16,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 5),
+                          decoration: BoxDecoration(
+                              color: Colors.lightBlueAccent,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Colors.transparent,
+                                    blurRadius: 20,
+                                    offset: Offset(0, 0))
+                              ]),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                          'Fleet No: ${_walletData != null ? _walletData!['vehicleId'] : 'N/A'}',
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold))
+                                    ]),
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                                Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text('Balance:',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold)),
+                                      Text(
+                                          'KES ${_walletData != null ? _walletData!['currentBalance'] : 'N/A'}',
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold)),
+                                    ]),
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                                Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text('Last Updated: ',
+                                          style: TextStyle(
+                                              color: Colors.black54,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold)),
+                                      Text(
+                                          formatDateTime(
+                                              '${_walletData != null ? _walletData!['lastUpdatedAt'] : ''}'),
+                                          style: const TextStyle(
+                                              color: Colors.black54,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold)),
+                                    ]),
+                              ])),
                     ),
                     Container(
                         constraints: const BoxConstraints(maxWidth: 500),
@@ -411,7 +381,7 @@ class _WalletsScreenState extends State<WalletScreen> {
                               TextSpan(
                                   text: 'One Time Password ',
                                   style: TextStyle(
-                                      color: Colors.blue.shade900,
+                                      color: Colors.lightBlueAccent,
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold)),
                               const TextSpan(
@@ -512,15 +482,15 @@ class _WalletsScreenState extends State<WalletScreen> {
                                                     255, 2, 32, 71)
                                                 .withOpacity(0.6),
                                           ),
-                                          suffix:
-                                              ((_phoneController.text).length ==
-                                                      10)
-                                                  ? const Icon(
-                                                      Icons.check_circle,
-                                                      color: Colors.green,
-                                                      // size: 25,
-                                                    )
-                                                  : null,
+                                          suffix: ((_phoneController.text)
+                                                      .length ==
+                                                  10)
+                                              ? const Icon(
+                                                  Icons.check_circle,
+                                                  color: Colors.lightBlueAccent,
+                                                  // size: 25,
+                                                )
+                                              : null,
                                           focusedBorder:
                                               const OutlineInputBorder(
                                             borderRadius: BorderRadius.all(
@@ -548,15 +518,18 @@ class _WalletsScreenState extends State<WalletScreen> {
                                             _selectedPhoneNumber = newValue!;
                                           });
                                         },
+
                                         items: _phoneNumbers
+                                            .toSet() // Convert to a set to remove duplicates
                                             .map<DropdownMenuItem<String>>(
-                                                (String value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value,
-                                                textAlign: TextAlign.center),
-                                          );
-                                        }).toList(),
+                                          (String value) {
+                                            return DropdownMenuItem<String>(
+                                              value: value,
+                                              child: Text(value,
+                                                  textAlign: TextAlign.center),
+                                            );
+                                          },
+                                        ).toList(),
                                         decoration: InputDecoration(
                                           contentPadding:
                                               const EdgeInsets.all(3),
@@ -583,7 +556,7 @@ class _WalletsScreenState extends State<WalletScreen> {
                                           suffixIcon: _selectedPhoneNumber !=
                                                   null
                                               ? const Icon(Icons.check_circle,
-                                                  color: Colors.green)
+                                                  color: Colors.lightBlueAccent)
                                               : null,
                                           focusedBorder:
                                               const OutlineInputBorder(
@@ -669,21 +642,6 @@ class _WalletsScreenState extends State<WalletScreen> {
                                             });
                                             if (_walletKey.currentState!
                                                 .validate()) {
-                                              // Navigator.push(
-                                              //     context,
-                                              //     MaterialPageRoute(
-                                              //         builder: (ctx) =>
-                                              //             TransactionsScreen()));
-                                              // walletOTPRequest(
-                                              //         int.parse(
-                                              //             _amountController
-                                              //                 .text),
-                                              //         _phoneController.text)
-                                              //     .then((value) {
-                                              //   setState(() {
-                                              //     _isRequesting = false;
-                                              //   });
-                                              // });
                                               _openConfirmationDialog();
                                               setState(() {
                                                 _isRequesting = false;
@@ -702,7 +660,7 @@ class _WalletsScreenState extends State<WalletScreen> {
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 15, vertical: 12),
                                             decoration: BoxDecoration(
-                                                color: Colors.blue,
+                                                color: Colors.lightBlueAccent,
                                                 borderRadius:
                                                     BorderRadius.circular(10),
                                                 boxShadow: [
@@ -811,351 +769,3 @@ class _WalletsScreenState extends State<WalletScreen> {
   // }
 
 
-
-
-// import 'dart:convert';
-
-// import 'package:flutter/material.dart';
-// import 'package:http/http.dart' as http;
-
-// import '../../home/home_screen.dart';
-
-// class WalletScreen extends StatefulWidget {
-//   // final String tokenRefId;
-//   // final String phone;
-//   // final int amount;
-
-//   // const WalletScreen({
-//   //   Key? key,
-//   //   required this.tokenRefId,
-//   //   required this.phone,
-//   //   required this.amount,
-//   // }) : super(key: key);
-
-//   @override
-//   State<WalletScreen> createState() => _WithdrawalOtpSreenState();
-// }
-
-// class _WithdrawalOtpSreenState extends State<WalletScreen> {
-//   late List<TextEditingController> otpControllers;
-//   final _withdrawKey = GlobalKey<FormState>();
-//   bool _isWithrawing = false;
-//   String username = '';
-//   String? token;
-//   @override
-//   void initState() {
-//     super.initState();
-//     // final authState = context.read<AuthBloc>().state;
-//     // username = authState.user?.username ?? '';
-
-//     // token = authState.token;
-//     otpControllers = List.generate(6, (index) => TextEditingController());
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       resizeToAvoidBottomInset: false,
-//       backgroundColor: const Color.fromARGB(255, 2, 46, 99).withOpacity(0.1),
-//       body: SafeArea(
-//         child: Padding(
-//             padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 25),
-//             child: SingleChildScrollView(
-//               child: Column(
-//                 children: [
-//                   Align(
-//                     alignment: Alignment.topLeft,
-//                     child: Navigator.canPop(context)
-//                         ? GestureDetector(
-//                             onTap: () => Navigator.pop(context),
-//                             child: Icon(
-//                               Icons.arrow_back,
-//                               size: 32,
-//                               color: const Color.fromARGB(255, 2, 46, 99)
-//                                   .withOpacity(0.9),
-//                             ),
-//                           )
-//                         : null,
-//                   ),
-//                   const SizedBox(
-//                     height: 18,
-//                   ),
-//                   Container(
-//                     width: 200,
-//                     height: 200,
-//                     decoration: BoxDecoration(
-//                       color:
-//                           const Color.fromARGB(255, 2, 46, 99).withOpacity(0.3),
-//                       shape: BoxShape.circle,
-//                     ),
-//                     child: Image.asset(
-//                       'assets/logo.jpg',
-//                       fit: BoxFit.cover,
-//                     ),
-//                   ),
-//                   const SizedBox(
-//                     height: 24,
-//                   ),
-//                   const Text(
-//                     'Withdrawal Verification',
-//                     style: TextStyle(
-//                       fontSize: 22,
-//                       fontWeight: FontWeight.bold,
-//                     ),
-//                   ),
-//                   const SizedBox(
-//                     height: 10,
-//                   ),
-//                   const Text(
-//                     "Enter your Withdrawal OTP code number",
-//                     style: TextStyle(
-//                       fontSize: 14,
-//                       fontWeight: FontWeight.bold,
-//                       color: Colors.black54,
-//                     ),
-//                     textAlign: TextAlign.center,
-//                   ),
-//                   const SizedBox(
-//                     height: 28,
-//                   ),
-//                   Form(
-//                       autovalidateMode: AutovalidateMode.onUserInteraction,
-//                       key: _withdrawKey,
-//                       child: Container(
-//                         padding: const EdgeInsets.symmetric(
-//                             horizontal: 15, vertical: 20),
-//                         decoration: BoxDecoration(
-//                           color: Colors.white,
-//                           borderRadius: BorderRadius.circular(12),
-//                         ),
-//                         child: Column(
-//                           children: [
-//                             Row(
-//                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                               children: List.generate(
-//                                 otpControllers.length,
-//                                 (index) => Expanded(
-//                                   child: _textFieldOTP(
-//                                     first: index == 0,
-//                                     last: index == otpControllers.length - 1,
-//                                     controller: otpControllers[index],
-//                                   ),
-//                                 ),
-//                               ),
-//                             ),
-//                             const SizedBox(
-//                               height: 20,
-//                             ),
-//                             SizedBox(
-//                               width: double.infinity,
-//                               child: ElevatedButton(
-//                                   onPressed: () async {
-//                                     setState(() {
-//                                       _isWithrawing = true;
-//                                     });
-//                                     if (_withdrawKey.currentState!.validate()) {
-//                                       withdrawRequest().then((value) {
-//                                         setState(() {
-//                                           _isWithrawing = false;
-//                                         });
-//                                       });
-//                                       setState(() {
-//                                         _isWithrawing = true;
-//                                       });
-//                                     } else {
-//                                       setState(() {
-//                                         _isWithrawing = false;
-//                                       });
-//                                     }
-//                                   },
-//                                   style: ButtonStyle(
-//                                     foregroundColor:
-//                                         MaterialStateProperty.all<Color>(
-//                                             Colors.white),
-//                                     backgroundColor:
-//                                         MaterialStateProperty.all<Color>(
-//                                       const Color.fromARGB(255, 2, 46, 99)
-//                                           .withOpacity(0.9),
-//                                     ),
-//                                     shape: MaterialStateProperty.all<
-//                                         RoundedRectangleBorder>(
-//                                       RoundedRectangleBorder(
-//                                         borderRadius:
-//                                             BorderRadius.circular(24.0),
-//                                       ),
-//                                     ),
-//                                   ),
-//                                   child: Center(
-//                                       child: _isWithrawing
-//                                           ? const SizedBox(
-//                                               height: 20,
-//                                               width: 20,
-//                                               child: CircularProgressIndicator(
-//                                                 strokeWidth: 2.0,
-//                                                 valueColor:
-//                                                     AlwaysStoppedAnimation(
-//                                                   Colors.white,
-//                                                 ),
-//                                               ),
-//                                             )
-//                                           : const Text(
-//                                               'Withdraw',
-//                                               style: TextStyle(
-//                                                   fontSize: 15,
-//                                                   fontWeight: FontWeight.bold),
-//                                             ))),
-//                             )
-//                           ],
-//                         ),
-//                       )),
-//                   const SizedBox(
-//                     height: 20,
-//                   ),
-//                   const Text(
-//                     "Didn't you receive any code?",
-//                     style: TextStyle(
-//                       fontSize: 14,
-//                       fontWeight: FontWeight.bold,
-//                       color: Colors.black54,
-//                     ),
-//                     textAlign: TextAlign.center,
-//                   ),
-//                   const SizedBox(
-//                     height: 18,
-//                   ),
-//                   GestureDetector(
-//                     onTap: () {
-//                       Navigator.pop(context);
-//                     },
-//                     child: const Text(
-//                       "Resend New Code",
-//                       style: TextStyle(
-//                         fontSize: 18,
-//                         fontWeight: FontWeight.bold,
-//                         color: Color.fromARGB(255, 2, 46, 99),
-//                       ),
-//                       textAlign: TextAlign.center,
-//                     ),
-//                   )
-//                 ],
-//               ),
-//             )),
-//       ),
-//     );
-//   }
-
-//   Widget _textFieldOTP(
-//       {required bool first,
-//       required bool last,
-//       required TextEditingController controller}) {
-//     return Container(
-//       height: 60,
-//       margin: const EdgeInsets.symmetric(horizontal: 3),
-//       child: AspectRatio(
-//         aspectRatio: 1.0,
-//         child: TextField(
-//           controller: controller,
-//           autofocus: true,
-//           onChanged: (value) {
-//             if (value.length == 1 && last == false) {
-//               FocusScope.of(context).nextFocus();
-//             }
-//             if (value.isEmpty && first == false) {
-//               FocusScope.of(context).previousFocus();
-//             }
-//           },
-//           showCursor: false,
-//           readOnly: false,
-//           textAlign: TextAlign.center,
-//           style: const TextStyle(
-//             fontSize: 18,
-//             fontWeight: FontWeight.bold,
-//             color: Color.fromARGB(255, 2, 46, 99),
-//           ),
-//           keyboardType: TextInputType.number,
-//           maxLength: 1,
-//           decoration: InputDecoration(
-//             counter: const Offstage(),
-//             enabledBorder: OutlineInputBorder(
-//               borderSide: const BorderSide(width: 2, color: Colors.black12),
-//               borderRadius: BorderRadius.circular(12),
-//             ),
-//             focusedBorder: OutlineInputBorder(
-//               borderSide: const BorderSide(
-//                   width: 2, color: Color.fromARGB(255, 2, 46, 99)),
-//               borderRadius: BorderRadius.circular(12),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   Future<dynamic> withdrawRequest() async {
-//     String otp = otpControllers.map((controller) => controller.text).join('');
-//     // Map<String, dynamic> body = {"otp": otp, "otpRefId": widget.tokenRefId};
-//     Map<String, dynamic> body = {
-//       "fleetNumber": username,
-//       "amount": 'widget.amount',
-//       "phoneNumber": 'widget.phone',
-//       "otp": otp,
-//       "otpRefId": ''
-//     };
-
-//     var url = Uri.parse('/b2c/make-payments');
-//     final postRequestResponse = await http.Client().post(url,
-//         headers: {
-//           'Content-Type': 'application/json; charset=UTF-8',
-//           'Authorization': 'Bearer $token'
-//         },
-//         body: jsonEncode(body));
-
-//     // print('Withdrawal Response::: ${postRequestResponse.body}');
-
-//     if (postRequestResponse.statusCode == 200) {
-//       var message = json.decode(postRequestResponse.body)['desc'];
-//       // ignore: use_build_context_synchronously
-//       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-//           content: Text(
-//             '$message',
-//             textAlign: TextAlign.center,
-//           ),
-//           behavior: SnackBarBehavior.floating,
-//           shape: RoundedRectangleBorder(
-//             borderRadius: BorderRadius.circular(10),
-//           ),
-//           duration: const Duration(seconds: 3),
-//           margin: EdgeInsets.only(
-//               // ignore: use_build_context_synchronously
-//               bottom: MediaQuery.of(context).size.height * 0.04,
-//               right: 15,
-//               left: 15),
-//           backgroundColor: Colors.green));
-//       // ignore: use_build_context_synchronously
-//       Navigator.pushAndRemoveUntil(
-//           context,
-//           MaterialPageRoute(builder: (context) => const SearchScreen()),
-//           (route) => false);
-//     } else if (postRequestResponse.statusCode == 400) {
-//       var message = json.decode(postRequestResponse.body)['message'];
-//       // ignore: use_build_context_synchronously
-//       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-//         content: Text(
-//           '$message',
-//           textAlign: TextAlign.center,
-//         ),
-//         behavior: SnackBarBehavior.floating,
-//         shape: RoundedRectangleBorder(
-//           borderRadius: BorderRadius.circular(10),
-//         ),
-//         duration: const Duration(seconds: 3),
-//         margin: EdgeInsets.only(
-//             // ignore: use_build_context_synchronously
-//             bottom: MediaQuery.of(context).size.height * 0.04,
-//             right: 15,
-//             left: 15),
-//         backgroundColor: Colors.red,
-//       ));
-//     }
-//   }
-// }

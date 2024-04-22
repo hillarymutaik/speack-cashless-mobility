@@ -1,12 +1,9 @@
-import 'dart:async';
 import 'dart:convert';
-
 // import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../screens/fleet_screen.dart';
-// import '../screens/pins.dart';
 import '../screens/side_menu.dart';
 import '../screens/transactions.dart';
 import '../screens/vehicles.dart';
@@ -77,32 +74,57 @@ class _SearchScreenState extends State<HomeScreen> {
     }
   }
 
+  Widget _buildCircularContainer(IconData icon, String description) {
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.lightBlueAccent,
+          ),
+          padding: const EdgeInsets.all(10),
+          child: Icon(
+            icon,
+            color: Colors.white,
+            size: 30,
+          ),
+        ),
+        SizedBox(height: 6),
+        Text(
+          description,
+          style: TextStyle(color: Colors.grey[600], fontSize: 15),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      drawer: const SideMenu(),
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        elevation: 0,
-        automaticallyImplyLeading: true,
-        iconTheme: const IconThemeData(color: Colors.white, size: 30),
-      ),
-      body: SingleChildScrollView(
-        child: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Stack(
-                alignment: AlignmentDirectional.bottomCenter,
-                children: [
-                  Container(
-                      height: MediaQuery.of(context).size.height * .18,
+        backgroundColor: Colors.white,
+        drawer: const SideMenu(),
+        appBar: AppBar(
+          backgroundColor: Colors.lightBlueAccent,
+          elevation: 0,
+          automaticallyImplyLeading: true,
+          iconTheme: const IconThemeData(color: Colors.white, size: 30),
+        ),
+        body: SingleChildScrollView(
+          child: Container(
+              // height: MediaQuery.of(context).size.height,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                Stack(
+                  alignment: AlignmentDirectional.bottomStart,
+                  children: [
+                    Container(
+                      height: MediaQuery.of(context).size.height * .27,
                       width: MediaQuery.of(context).size.width,
                       decoration: const BoxDecoration(
-                        color: Colors.blue,
+                        color: Colors.lightBlueAccent,
                         borderRadius:
-                            BorderRadius.vertical(bottom: Radius.circular(20)),
+                            BorderRadius.vertical(bottom: Radius.circular(80)),
                         boxShadow: [
                           BoxShadow(
                               color: Colors.white,
@@ -110,444 +132,510 @@ class _SearchScreenState extends State<HomeScreen> {
                               offset: Offset(2, 2)),
                         ],
                       ),
-                      margin: const EdgeInsets.only(bottom: 65),
+                      margin: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).size.height * .13),
                       child: Container(
-                        margin: const EdgeInsets.only(bottom: 80),
-                        child: Center(
-                            child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              _getGreetingMessage(),
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15, // Adjust the font size as needed
-                                fontWeight: FontWeight
-                                    .normal, // Optionally, make it bold
-                              ),
-                            ),
-                            Text(
-                              '$fullname',
-                              style: TextStyle(
-                                fontSize: 16, // Adjust the font size as needed
-                                fontWeight:
-                                    FontWeight.bold, // Optionally, make it bold
-                                fontStyle: FontStyle.italic,
-                                color: Colors
-                                    .white70, // Optionally, change the text color
-                              ),
-                            ),
-                          ],
-                        )),
-                      )),
-                  InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (ctx) => FleetNumbersScreen()));
-                      },
-                      child: Container(
+                          margin: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).size.height * .2,
+                              left: 30,
+                              right: 30),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      _getGreetingMessage(),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            15, // Adjust the font size as needed
+                                        fontWeight: FontWeight
+                                            .normal, // Optionally, make it bold
+                                      ),
+                                    ),
+                                    Text(
+                                      '$fullname',
+                                      style: TextStyle(
+                                        fontSize:
+                                            16, // Adjust the font size as needed
+                                        fontWeight: FontWeight
+                                            .bold, // Optionally, make it bold
+                                        fontStyle: FontStyle.italic,
+                                        color: Colors
+                                            .white, // Optionally, change the text color
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                // InkWell(
+                                //   onTap: () {
+                                //     Navigator.push(
+                                //         context,
+                                //         MaterialPageRoute(
+                                //             builder: (ctx) => ProfileScreen()));
+                                //   },
+                                //   child: Container(
+                                //     decoration: BoxDecoration(
+                                //       shape: BoxShape.circle,
+                                //       color: Colors.white,
+                                //     ),
+                                //     padding: const EdgeInsets.all(10),
+                                //     child: ClipRRect(
+                                //       borderRadius: const BorderRadius.all(
+                                //           Radius.circular(100)),
+                                //       child: Image.asset(
+                                //         'assets/logo.jpg',
+                                //         fit: BoxFit.cover,
+                                //         height:
+                                //             MediaQuery.of(context).size.height *
+                                //                 0.04,
+                                //       ),
+                                //     ),
+                                //   ),
+                                // ),
+                              ])),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 30),
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            blurRadius: 5,
+                            offset: Offset(0, 0),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (ctx) =>
+                                                TransactionsScreen()));
+                                  },
+                                  child: _buildCircularContainer(
+                                      Icons.summarize, 'Summary')),
+                              InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (ctx) =>
+                                                FleetNumbersScreen()));
+                                  },
+                                  child: _buildCircularContainer(
+                                      Icons.car_crash_rounded, 'Fleets'))
+                            ],
+                          ),
+                          SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (ctx) =>
+                                                VehiclesScreen()));
+                                  },
+                                  child: _buildCircularContainer(
+                                      Icons.car_rental_rounded, 'Vehilces')),
+                              InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (ctx) =>
+                                                TransactionsScreen()));
+                                  },
+                                  child: _buildCircularContainer(
+                                      Icons.history_rounded, 'Transactions'))
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                    padding: const EdgeInsets.only(left: 30, top: 10),
+                    child: Text(
+                      'Amount Collected Today',
+                      style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold),
+                    )),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                        child: InkWell(
+                            onTap: () {
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (ctx) => TransactionsScreen()));
+                            },
+                            child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 30, vertical: 20),
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 30, vertical: 10),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                      color: Colors.transparent,
+                                    ),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                          color: Colors.grey,
+                                          blurRadius: 10,
+                                          offset: Offset(0, 0)),
+                                    ],
+                                    borderRadius: BorderRadius.circular(15)),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.lightBlueAccent,
+                                      ),
+                                      padding: const EdgeInsets.all(10),
+                                      child: Text(
+                                        'KES',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 15),
+                                      ),
+                                    ),
+                                    SizedBox(width: 6),
+                                    Text(
+                                      '1,500.00',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey[600],
+                                          fontSize: 15),
+                                    ),
+                                  ],
+                                )))),
+                  ],
+                ),
+                Padding(
+                    padding: const EdgeInsets.only(left: 30, top: 10),
+                    child: Text(
+                      'Recent Transactions',
+                      style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold),
+                    )),
+                Container(
+                  height: MediaQuery.of(context).size.height * .3,
+                  width: MediaQuery.of(context).size.width,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                      color: Colors.transparent,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.shade500,
+                        blurRadius: 10,
+                        offset: Offset(0, 0),
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: SingleChildScrollView(
+                      child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 30),
+                            horizontal: 10, vertical: 2),
                         margin: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 10),
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black54,
-                                blurRadius: 5,
-                                offset: Offset(0, 0)),
-                          ],
-                        ),
+                            horizontal: 10, vertical: 3),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.transparent,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.grey.shade500,
+                                  blurRadius: 10,
+                                  offset: Offset(0, 0)),
+                            ],
+                            borderRadius: BorderRadius.circular(15)),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 6),
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Icon(
-                                Icons.car_crash_rounded,
-                                color: Colors.black,
-                                size: 35,
-                              ),
                               Container(
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 12),
-                                width: 1,
-                                height: 24,
-                                color: Colors.black,
-                              ),
-                              const Expanded(
-                                child: Text(
-                                  'Fleets',
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 20),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.lightBlueAccent,
+                                ),
+                                padding: const EdgeInsets.all(10),
+                                child: Icon(
+                                  Icons.summarize_rounded,
+                                  color: Colors.white,
+                                  size: 10,
                                 ),
                               ),
-                              const Icon(
-                                Icons.arrow_forward_ios,
-                                size: 20,
-                                color: Colors.black,
+                              const Text(
+                                'Transactions History',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16),
                               ),
                             ],
                           ),
                         ),
-                      )),
-                ],
-              ),
-              InkWell(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (ctx) => VehiclesScreen()));
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 30),
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 15),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(
-                          color: Colors.transparent,
-                        ),
-                        boxShadow: const [
-                          BoxShadow(
-                              color: Colors.black54,
-                              blurRadius: 10,
-                              offset: Offset(0, 0)),
-                        ],
-                        borderRadius: BorderRadius.circular(15)),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.bus_alert_rounded,
-                            color: Colors.black,
-                            size: 35.0,
-                          ),
-                          Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 12),
-                            width: 1,
-                            height: 24,
-                            color: Colors.black,
-                          ),
-                          const Expanded(
-                            child: Text(
-                              'Vehicles',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 20),
-                            ),
-                          ),
-                          const Icon(
-                            Icons.arrow_forward_ios,
-                            size: 12,
-                            color: Colors.black,
-                          ),
-                        ],
                       ),
-                    ),
-                  )),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Expanded(
-                    child: InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (ctx) => TransactionsScreen()));
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 30),
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 15),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(
-                                color: Colors.transparent,
-                              ),
-                              boxShadow: const [
-                                BoxShadow(
-                                    color: Colors.black54,
-                                    blurRadius: 5,
-                                    offset: Offset(0, 0)),
-                              ],
-                              borderRadius: BorderRadius.circular(15)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 6),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Icon(
-                                  Icons.pin,
-                                  color: Colors.black,
-                                ),
-                                Container(
-                                  margin:
-                                      const EdgeInsets.symmetric(horizontal: 5),
-                                  width: 1,
-                                  height: 24,
-                                  color: Colors.black,
-                                ),
-                                const Text(
-                                  'Summary',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                const Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 12,
-                                  color: Colors.black,
-                                ),
-                              ],
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 2),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 3),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.transparent,
                             ),
-                          ),
-                        ))),
-                const SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                    child: InkWell(
-                        onTap: () {
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (ctx) =>
-                          //             const SecurityPinsScreen()));
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 30),
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 15),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(
-                                color: Colors.transparent,
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.grey.shade500,
+                                  blurRadius: 10,
+                                  offset: Offset(0, 0)),
+                            ],
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.lightBlueAccent,
+                                ),
+                                padding: const EdgeInsets.all(10),
+                                child: Icon(
+                                  Icons.summarize_rounded,
+                                  color: Colors.white,
+                                  size: 10,
+                                ),
                               ),
-                              boxShadow: const [
-                                BoxShadow(
-                                    color: Colors.black54,
-                                    blurRadius: 5,
-                                    offset: Offset(0, 0)),
-                              ],
-                              borderRadius: BorderRadius.circular(15)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 6),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Icon(
-                                  Icons.pin,
-                                  color: Colors.black,
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 12),
-                                  width: 1,
-                                  height: 24,
-                                  color: Colors.black,
-                                ),
-                                const Text(
-                                  'Pins',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                const Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 12,
-                                  color: Colors.black,
-                                ),
-                              ],
-                            ),
+                              const Text(
+                                'Transactions History',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16),
+                              ),
+                            ],
                           ),
-                        )))
-              ]),
-              InkWell(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (ctx) => VehiclesScreen()));
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 30),
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 15),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(
-                          color: Colors.transparent,
                         ),
-                        boxShadow: const [
-                          BoxShadow(
-                              color: Colors.black54,
-                              blurRadius: 5,
-                              offset: Offset(0, 0)),
-                        ],
-                        borderRadius: BorderRadius.circular(15)),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.bus_alert_rounded,
-                            color: Colors.black,
-                            size: 35.0,
-                          ),
-                          Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 12),
-                            width: 1,
-                            height: 24,
-                            color: Colors.black,
-                          ),
-                          const Expanded(
-                            child: Text(
-                              'Transactions History',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 20),
-                            ),
-                          ),
-                          const Icon(
-                            Icons.arrow_forward_ios,
-                            size: 12,
-                            color: Colors.black,
-                          ),
-                        ],
                       ),
-                    ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 2),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 3),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.transparent,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.grey.shade500,
+                                  blurRadius: 10,
+                                  offset: Offset(0, 0)),
+                            ],
+                            borderRadius: BorderRadius.circular(15)),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.lightBlueAccent,
+                                ),
+                                padding: const EdgeInsets.all(10),
+                                child: Icon(
+                                  Icons.summarize_rounded,
+                                  color: Colors.white,
+                                  size: 10,
+                                ),
+                              ),
+                              const Text(
+                                'Transactions History',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 2),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 3),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.transparent,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.grey.shade500,
+                                  blurRadius: 10,
+                                  offset: Offset(0, 0)),
+                            ],
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.lightBlueAccent,
+                                ),
+                                padding: const EdgeInsets.all(10),
+                                child: Icon(
+                                  Icons.summarize_rounded,
+                                  color: Colors.white,
+                                  size: 10,
+                                ),
+                              ),
+                              const Text(
+                                'Transactions History',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 2),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 3),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.transparent,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.grey.shade500,
+                                  blurRadius: 10,
+                                  offset: Offset(0, 0)),
+                            ],
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.lightBlueAccent,
+                                ),
+                                padding: const EdgeInsets.all(10),
+                                child: Icon(
+                                  Icons.summarize_rounded,
+                                  color: Colors.white,
+                                  size: 10,
+                                ),
+                              ),
+                              const Text(
+                                'Transactions History',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 2),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 3),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.transparent,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.grey.shade500,
+                                  blurRadius: 10,
+                                  offset: Offset(0, 0)),
+                            ],
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.lightBlueAccent,
+                                ),
+                                padding: const EdgeInsets.all(10),
+                                child: Icon(
+                                  Icons.summarize_rounded,
+                                  color: Colors.white,
+                                  size: 10,
+                                ),
+                              ),
+                              const Text(
+                                'Transactions History',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   )),
-            ])),
-      ),
-    );
+                )
+              ])),
+        ));
   }
-
-  // Future<dynamic> createSearch({
-  //   required String registrationNo,
-  //   required int amount,
-  //   required String phoneNumber,
-  // }) async {
-  //   if (!(await checkNetworkConnectivity())) {
-  //     Future.delayed(const Duration(seconds: 3), () {
-  //       // Hide loading indicator
-  //       setState(() {
-  //         _searchLoading = false;
-  //       });
-  //     });
-  //     // ignore: use_build_context_synchronously
-  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //       content: const Text(
-  //         'No Internet Connection',
-  //         textAlign: TextAlign.center,
-  //       ),
-  //       behavior: SnackBarBehavior.floating,
-  //       shape: RoundedRectangleBorder(
-  //         borderRadius: BorderRadius.circular(10),
-  //       ),
-  //       duration: const Duration(seconds: 5),
-  //       margin: EdgeInsets.only(
-  //         // ignore: use_build_context_synchronously
-  //         bottom: MediaQuery.of(context).size.height * 0.04,
-  //         right: 15,
-  //         left: 15,
-  //       ),
-  //       backgroundColor: Colors.red,
-  //     ));
-
-  //     // Return an empty list when there is no internet connection
-  //     return [];
-  //   }
-
-  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   final String? jwt = prefs.getString('jwt');
-  //   Map<String, dynamic> token = jsonDecode(jwt!);
-  //   Map<String, dynamic> body = {
-  //     "registrationNo": registrationNo,
-  //     "policyNo": 'N/A',
-  //     "insuranceType": 'N/A',
-  //     "insuredPerson": 'N/A',
-  //     "insurer": 'N/A',
-  //     "username": username,
-  //     "amount": amount,
-  //     "phoneNumber": phoneNumber,
-  //   };
-  //   var url = Uri.parse('$baseUrl/create_search_vehicle');
-  //   final postRequestResponse = await http.Client().post(url,
-  //       headers: {
-  //         'Content-Type': 'application/json; charset=UTF-8',
-  //         'Authorization': 'Bearer ${token['access_token']}'
-  //       },
-  //       body: jsonEncode(body));
-  //   // print(postRequestResponse.body);
-  //   if (postRequestResponse.statusCode == 200) {
-  //     // var message = json.decode(postRequestResponse.body)['message'];
-  //     // var sellerId = json.decode(postRequestResponse.body)['id'];
-
-  //     // ignore: use_build_context_synchronously
-  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //       content: const Text(
-  //         'Search request successful. Wait to input M-PESA PIN for payment to proceed.',
-  //         textAlign: TextAlign.center,
-  //       ),
-  //       behavior: SnackBarBehavior.floating,
-  //       shape: RoundedRectangleBorder(
-  //         borderRadius: BorderRadius.circular(10),
-  //       ),
-  //       duration: const Duration(seconds: 5),
-  //       margin: EdgeInsets.only(
-  //           // ignore: use_build_context_synchronously
-  //           bottom: MediaQuery.of(context).size.height * 0.04,
-  //           right: 10,
-  //           left: 10),
-  //       backgroundColor: const Color(0xff4c505b),
-  //     ));
-  //     // // ignore: use_build_context_synchronously
-  //     // Navigator.pushAndRemoveUntil(
-  //     //     context,
-  //     //     MaterialPageRoute(
-  //     //         builder: (context) => PaymentScreen(
-  //     //               sellerId: sellerId!,
-  //     //             )),
-  //     //     (route) => true);
-  //     // Navigator.of(context).pushReplacementNamed(SearchScreen.routeName);
-  //   } else if (postRequestResponse.statusCode != 200) {
-  //     var message = json.decode(postRequestResponse.body)['message'];
-  //     // ignore: use_build_context_synchronously
-  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //       content: Text(
-  //         '$message',
-  //         textAlign: TextAlign.center,
-  //       ),
-  //       behavior: SnackBarBehavior.floating,
-  //       shape: RoundedRectangleBorder(
-  //         borderRadius: BorderRadius.circular(10),
-  //       ),
-  //       duration: const Duration(seconds: 3),
-  //       margin: EdgeInsets.only(
-  //           // ignore: use_build_context_synchronously
-  //           bottom: MediaQuery.of(context).size.height * 0.04,
-  //           right: 15,
-  //           left: 15),
-  //       backgroundColor: Colors.red,
-  //     ));
-
-  //     //Start a separate timer to check if 5 minutes have passed
-  //     Timer(const Duration(minutes: 3), () async {
-  //       // If 5 minutes have passed, navigate to SearchScreen
-  //       // SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  //       // if (mounted) {
-  //       //   prefs
-  //       //       .remove('jwt')
-  //       //       .then((value) => Navigator.pushAndRemoveUntil(
-  //       //           context,
-  //       //           MaterialPageRoute(builder: (context) => const SignInScreen()),
-  //       //           (route) => false))
-  //       //       .onError((error, stackTrace) =>
-  //       //           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //       //             content: Text('$error'),
-  //       //           )));
-  //       // }
-  //     });
-  //   }
-  // }
 }
