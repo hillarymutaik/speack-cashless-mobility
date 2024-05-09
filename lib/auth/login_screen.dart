@@ -282,33 +282,7 @@ class _SignInScreenState extends State<SignInScreen>
       _isLoading = true;
     });
 
-    // if (!(await checkNetworkConnectivity())) {
-    //   _scaffoldKey.currentState?.showSnackBar(
-    //     SnackBar(
-    //       content: const Text(
-    //         'No Internet Connection',
-    //         textAlign: TextAlign.center,
-    //       ),
-    //       behavior: SnackBarBehavior.floating,
-    //       shape: RoundedRectangleBorder(
-    //         borderRadius: BorderRadius.circular(10),
-    //       ),
-    //       duration: const Duration(seconds: 5),
-    //       margin: EdgeInsets.only(
-    //         bottom: MediaQuery.of(context).size.height * 0.04,
-    //         right: 15,
-    //         left: 15,
-    //       ),
-    //       backgroundColor: Colors.red,
-    //     ),
-    //   );
-
-    //   setState(() {
-    //     _isLoading = false;
-    //   });
-    //   return;
-    // }
-
+ 
     Map<String, String> body = {
       "phoneNumber": username!,
       "password": password!

@@ -3,12 +3,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 // import 'package:shared_preferences/shared_preferences.dart';
 import '../../home/Home.dart';
 import '../../utils/validators.dart';
-import 'package:http/http.dart' as http;
 
 class LoanData {
   final double loanLimit;
@@ -46,6 +47,7 @@ class _AppliedLoansState extends State<LoansHomeScreen> {
   LoanData? _loanData;
   bool dataLoading = true;
   bool loansLoading = true;
+
   @override
   void initState() {
     super.initState();
@@ -182,7 +184,7 @@ class _AppliedLoansState extends State<LoansHomeScreen> {
                 elevation: 0,
                 titleSpacing: 0,
                 shadowColor: Colors.transparent,
-                expandedHeight: 80,
+                expandedHeight: 60,
                 backgroundColor: Colors.lightBlueAccent,
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
@@ -206,7 +208,7 @@ class _AppliedLoansState extends State<LoansHomeScreen> {
                                   Expanded(
                                     child: Container(
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: 10, vertical: 5),
+                                            horizontal: 10, vertical: 0),
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(15),
@@ -251,21 +253,21 @@ class _AppliedLoansState extends State<LoansHomeScreen> {
                                                                         FontWeight
                                                                             .bold,
                                                                     fontSize:
-                                                                        16),
+                                                                        18),
                                                               ),
                                                             ]),
                                                         const SizedBox(
                                                           height: 6,
                                                         ),
                                                         Text(
-                                                          'Updated: ${fLast}',
+                                                          'Updated ${fLast}',
                                                           style:
                                                               const TextStyle(
                                                                   color: Colors
-                                                                      .white70,
+                                                                      .black87,
                                                                   fontFamily:
                                                                       'Baloo2',
-                                                                  fontSize: 11),
+                                                                  fontSize: 12),
                                                         ),
                                                       ]))),
                                   ),
@@ -470,22 +472,22 @@ class _AppliedLoansState extends State<LoansHomeScreen> {
           ),
       floatingActionButton: SizedBox(
         width: 100.0,
-        height: 40,
+        height: 38,
         child: FloatingActionButton(
-            backgroundColor: Colors.lightBlueAccent.withOpacity(0.9),
+            backgroundColor: Colors.lightBlueAccent,
             onPressed: () {
               _applyLoanSheet(context);
             },
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(
-                  40.0), // Set a circular radius for all four corners
+                  15.0), // Set a circular radius for all four corners
             ),
             child: const Text(
               'Apply Loan',
               style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                   fontFamily: 'Baloo2',
-                  fontSize: 15,
+                  fontSize: 13,
                   fontWeight: FontWeight.bold),
             )), // Set the shape here
       ),
@@ -548,49 +550,48 @@ class _ApplyLoanSheetState extends State<ApplyLoanSheet> {
                 key: _globalKey,
                 child: SingleChildScrollView(
                     child: Column(
-                  // scrollDirection: Axis.vertical,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Center(
                       child: Container(
-                          width: size.width * .12,
-                          height: size.height * 0.007,
+                          width: size.width * .15,
+                          height: size.height * 0.005,
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 2, 46, 99),
                             borderRadius: BorderRadius.circular(10),
                           )),
                     ),
-                    SizedBox(height: size.height * 0.04),
+                    SizedBox(height: size.height * 0.03),
                     const Text('Apply Loan',
                         style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 2, 32, 71))),
-                    SizedBox(height: size.height * 0.02),
-                    SizedBox(height: size.height * 0.02),
+                            color: Colors.black)),
+                    SizedBox(height: size.height * 0.03),
                     TextFormField(
                         keyboardType: TextInputType.number,
                         style: const TextStyle(
-                            fontWeight: FontWeight.normal,
-                            color: Color.fromARGB(255, 2, 32, 71),
-                            fontSize: 14),
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            fontSize: 15),
                         controller: _amountController,
-                        validator: amountValidator,
+                        validator: loanAmountValidator,
                         cursorColor: Colors.blueGrey,
                         decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(15),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide:
                                 const BorderSide(color: Colors.blueGrey),
                           ),
-                          fillColor: Colors.grey.withOpacity(0.5),
+                          fillColor: Colors.blueGrey.shade50,
                           filled: true,
                           hintText: 'Enter amount',
                           hintStyle: const TextStyle(fontSize: 12),
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                           prefixIcon: const Icon(Icons.numbers_rounded,
-                              color: Colors.blue),
+                              color: Colors.lightBlueAccent),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: const BorderSide(
@@ -606,7 +607,7 @@ class _ApplyLoanSheetState extends State<ApplyLoanSheet> {
                             ),
                           ),
                         )),
-                    SizedBox(height: size.height * 0.02),
+                    SizedBox(height: size.height * 0.04),
                     GestureDetector(
                         onTap: () {
                           if (_globalKey.currentState!.validate()) {
@@ -631,8 +632,8 @@ class _ApplyLoanSheetState extends State<ApplyLoanSheet> {
                             width: size.width,
                             height: size.height * 0.06,
                             decoration: BoxDecoration(
-                              color: Colors.lightBlueAccent,
-                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(25),
                             ),
                             child: Center(
                                 child: _applyLoading
@@ -660,33 +661,6 @@ class _ApplyLoanSheetState extends State<ApplyLoanSheet> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? jwt = prefs.getString('jwt');
     Map<String, dynamic> token = jsonDecode(jwt!);
-
-    // if (!(await checkNetworkConnectivity())) {
-    //   _scaffoldKey.currentState?.showSnackBar(
-    //     SnackBar(
-    //       content: const Text(
-    //         'No Internet Connection',
-    //         textAlign: TextAlign.center,
-    //       ),
-    //       behavior: SnackBarBehavior.floating,
-    //       shape: RoundedRectangleBorder(
-    //         borderRadius: BorderRadius.circular(10),
-    //       ),
-    //       duration: const Duration(seconds: 5),
-    //       margin: EdgeInsets.only(
-    //         bottom: MediaQuery.of(context).size.height * 0.04,
-    //         right: 15,
-    //         left: 15,
-    //       ),
-    //       backgroundColor: Colors.red,
-    //     ),
-    //   );
-
-    //   setState(() {
-    //     _isLoading = false;
-    //   });
-    //   return;
-    // }
 
     Map<String, String> body = {
       'amount': amount.toString(),

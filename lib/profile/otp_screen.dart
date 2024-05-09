@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../utils/colors_frave.dart';
 import '../utils/validators.dart';
 import 'change_pin.dart';
-import 'set_wallet_pin.dart';
+// import 'set_wallet_pin.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -115,8 +114,8 @@ class _OTPPINScreenState extends State<OTPPINScreen> {
                         ))
                       : Text('Save',
                           style: TextStyle(
-                              fontSize: 16,
-                              color: ColorsFrave.backgroundColor))))
+                              fontSize: 15,
+                              color: Colors.white))))
         ],
       ),
       body: SafeArea(
@@ -196,39 +195,39 @@ class _OTPPINScreenState extends State<OTPPINScreen> {
                   ),
                   validator: pinValidator,
                 ),
-                Container(
-                  height: 30,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Don't have a  wallet PIN ?",
-                      style: TextStyle(
-                          fontSize: 13,
-                          fontFamily: 'Baloo2',
-                          fontWeight: FontWeight.normal,
-                          color: Colors.black),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (ctx) => SetWalletPinScreen()));
-                      },
-                      child: const Text(
-                        "Set PIN",
-                        style: TextStyle(
-                            decoration: TextDecoration.underline,
-                            fontSize: 15,
-                            fontFamily: 'Baloo2',
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 17, 138, 194)),
-                      ),
-                    )
-                  ],
-                ),
+                // Container(
+                //   height: 30,
+                // ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     const Text(
+                //       "Don't have a  wallet PIN ?",
+                //       style: TextStyle(
+                //           fontSize: 13,
+                //           fontFamily: 'Baloo2',
+                //           fontWeight: FontWeight.normal,
+                //           color: Colors.black),
+                //     ),
+                //     TextButton(
+                //       onPressed: () {
+                //         Navigator.push(
+                //             context,
+                //             MaterialPageRoute(
+                //                 builder: (ctx) => SetWalletPinScreen()));
+                //       },
+                //       child: const Text(
+                //         "Set PIN",
+                //         style: TextStyle(
+                //             decoration: TextDecoration.underline,
+                //             fontSize: 15,
+                //             fontFamily: 'Baloo2',
+                //             fontWeight: FontWeight.bold,
+                //             color: Colors.lightBlueAccent),
+                //       ),
+                //     )
+                //   ],
+                // ),
               ],
             ),
           ),

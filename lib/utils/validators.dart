@@ -6,9 +6,9 @@ const String baseUrl = 'http://52.23.50.252:9077/api';
 const Color backgroundColor = Colors.white;
 
 final phoneValidator = MultiValidator([
-  RequiredValidator(errorText: 'M-PESA number required'),
+  RequiredValidator(errorText: 'Phone number required'),
   MinLengthValidator(10, errorText: 'Format 07xxxxxxxx'),
-  MaxLengthValidator(10, errorText: 'Enter a valid M-PESA number'),
+  MaxLengthValidator(10, errorText: 'Enter a valid phone number'),
 ]);
 final emailValidator = MultiValidator([
   RequiredValidator(errorText: 'Email required'),
@@ -51,3 +51,36 @@ String? amountValidator(String? value) {
 
   return null; // Validation passed
 }
+
+String? loanAmountValidator(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Amount required';
+  }
+
+  if (double.tryParse(value) == null) {
+    return 'Enter a valid number';
+  }
+
+  if (double.parse(value) < 100) {
+    return 'Minimum amount is KES 100.00';
+  }
+
+  return null; 
+}
+
+String? withAmountValidator(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Amount required';
+  }
+
+  if (double.tryParse(value) == null) {
+    return 'Enter a valid number';
+  }
+
+  if (double.parse(value) < 100) {
+    return 'Minimum withdrawal amount is KES 100.00';
+  }
+
+  return null; 
+}
+

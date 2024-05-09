@@ -9,40 +9,48 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
-import '../home/home_screen.dart';
-import '../utils/validators.dart';
+// import '../../home/home_screen.dart';
+import '../../utils/validators.dart';
 
-class TransactionsScreen extends StatefulWidget {
-  @override
-  State<TransactionsScreen> createState() => _TransactionsScreenState();
+class DataModel {
+  final Map<String, dynamic> additionalProp1;
+  final Map<String, dynamic> additionalProp2;
+  final Map<String, dynamic> additionalProp3;
+
+  DataModel({
+    required this.additionalProp1,
+    required this.additionalProp2,
+    required this.additionalProp3,
+  });
+
+  factory DataModel.fromJson(Map<String, dynamic> json) {
+    return DataModel(
+      additionalProp1: json['data']['additionalProp1'] ?? {},
+      additionalProp2: json['data']['additionalProp2'] ?? {},
+      additionalProp3: json['data']['additionalProp3'] ?? {},
+    );
+  }
 }
 
-class _TransactionsScreenState extends State<TransactionsScreen> {
+class WithdrawalsScreen extends StatefulWidget {
+  @override
+  State<WithdrawalsScreen> createState() => _TransactionsScreenState();
+}
+
+class _TransactionsScreenState extends State<WithdrawalsScreen> {
   @override
   void initState() {
     super.initState();
-    fetchData();
+    getWithdrawals();
   }
 
-  // Future<void> _loadTransactionsData() async {
-  //   try {
-  //     String jsonString = await rootBundle.loadString('assets/trans.json');
-  //     Map<String, dynamic> data = jsonDecode(jsonString);
-  //     setState(() {
-  //       _transactionsData =
-  //           List<Map<String, dynamic>>.from(data['transactions']);
-  //     });
-  //   } catch (e) {
-  //     print("Error retrieving transactions data: $e");
-  //   }
-  // }
-
-  Future<TransactionData>? fetchData() async {
+  Future<DataModel>? getWithdrawals() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? jwt = prefs.getString('jwt');
     Map<String, dynamic> token = jsonDecode(jwt!);
 
-    final url = '${baseUrl}/transactions/filter?page=0&size=1&sort=string';
+    final url =
+        '${baseUrl}/transactions/withdrawals/history?page=0&size=1&sort=string';
 
     try {
       final http.Response response = await http.get(Uri.parse(url), headers: {
@@ -52,22 +60,17 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       // print("Data::: ${response.body}");
 
       if (response.statusCode == 200) {
+        // If the server returns a 200 OK response, parse the JSON
         final jsonData = jsonDecode(response.body);
-        final transactionData = TransactionData.fromJson(jsonData);
-
-        // Now you can access transaction data
-        // print('Total elements: ${transactionData.totalElements}');
-        for (var transaction in transactionData.transactions) {
-          print('Transaction ID: ${transaction.id}, Name: ${transaction.name}');
-        }
-        return TransactionData.fromJson(jsonData);
+        final dataModel = DataModel.fromJson(jsonData);
+        return dataModel;
       } else {
-        throw Exception(
-            'Failed to fetch data. Status code: ${response.statusCode}');
+        // If the server returns an error response, throw an exception
+        throw Exception('Failed to load data: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error fetching data: $e');
-      throw Exception('Failed to fetch data');
+      // If an error occurs during the HTTP request, throw an exception
+      throw Exception('Failed to load data: $e');
     }
   }
 
@@ -91,14 +94,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           ),
         ),
         title: const Text(
-          'Transactions',
+          'Withdrawals History',
           style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+              color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
         ),
       ),
       body: Center(
-        child: FutureBuilder<TransactionData>(
-          future: fetchData(),
+        child: FutureBuilder<DataModel>(
+          future: getWithdrawals(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
@@ -106,7 +109,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 height: 25,
                 width: 25,
                 child: CircularProgressIndicator(
-                  strokeWidth: 2.5,
+                  strokeWidth: 2,
                   valueColor: AlwaysStoppedAnimation(
                     Colors.lightBlueAccent,
                   ),
@@ -120,12 +123,12 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 final transactionData = snapshot.data!;
                 // print(
                 //     'Total elements: ${transactionData.totalElements}');
-                if (transactionData.transactions.isEmpty) {
+                if (transactionData.additionalProp1.isEmpty) {
                   return Center(
                     child: Text(
-                      'No transactions',
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                      'No withdrawals',
+                      style: TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.normal),
                     ),
                   );
                 } else {
@@ -134,17 +137,17 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        'Total Elements: ${transactionData.totalElements}',
+                        'Total Elements: ${transactionData.additionalProp1}',
                         style: TextStyle(
                             color: Colors.lightBlueAccent, fontSize: 12),
                       ),
                       SizedBox(height: 20),
                       Expanded(
                         child: ListView.builder(
-                          itemCount: transactionData.transactions.length,
+                          itemCount: transactionData.additionalProp1.length,
                           itemBuilder: (context, index) {
                             final transaction =
-                                transactionData.transactions[index];
+                                transactionData.additionalProp1[index];
                             return Container(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 2),

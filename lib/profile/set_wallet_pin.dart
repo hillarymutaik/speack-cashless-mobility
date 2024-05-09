@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:speack_cashless_mobility/home/Home.dart';
 
-import '../utils/colors_frave.dart';
 import '../utils/validators.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+
+// import 'otp_screen.dart';
 
 class SetWalletPinScreen extends StatefulWidget {
   @override
@@ -53,7 +55,11 @@ class _SetWalletPinScreenState extends State<SetWalletPinScreen> {
         centerTitle: true,
         leadingWidth: 70,
         leading: InkWell(
-          onTap: () => Navigator.pop(context),
+          onTap: () => Navigator.pushAndRemoveUntil<void>(
+              context,
+              MaterialPageRoute<void>(
+                  builder: (BuildContext context) => Home()),
+              (Route<dynamic> route) => false),
           child: Row(
             children: const [
               SizedBox(width: 20.0),
@@ -93,22 +99,22 @@ class _SetWalletPinScreenState extends State<SetWalletPinScreen> {
                       });
                     }
                   },
-                  child: _setLoading
-                      ? const Center(
-                          child: SizedBox(
-                          height: 15,
-                          width: 15,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2.5,
-                            valueColor: AlwaysStoppedAnimation(
-                              Colors.white,
-                            ),
-                          ),
-                        ))
-                      : Text('Save',
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: ColorsFrave.backgroundColor))))
+                  child: Center(
+                      child: _setLoading
+                          ? SizedBox(
+                              height: 15,
+                              width: 15,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.5,
+                                valueColor: AlwaysStoppedAnimation(
+                                  Colors.white,
+                                ),
+                              ),
+                            )
+                          : Text('Save',
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.white)))))
         ],
       ),
       body: SafeArea(
@@ -228,10 +234,10 @@ class _SetWalletPinScreenState extends State<SetWalletPinScreen> {
 
     if (postRequestResponse.statusCode == 200) {
       var jsonResponse = json.decode(postRequestResponse.body);
-      var message = jsonResponse['desc'];
-      var status = jsonResponse['status'];
+      var message = jsonResponse["desc"];
+      var status = jsonResponse["status"];
 
-      if (status == 'Ok') {
+      if (status == "OK") {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -251,7 +257,10 @@ class _SetWalletPinScreenState extends State<SetWalletPinScreen> {
             backgroundColor: Color.fromARGB(255, 1, 145, 56),
           ),
         );
-        Navigator.pop(context);
+        Navigator.pushAndRemoveUntil<void>(
+            context,
+            MaterialPageRoute<void>(builder: (BuildContext context) => Home()),
+            (Route<dynamic> route) => false);
       } else {
         var message = jsonResponse['desc'];
 

@@ -5,12 +5,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../auth/login_screen.dart';
 import 'otp_screen.dart';
-// import 'package:image_picker/image_picker.dart';
+import 'package:image_picker/image_picker.dart';
 
 // ignore: use_key_in_widget_constructors
 class ProfileScreen extends StatefulWidget {
@@ -69,37 +70,10 @@ class _LocationPageState extends State<ProfileScreen> {
     }
   }
 
-  // Future<void> _getBackground(ImageSource source) async {
-  //   final picker = ImagePicker();
-  //   final pickedFile = await picker.getImage(source: source);
-
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       if (source == ImageSource.camera) {
-  //         backgroundImage = pickedFile.path;
-  //       } else {
-  //         backgroundImage = pickedFile.path;
-  //       }
-  //     });
-  //   }
-  // }
-
-  // Future<void> _getLogo(ImageSource source) async {
-  //   final picker = ImagePicker();
-  //   final pickedFile = await picker.getImage(source: source);
-
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       if (source == ImageSource.camera) {
-  //         backgroundImage = pickedFile.path;
-  //       } else {
-  //         backgroundImage = pickedFile.path;
-  //       }
-  //     });
-  //   }
-  // }
   String backgroundImage = 'assets/logo.jpg';
   String logoImage = 'assets/logo.jpg';
+
+  final ImagePicker _imagePicker = ImagePicker();
 
   Future<void> _loadImages() async {
     try {
@@ -118,48 +92,44 @@ class _LocationPageState extends State<ProfileScreen> {
   }
 
   Future<void> _saveImage(Uint8List bytes, String imageType) async {
-    final String assetsDirectory =
-        'assets/images'; // Define your assets directory
-    final String fileName =
-        imageType == 'background' ? 'background.jpg' : 'logo.jpg';
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final String assetsDirectory =
+          directory.path; // Use the documents directory
+      final String fileName =
+          imageType == 'background' ? 'background.jpg' : 'logo.jpg';
 
-    final Directory directory = Directory(assetsDirectory);
-    if (!(await directory.exists())) {
-      directory.createSync(recursive: true);
+      final String imagePath = '$assetsDirectory/$fileName';
+      final File imageFile = File(imagePath);
+
+      await imageFile.writeAsBytes(bytes);
+
+      setState(() {
+        if (imageType == 'background') {
+          backgroundImage = imagePath;
+        } else if (imageType == 'logo') {
+          logoImage = imagePath;
+        }
+      });
+
+      print('Image saved to: $imagePath');
+    } catch (e) {
+      print('Error saving image: $e');
     }
-
-    final String imagePath = '${directory.path}/$fileName';
-    final File imageFile = File(imagePath);
-
-    await imageFile.writeAsBytes(bytes);
-
-    setState(() {
-      if (imageType == 'background') {
-        backgroundImage = imagePath;
-      } else if (imageType == 'logo') {
-        logoImage = imagePath;
-      }
-    });
-
-    print('Image saved to: $imagePath');
   }
 
-  // Future<void> _getImage(ImageSource source, String imageType) async {
-  //   final picker = ImagePicker();
-  //   final pickedFile = await picker.getImage(source: source);
-
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       if (imageType == 'background') {
-  //         backgroundImage = pickedFile.path;
-  //       } else if (imageType == 'logo') {
-  //         logoImage = pickedFile.path;
-  //       }
-  //     });
-  //     final imageBytes = await pickedFile.readAsBytes();
-  //     await _saveImage(imageBytes, imageType); // Correct the function call
-  //   }
-  // }
+  Future<void> getImage(ImageSource source) async {
+    try {
+      final pickedFile = await _imagePicker.pickImage(source: source);
+      if (pickedFile != null) {
+        final imageBytes = await pickedFile.readAsBytes();
+        await _saveImage(
+            imageBytes, 'background'); // Example: Saving as background image
+      }
+    } catch (e) {
+      print('Error getting image: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -168,12 +138,12 @@ class _LocationPageState extends State<ProfileScreen> {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          title: const Text("Profile",
+          title: Text("Profile",
               style: TextStyle(
                 fontSize: 22,
                 fontFamily: 'Baloo2',
                 fontWeight: FontWeight.bold,
-                color: Colors.lightBlueAccent,
+                color: Colors.lightBlueAccent.shade100,
               )),
           centerTitle: false,
           automaticallyImplyLeading: false,
@@ -192,99 +162,63 @@ class _LocationPageState extends State<ProfileScreen> {
         body: SingleChildScrollView(
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Stack(
-              alignment: AlignmentDirectional.centerStart,
+              alignment: AlignmentDirectional.bottomCenter,
               children: [
                 Opacity(
-                  opacity: 0.85,
-                  child: GestureDetector(
-                    onTap: () {
-                      // _getImage(ImageSource.gallery, 'background');
-                    },
-                    child: Stack(
-                      children: [
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.34,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
+                    opacity: .5,
+                    child: Container(
+                        height: MediaQuery.of(context).size.height * .34,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
                               image: AssetImage(backgroundImage),
-                              fit: BoxFit.fitWidth,
-                            ),
-                            borderRadius: const BorderRadius.vertical(
-                                bottom: Radius.circular(35)),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.white70,
+                              fit: BoxFit.cover),
+                          borderRadius: BorderRadius.vertical(
+                              bottom: Radius.circular(10)),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.white,
                                 blurRadius: 5,
-                                offset: Offset(2, 2),
-                              ),
-                            ],
-                          ),
-                          margin: const EdgeInsets.only(bottom: 0),
+                                offset: Offset(2, 2)),
+                          ],
                         ),
-                        Positioned(
-                          bottom: 25,
-                          right: 5,
-                          child: Container(
-                            margin: const EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.grey.withOpacity(0.5),
-                            ),
-                            child: IconButton(
-                              onPressed: () {
-                                // _getImage(ImageSource.gallery, 'background');
-                              },
-                              icon: const Icon(Icons.camera_alt_rounded,
-                                  size: 20, color: Colors.grey),
-                            ),
-                          ),
+                        margin: EdgeInsets.only(bottom: 50))),
+                GestureDetector(
+                  onTap: () {
+                    getImage(ImageSource.gallery);
+                  },
+                  child: Stack(
+                    alignment: AlignmentDirectional.topEnd,
+                    children: [
+                      ClipRRect(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(100)),
+                        child: Image.asset(
+                          logoImage,
+                          fit: BoxFit.cover,
+                          height: MediaQuery.of(context).size.height * 0.12,
                         ),
-                      ],
-                    ),
+                      ),
+                      Positioned(
+                        top: 40,
+                        right: 4,
+                        child: Icon(Icons.camera_alt_rounded,
+                            size: 25, color: Colors.white70),
+                      ),
+                    ],
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left: 10),
-                  child: GestureDetector(
-                    onTap: () {
-                      // _getImage(ImageSource.gallery, 'logo');
-                    },
-                    child: Stack(
-                      alignment: AlignmentDirectional.topEnd,
-                      children: [
-                        ClipRRect(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(100)),
-                          child: Image.asset(
-                            logoImage,
-                            fit: BoxFit.cover,
-                            height: MediaQuery.of(context).size.height * 0.1,
-                          ),
-                        ),
-                        Positioned(
-                          top: 25,
-                          right: 2,
-                          child: Icon(Icons.camera_alt_rounded,
-                              size: 18,
-                              color: Colors.grey.shade200.withOpacity(0.7)),
-                        ),
-                      ],
-                    ),
-                  ),
-                )
               ],
             ),
+
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
                   color: Colors.transparent.withOpacity(.1),
-                  // border: Border.all(
-                  //     // color: Get.theme.focusColor.withOpacity(0.2),
-                  //     ),
                   borderRadius: BorderRadius.circular(8)),
               child: Column(
                 children: [
@@ -466,9 +400,9 @@ class _LocationPageState extends State<ProfileScreen> {
                           builder: (BuildContext context) {
                             return Dialog(
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25)),
+                                  borderRadius: BorderRadius.circular(20)),
                               child: Container(
-                                padding: const EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(15),
                                 height:
                                     MediaQuery.of(context).size.height * 0.18,
                                 width: MediaQuery.of(context).size.width * 0.75,
@@ -565,7 +499,7 @@ class _LocationPageState extends State<ProfileScreen> {
                                               padding: const EdgeInsets.all(6),
                                               decoration: BoxDecoration(
                                                   color: Colors
-                                                      .blue, //Get.theme.primaryColor,
+                                                      .lightBlueAccent, //Get.theme.primaryColor,
                                                   border: Border.all(
                                                     color: Colors.grey
                                                         .withOpacity(0.2),
@@ -573,14 +507,14 @@ class _LocationPageState extends State<ProfileScreen> {
                                                   borderRadius:
                                                       BorderRadius.circular(6)),
                                               child: const Center(
-                                                child: Text("Yes",
+                                                child: Text("Ok",
                                                     maxLines: 2,
                                                     softWrap: false,
                                                     overflow: TextOverflow.fade,
                                                     style: TextStyle(
                                                         fontSize: 18,
                                                         fontWeight:
-                                                            FontWeight.bold,
+                                                            FontWeight.normal,
                                                         color: Colors.white)),
                                               ),
                                             ),
@@ -731,3 +665,88 @@ class AccountLinkWidget extends StatelessWidget {
     );
   }
 }
+
+            // Stack(
+            //   alignment: AlignmentDirectional.centerStart,
+            //   children: [
+            //     Opacity(
+            //       opacity: 0.85,
+            //       child: GestureDetector(
+            //         onTap: () {
+            //           // _getImage(ImageSource.gallery, 'background');
+            //         },
+            //         child: Stack(
+            //           children: [
+            //             Container(
+            //               height: MediaQuery.of(context).size.height * 0.34,
+            //               width: MediaQuery.of(context).size.width,
+            //               decoration: BoxDecoration(
+            //                 image: DecorationImage(
+            //                   image: AssetImage(backgroundImage),
+            //                   fit: BoxFit.fitWidth,
+            //                 ),
+            //                 borderRadius: const BorderRadius.vertical(
+            //                     bottom: Radius.circular(35)),
+            //                 boxShadow: const [
+            //                   BoxShadow(
+            //                     color: Colors.white70,
+            //                     blurRadius: 5,
+            //                     offset: Offset(2, 2),
+            //                   ),
+            //                 ],
+            //               ),
+            //               margin: const EdgeInsets.only(bottom: 0),
+            //             ),
+            //             Positioned(
+            //               bottom: 25,
+            //               right: 5,
+            //               child: Container(
+            //                 margin: const EdgeInsets.all(5),
+            //                 decoration: BoxDecoration(
+            //                   shape: BoxShape.circle,
+            //                   color: Colors.grey.withOpacity(0.5),
+            //                 ),
+            //                 child: IconButton(
+            //                   onPressed: () {
+            //                     // _getImage(ImageSource.gallery, 'background');
+            //                   },
+            //                   icon: const Icon(Icons.camera_alt_rounded,
+            //                       size: 20, color: Colors.grey),
+            //                 ),
+            //               ),
+            //             ),
+            //           ],
+            //         ),
+            //       ),
+            //     ),
+            //     Padding(
+            //       padding: EdgeInsets.only(left: 10),
+            //       child: GestureDetector(
+            //         onTap: () {
+            //           // _getImage(ImageSource.gallery, 'logo');
+            //         },
+            //         child: Stack(
+            //           alignment: AlignmentDirectional.topEnd,
+            //           children: [
+            //             ClipRRect(
+            //               borderRadius:
+            //                   const BorderRadius.all(Radius.circular(100)),
+            //               child: Image.asset(
+            //                 logoImage,
+            //                 fit: BoxFit.cover,
+            //                 height: MediaQuery.of(context).size.height * 0.1,
+            //               ),
+            //             ),
+            //             Positioned(
+            //               top: 25,
+            //               right: 2,
+            //               child: Icon(Icons.camera_alt_rounded,
+            //                   size: 18,
+            //                   color: Colors.grey.shade200.withOpacity(0.7)),
+            //             ),
+            //           ],
+            //         ),
+            //       ),
+            //     )
+            //   ],
+            // ),

@@ -6,14 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../auth/login_screen.dart';
-import 'commission/commission_screen.dart';
-// import 'fleet_screen.dart';
-// import 'users.dart';
-// import 'vehicles.dart';
-// import 'wallet/wallet_pin.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:get/get.dart';
-// import '../wallet/wallet_otp_request.dart';
+// import 'commission/commission_screen.dart';
 
 class SideMenu extends StatefulWidget {
   const SideMenu({
@@ -134,7 +127,6 @@ class _SideMenuState extends State<SideMenu> {
                   Navigator.pop(context);
                 },
               )),
-
           Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -158,20 +150,32 @@ class _SideMenuState extends State<SideMenu> {
                   ),
                 ),
                 onTap: (e) {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (ctx) => CommissionScreen()));
-                  // requestOTP();
+                  Navigator.pop(context);
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Coming soon!',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: Colors.white,
+                          )),
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      duration: const Duration(seconds: 2),
+                      margin: const EdgeInsets.only(
+                        bottom: 200,
+                        right: 40,
+                        left: 40,
+                      ),
+                      backgroundColor: Colors.lightBlue,
+                    ),
+                  );
                 },
               )),
-
-          // BlocConsumer<AuthBloc, AuthState>( VehiclesScreen
-          //   listener: (context, state) {
-          //     if (!state.isAuthenticated) {
-          //       SystemNavigator.pop();
-          //     }
-          //   },
-          //   builder: (context, state) {
-          //     return
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
             margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),

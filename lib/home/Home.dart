@@ -1,8 +1,9 @@
 // ignore_for_file: use_key_in_widget_constructors
 import 'package:flutter/material.dart';
+
 import '../profile/profile_screen.dart';
 import '../screens/loans/loans_screen.dart';
-import '../screens/wallet/wallet_pin.dart';
+import '../screens/wallet/check_pin.dart';
 import 'home_screen.dart';
 
 class Home extends StatefulWidget {
@@ -17,8 +18,8 @@ class _HomeState extends State<Home> {
   int currentIndex = 0;
   final screens = [
     HomeScreen(),
-    const LoansHomeScreen(),
-    const PinScreen(),
+    LoansHomeScreen(),
+    CheckPINScreen(),
     ProfileScreen()
   ];
 

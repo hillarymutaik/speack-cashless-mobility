@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../home/Home.dart';
-import '../utils/colors_frave.dart';
 import '../utils/validators.dart';
-import 'set_wallet_pin.dart';
+// import 'set_wallet_pin.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -53,12 +52,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text('Change PIN',
+        title: const Text('Re-set PIN',
             style: TextStyle(fontSize: 18, color: Colors.lightBlueAccent)),
         centerTitle: true,
         leadingWidth: 70,
         leading: InkWell(
-          onTap: () => Navigator.pop(context),
+          onTap: () => Navigator.pushAndRemoveUntil<void>(
+              context,
+              MaterialPageRoute<void>(
+                  builder: (BuildContext context) => Home()),
+              (Route<dynamic> route) => false),
           child: Row(
             children: const [
               SizedBox(width: 20.0),
@@ -115,9 +118,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           ),
                         ))
                       : Text('Save',
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: ColorsFrave.backgroundColor))))
+                          style: TextStyle(fontSize: 15, color: Colors.white))))
         ],
       ),
       body: SafeArea(
@@ -197,39 +198,39 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   ),
                   validator: pinValidator,
                 ),
-                Container(
-                  height: 30,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Don't have a  wallet PIN ?",
-                      style: TextStyle(
-                          fontSize: 13,
-                          fontFamily: 'Baloo2',
-                          fontWeight: FontWeight.normal,
-                          color: Colors.black),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (ctx) => SetWalletPinScreen()));
-                      },
-                      child: const Text(
-                        "Set PIN",
-                        style: TextStyle(
-                            decoration: TextDecoration.underline,
-                            fontSize: 15,
-                            fontFamily: 'Baloo2',
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 17, 138, 194)),
-                      ),
-                    )
-                  ],
-                ),
+                // Container(
+                //   height: 30,
+                // ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     const Text(
+                //       "Don't have a  wallet PIN ?",
+                //       style: TextStyle(
+                //           fontSize: 13,
+                //           fontFamily: 'Baloo2',
+                //           fontWeight: FontWeight.normal,
+                //           color: Colors.black),
+                //     ),
+                //     TextButton(
+                //       onPressed: () {
+                //         Navigator.push(
+                //             context,
+                //             MaterialPageRoute(
+                //                 builder: (ctx) => SetWalletPinScreen()));
+                //       },
+                //       child: const Text(
+                //         "Set PIN",
+                //         style: TextStyle(
+                //             decoration: TextDecoration.underline,
+                //             fontSize: 15,
+                //             fontFamily: 'Baloo2',
+                //             fontWeight: FontWeight.bold,
+                //             color: Color.fromARGB(255, 17, 138, 194)),
+                //       ),
+                //     )
+                //   ],
+                // ),
               ],
             ),
           ),

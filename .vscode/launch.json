@@ -10,18 +10,6 @@
             "type": "dart",
             "deviceId": "CPH2185",
             "program": "lib/main.dart"
-          },
-
-        {
-            "name": "speack-cashless-mobility",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "speack-cashless-mobility (profile mode)",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "profile"
         },
         {
             "name": "speack-cashless-mobility (release mode)",

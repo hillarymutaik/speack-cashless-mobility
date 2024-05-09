@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../home/Home.dart';
+// import '../home/Home.dart';
 import '../utils/validators.dart';
 import 'login_screen.dart';
 
@@ -121,7 +121,7 @@ class _SignupPageState extends State<SignUpScreen> {
         if (mounted) {
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => Home()),
+            MaterialPageRoute(builder: (context) => SignInScreen()),
             (route) => false,
           );
         }
@@ -204,7 +204,7 @@ class _SignupPageState extends State<SignUpScreen> {
           child: Form(
             key: _signUpFormKey,
             child: SizedBox(
-              // height: size.height,
+              height: size.height,
               width: size.width,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -241,7 +241,7 @@ class _SignupPageState extends State<SignUpScreen> {
                             const Text(
                               'Enter your credentials below to sign up.',
                               style: TextStyle(
-                                  fontSize: 17,
+                                  fontSize: 15,
                                   color: Colors.white70,
                                   fontWeight: FontWeight.w600),
                             ),
@@ -559,6 +559,8 @@ class _SignupPageState extends State<SignUpScreen> {
                                         child: Text(
                                           'Terms & Conditions',
                                           style: TextStyle(
+                                            decoration:
+                                                TextDecoration.underline,
                                             fontSize: 15,
                                             color: Colors.black87,
                                             fontWeight: FontWeight.normal,
@@ -580,6 +582,8 @@ class _SignupPageState extends State<SignUpScreen> {
                                         child: Text(
                                           'Privacy Policy',
                                           style: TextStyle(
+                                            decoration:
+                                                TextDecoration.underline,
                                             fontSize: 15,
                                             color: Colors.black87,
                                             fontWeight: FontWeight.normal,

@@ -1,7 +1,5 @@
 name: speack_cashless_mobility
 version: 1.0.0+1
-publish_to: none
-
 environment:
   sdk: '>=2.19.0 <4.0.0'
 dependencies:
@@ -14,10 +12,10 @@ dependencies:
   progress_indicators: any
   url_launcher: any
 
-  # connectivity_plus:
-  # image_picker: 
-  # path_provider: 
+  image_picker: 
+  path_provider: 
   device_info: 
+  # connectivity_plus:
 
 dev_dependencies:
   flutter_test:
@@ -26,4 +24,3 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
-    - assets/data.json
