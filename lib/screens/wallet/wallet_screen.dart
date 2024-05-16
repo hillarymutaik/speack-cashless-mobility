@@ -76,6 +76,7 @@ class _WalletsScreenState extends State<WalletScreen> {
   bool _isRequesting = false;
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+
   @override
   void dispose() {
     super.dispose();
